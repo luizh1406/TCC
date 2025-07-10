@@ -11,6 +11,7 @@ A gestão da qualidade é um dos pilares fundamentais para a eficiência de proc
 Justificativa:
 A falta de padronização no tratamento de RNCs compromete a rastreabilidade e dificulta análises para melhoria contínua. Um sistema digital de gestão de RNCs facilita auditorias, promove organização e auxilia no atendimento aos requisitos normativos.
 Objetivos:
+
 ●	Objetivo principal: Desenvolver um módulo web para gerenciamento de Registros de Não Conformidade (RNCs), com foco em rastreabilidade, padronização do fluxo e alinhamento com a norma ISO 9001.
 ●	Objetivos secundários:
 o	Padronizar o fluxo de registro e atualização de RNCs com um formulário validado;
@@ -24,8 +25,10 @@ Desenvolvimento de um módulo web para gestão de Registros de Não Conformidade
 Problema a Resolver:
 Em muitas organizações e instituições de ensino, o controle de Registros de Não Conformidade (RNCs) ainda é feito de forma manual ou descentralizada, o que gera dificuldades como a falta de rastreabilidade, a dificuldade de acompanhar o andamento das não conformidades e a ausência de um fluxo padronizado para tratamento dos registros. Isso compromete a eficácia das ações corretivas e dificulta a conformidade com normas como a ISO 9001.
 Limitações:
+
 ●	Projeto não incluirá integração com outros sistemas;
 ●	Não serão abordadas funcionalidades de análise estatística avançada de RNCs nesta versão inicial.
+
 REQUISITOS DE SOFTWARE E STACK TECNOLÓGICA
 
 Requisitos Funcionais (RF):
@@ -39,6 +42,7 @@ Requisitos Funcionais (RF):
 ●	RF08: O sistema deve oferecer diferentes níveis de acesso (ex: operador e gestor).
 ●	RF09: O sistema deve permitir a emissão de relatórios de RNCs por período e status.
 ●	RF10: O sistema deve permitir a exportação de dados das RNCs em formato PDF.
+
 Requisitos Não Funcionais (RNF):
 ●	RNF01: O sistema deve ser intuitivo e fácil de usar, permitindo que usuários com conhecimento básico em informática consigam navegar sem dificuldades.
 ●	RNF02: Segurança no armazenamento dos dados.
@@ -48,6 +52,7 @@ Representação dos Requisitos:
  
 Escopo do MVP (Versão Inicial Funcional)
 Para o Portfólio I, o projeto focará no desenvolvimento das seguintes funcionalidades essenciais:
+
 ●	RF01: Cadastro de RNCs
 
 ●	RF02: Consulta e filtragem por status
@@ -61,6 +66,7 @@ Para o Portfólio I, o projeto focará no desenvolvimento das seguintes funciona
 As demais funcionalidades serão planejadas para a fase seguinte (Portfólio II), conforme cronograma de desenvolvimento.
 
 Stack Tecnológico
+
 Para o desenvolvimento do módulo de qualidade para gestão de Registros de Não Conformidade (RNCs), a escolha do stack tecnológico foi pautada em critérios de escalabilidade, manutenção, desempenho e aderência às melhores práticas de engenharia de software.
 ●	Front-end: HTML + React + Next.js
  O React foi escolhido por ser uma biblioteca moderna, amplamente utilizada para construção de interfaces dinâmicas e responsivas, o que facilita a criação de uma experiência intuitiva para o usuário, conforme o requisito não funcional de facilidade de uso. O Next.js complementa o React, trazendo vantagens como renderização híbrida (SSR e SPA), otimização de performance e roteamento simplificado, beneficiando a escalabilidade e organização do código.
