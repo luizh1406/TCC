@@ -1,124 +1,92 @@
+# Módulo de Qualidade para Gestão de RNCs e Checklists
 
-# 📦 Módulo de Qualidade para Gestão de RNCs
-
-## 📑 Resumo
-
-Este projeto propõe o desenvolvimento de um módulo de qualidade para a **gestão de Registros de Não Conformidade (RNCs)**, com foco em **padronização**, **rastreabilidade** e **melhoria contínua**. O sistema segue os princípios da **norma ISO 9001** e será desenvolvido como parte do **TCC de Engenharia de Software**.
-
----
-
-## 📌 Introdução e Descrição do Projeto
-
-### 🔍 Contexto
-A gestão da qualidade é essencial para processos eficientes. A norma **ISO 9001** inclui o controle de não conformidades como um dos critérios para o SGQ.
-
-### 🛠 Justificativa
-A ausência de padronização no tratamento de RNCs compromete a rastreabilidade e dificulta ações corretivas. Um sistema digital facilita **auditorias** e promove a organização.
-
-### 🎯 Objetivos
-
-#### Objetivo Principal
-- Desenvolver um **módulo web** para gerenciamento de RNCs, com foco em **rastreabilidade**, **padronização** e conformidade com a **ISO 9001**.
-
-#### Objetivos Secundários
-- Padronizar o fluxo de registro/atualização via formulário validado;
-- Permitir consulta com filtros (status, período);
-- Aplicar conceitos práticos da ISO 9001;
-- Desenvolver uma interface amigável com testes de usabilidade;
-- Manter histórico completo de alterações.
-
-### ❓ Problema a Resolver
-O controle de RNCs ainda é manual em muitas instituições, prejudicando rastreabilidade, controle e conformidade com a ISO 9001.
-
-### ⚠️ Limitações
-- Sem integração com outros sistemas;
-- Não inclui análise estatística avançada nesta versão.
+## 📌 Resumo
+Este projeto apresenta a proposta de desenvolvimento de um módulo de qualidade para a **gestão de Registros de Não Conformidade (RNCs)** e controle de **checklists de produtos**, com o objetivo de padronizar o controle e promover a melhoria contínua de processos.  
+O sistema é parte do Trabalho de Conclusão de Curso em Engenharia de Software e segue os princípios da **ISO 9001**.
 
 ---
 
-## 🧾 Requisitos de Software
+## 🎯 Objetivo Principal
+Desenvolver um módulo web para gerenciamento de **checklists** e **RNCs**, com foco em rastreabilidade, padronização do fluxo e alinhamento com a ISO 9001.
 
-### ✅ Requisitos Funcionais (RF)
-
-| Código | Descrição |
-|--------|-----------|
-| RF01 | Cadastro de RNCs com campos detalhados |
-| RF02 | Consulta e filtragem por status |
-| RF03 | Edição de RNCs |
-| RF04 | Cancelamento de RNCs |
-| RF05 | Upload de anexos |
-| RF06 | Visualizar histórico de alterações |
-| RF07 | Login de usuários |
-| RF08 | Níveis de acesso (operador/gestor) |
-| RF09 | Emissão de relatórios |
-| RF10 | Exportação em PDF |
-
-### 🚫 Requisitos Não Funcionais (RNF)
-
-- RNF01: Interface intuitiva
-- RNF02: Segurança no armazenamento
-- RNF03: Escalável para futuras melhorias
-- RNF04: Validação de dados de entrada
+### Objetivos Secundários
+- Padronizar o fluxo de verificação de produtos por meio de checklists;
+- Permitir o registro e consulta de checklists executados;
+- Garantir a rastreabilidade de não conformidades originadas a partir de checklists;
+- Aplicar conceitos práticos da ISO 9001 dentro do contexto acadêmico ou organizacional;
+- Desenvolver uma interface amigável com usabilidade testada com pelo menos 5 usuários;
+- Garantir maior rastreabilidade, mantendo histórico completo de alterações em cada RNC.
 
 ---
 
-## 🧪 Escopo do MVP (Portfólio I)
-
-Funcionalidades da primeira entrega:
-
-- RF01: Cadastro de RNCs  
-- RF02: Consulta e filtragem  
-- RF03: Edição de RNCs  
-- RF07: Login  
-- RF08: Níveis de acesso  
+## 🚨 Problema a Resolver
+Atualmente, muitas organizações ainda realizam o controle de checklists e RNCs de forma **manual** ou **descentralizada**, dificultando:
+- A rastreabilidade das não conformidades;
+- O acompanhamento de inspeções;
+- A padronização do fluxo de tratamento;
+- A conformidade com normas como a **ISO 9001**.
 
 ---
 
-## 🧱 Stack Tecnológica
+## ⚙️ Requisitos de Software
 
-| Camada | Tecnologia | Justificativa |
-|--------|------------|---------------|
-| Frontend | **React + Next.js** | Interfaces modernas, SSR e SPA |
-| Backend | **Node.js (API RESTful)** | Uniformidade JS, desacoplamento |
-| Banco de Dados | **PostgreSQL** | Robusto, seguro e escalável |
-| Arquitetura | **APIs separadas por operação** | Modularidade e segurança |
+### Requisitos Funcionais (RF)
+- RF01: Cadastro de checklists, incluindo itens de verificação;
+- RF02: Execução e preenchimento de checklists;
+- RF03: Consulta de checklists executados;
+- RF04: Cadastro de RNCs (família, tipo, número de série, status, descrição, responsável e data);
+- RF05: Consulta e filtragem de RNCs por status;
+- RF06: Edição de RNCs;
+- RF07: Cancelamento de RNCs;
+- RF08: Upload de anexos (documentos ou imagens);
+- RF09: Histórico de alterações em RNCs;
+- RF10: Login de usuários;
+- RF11: Emissão de relatórios de RNCs por período e status;
+- RF12: Exportação de dados de RNCs em PDF.
 
----
-
-## 🏗️ Design, Arquitetura e Modelos C4
-
-### Arquitetura
-- Modular: Frontend e Backend desacoplados
-- Padrão MVC
-- Modelos C4:
-
-| Nível | Elementos |
-|-------|-----------|
-| Contexto | Sistema acadêmico |
-| Contêineres | Frontend (Next.js), Backend (Node.js), Banco de dados (PostgreSQL) |
-| Componentes | Tela de CRUD, API REST |
-| Código | Separação por camadas (controllers, services, models) |
+### Requisitos Não Funcionais (RNF)
+- RNF01: Sistema intuitivo e fácil de usar;
+- RNF02: Segurança no armazenamento dos dados;
+- RNF03: Escalabilidade para futuras melhorias;
+- RNF04: Validação de dados antes do envio.
 
 ---
 
-## 🔐 Segurança
+## 🚀 Escopo do MVP (Portfólio I)
+- RF01: Cadastro de checklists;
+- RF02: Execução e preenchimento de checklists;
+- RF03: Consulta de checklists executados;
+- RF10: Login de usuários.
 
-- Autenticação de usuários (login ou token)
-- Proteção contra SQL Injection (ORM)
-- Validação de dados nos formulários
+🔜 **Portfólio II**: Implementação da abertura automática de RNCs a partir dos checklists e fluxo completo de gestão.
 
 ---
 
-## 📆 Próximos Passos
+## 🛠️ Stack Tecnológica
+- **Frontend:** React + Next.js  
+- **Backend:** Node.js (API RESTful)  
+- **Banco de Dados:** PostgreSQL  
+- **Arquitetura:** APIs separadas por operação + MVC
 
-### Portfólio I
-- Levantamento de requisitos
-- Modelagem do banco
-- Protótipos de interface
-- CRUD básico
+---
 
-### Portfólio II
-- Finalização do sistema
-- Regras de segurança
-- Testes e validações
-- Documentação e apresentação
+## 🔒 Segurança
+- Autenticação por login/token;
+- Proteção contra SQL Injection (ORM);
+- Validação de dados em formulários.
+
+---
+
+## 📅 Próximos Passos
+**Portfólio I**
+- Levantamento detalhado de requisitos;
+- Modelagem do banco de dados;
+- Protótipo de interfaces;
+- CRUD inicial de checklists.
+
+**Portfólio II**
+- Abertura automática de RNCs a partir dos checklists;
+- Gestão completa de RNCs;
+- Regras de segurança avançadas;
+- Testes e validações;
+- Documentação final e apresentação do TCC.
