@@ -149,7 +149,7 @@ export default function sh(props) {
     document.documentElement.style.height = "100vh";
     document.body.style.display = "block";
 
-    document.title = "NEXOS-JIMP";
+    document.title = "CORE-JIMP";
     const iconLink = document.createElement("link");
     iconLink.rel = "stylesheet";
     iconLink.href =
@@ -341,7 +341,7 @@ export default function sh(props) {
               alignItems: "center",
             }}
           >
-            NEXOS - JIMP
+            CORE - JIMP
           </label>
           <button
             style={st_logoutBtn}

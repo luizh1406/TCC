@@ -30,12 +30,7 @@ export async function getServerSideProps(context) {
   return { props: { isMobile, userAgent, user } };
 }
 
-async function listOfChecklist(
-  setLoading,
-  setLtCheckList,
-  setClChecklistIMG,
-  setMixed
-) {
+async function listOfChecklist(setLoading, setLtCheckList, setClChecklistIMG) {
   setLoading(true);
 
   const res = await fetch("/api/get/quality/editChecklist");
@@ -45,7 +40,6 @@ async function listOfChecklist(
   const dataIMG = await resultFetch(resIMG);
   await setClChecklistIMG(dataIMG);
   await setLtCheckList(data);
-  await setMixed({ ...data, ...dataIMG });
 
   setLoading(false);
 }
@@ -92,13 +86,20 @@ function selectChecklist(
   ns,
   setSelectedCk,
   setReady,
-  setNsProduto
+  setNsProduto,
+  mixed,
+  clChecklistIMG
 ) {
   setLoading(true);
   setNsProduto(ns);
   const filteredCk = ltCheckList.filter((ft) => String(ft.ns) === String(ns));
+  const filteredMixed = clChecklistIMG.filter(
+    (ft) => String(ft.ns) === String(ns)
+  );
+  console.log([...filteredCk, ...filteredMixed]);
 
-  setSelectedCk(filteredCk);
+  //setSelectedCk({ ...filteredCk, ...filteredMixed });
+  setSelectedCk([...filteredCk, ...filteredMixed]);
   setReady(true);
   setLoading(false);
 }
@@ -181,7 +182,7 @@ export default function sh(props) {
     document.documentElement.style.height = "100vh";
     document.body.style.display = "block";
 
-    document.title = "NEXOS-JIMP";
+    document.title = "CORE-JIMP";
     const iconLink = document.createElement("link");
     iconLink.rel = "stylesheet";
     iconLink.href =
@@ -205,7 +206,6 @@ export default function sh(props) {
         setIdList
       );
     }
-    console.log(mixed);
   }, [nsProduto]);
 
   const dimensions = setDimensions(props.isMobile);
@@ -330,6 +330,17 @@ export default function sh(props) {
     boxSizing: "border-box",
   };
 
+  function bufferParaBase64(buffer) {
+    let binary = "";
+    const bytes = new Uint8Array(buffer);
+    const chunkSize = 0x8000; // evita estouro de memória
+    for (let i = 0; i < bytes.length; i += chunkSize) {
+      const chunk = bytes.subarray(i, i + chunkSize);
+      binary += String.fromCharCode.apply(null, chunk);
+    }
+    return btoa(binary);
+  }
+
   return (
     <>
       <div
@@ -351,7 +362,7 @@ export default function sh(props) {
               alignItems: "center",
             }}
           >
-            NEXOS - JIMP
+            CORE - JIMP
           </label>
           <button
             style={st_logoutBtn}
@@ -359,7 +370,7 @@ export default function sh(props) {
           ></button>
         </div>
         <div style={{ ...mainBkgImage }}>
-          <div style={{ ...st_translucedDiv }}>
+          <div id="mainData" style={{ ...st_translucedDiv }}>
             <label style={{ ...st_moduleTitle }}>
               Edição de checklist {nsProduto && `- NS: ${nsProduto}`}
             </label>
@@ -473,7 +484,9 @@ export default function sh(props) {
                           line.ns,
                           setSelectedCk,
                           setReady,
-                          setNsProduto
+                          setNsProduto,
+                          mixed,
+                          clChecklistIMG
                         )
                       }
                       id={line.ns}
@@ -488,99 +501,107 @@ export default function sh(props) {
               selectedCk
                 .sort((a, b) => a.sequencia - b.sequencia)
                 .map((line) => {
-                  if (line.preenchimento === "Numérico") {
-                    return (
-                      <div
-                        key={line.codigo_pergunta}
-                        style={{
-                          ...st_translucedBox,
-                          marginTop: "10px",
-                          flexDirection: "column",
-                        }}
-                      >
-                        <label style={{ width: "100%" }}>
-                          {line.descricao}
-                        </label>
-                        <input
-                          id={line.codigo_pergunta}
-                          style={inputStyle}
-                          type="number"
-                          inputmode="numeric"
-                        />
-                      </div>
-                    );
-                  } else if (line.preenchimento === "Texto") {
-                    return (
-                      <div
-                        key={line.codigo_pergunta}
-                        style={{
-                          ...st_translucedBox,
-                          marginTop: "10px",
-                          flexDirection: "column",
-                        }}
-                      >
-                        <label>{line.descricao}</label>
-                        <input
-                          id={line.codigo_pergunta}
-                          style={inputStyle}
-                          type="text"
-                        />
-                      </div>
-                    );
-                  } else if (line.preenchimento === "Foto") {
-                    {
-                      console.log("Renderizando campo de foto");
-                    }
-                    return (
-                      <div
-                        key={line.codigo_pergunta}
-                        style={{
-                          ...st_translucedBox,
-                          marginTop: "10px",
-                          flexDirection: "column",
-                        }}
-                      >
-                        <label style={{ width: "100%" }}>
-                          {line.descricao}
-                        </label>
-                        <input
-                          id={line.codigo_pergunta}
-                          style={inputStyle}
-                          type="file"
-                          accept="image/*"
-                          onChange={(e) =>
-                            setInputfoto(e, `foto-${line.codigo_pergunta}`)
-                          }
-                        />
-                      </div>
-                    );
-                  } else if (line.preenchimento === "Verdadeiro ou falso") {
-                    return (
-                      <div
-                        key={line.codigo_pergunta}
-                        style={{
-                          ...st_translucedBox,
-                          marginTop: "10px",
-                          flexDirection: "row",
-                          alignItems: "center",
-                        }}
-                      >
-                        <label
+                  const boxStyle = {
+                    ...st_translucedBox,
+                    marginTop: "10px",
+                  };
+
+                  switch (line.preenchimento) {
+                    case "Numérico":
+                      return (
+                        <div
+                          key={line.codigo_pergunta}
+                          style={{ ...boxStyle, flexDirection: "column" }}
+                        >
+                          <label style={{ width: "100%" }}>
+                            {line.descricao}
+                          </label>
+                          <input
+                            id={line.codigo_pergunta}
+                            style={inputStyle}
+                            type="number"
+                            inputMode="numeric"
+                            value={line.value || ""}
+                          />
+                        </div>
+                      );
+
+                    case "Texto":
+                      return (
+                        <div
+                          key={line.codigo_pergunta}
+                          style={{ ...boxStyle, flexDirection: "column" }}
+                        >
+                          <label>{line.descricao}</label>
+                          <input
+                            id={line.codigo_pergunta}
+                            style={inputStyle}
+                            type="text"
+                            value={line.value || ""}
+                          />
+                        </div>
+                      );
+                    case "Verdadeiro ou falso":
+                      return (
+                        <div
+                          key={line.codigo_pergunta}
                           style={{
-                            paddingRight: "5px",
-                            borderRight: "2px solid white",
-                            width: "100%",
+                            ...boxStyle,
+                            flexDirection: "row",
+                            alignItems: "center",
                           }}
                         >
-                          {line.descricao}
-                        </label>
-                        <input
-                          id={line.codigo_pergunta}
-                          style={{ paddingLeft: "5px", width: "50px" }}
-                          type="checkbox"
-                        />
-                      </div>
-                    );
+                          <label
+                            style={{
+                              paddingRight: "5px",
+                              borderRight: "2px solid white",
+                              width: "100%",
+                            }}
+                          >
+                            {line.descricao}
+                          </label>
+                          <input
+                            id={line.codigo_pergunta}
+                            style={{ paddingLeft: "5px", width: "50px" }}
+                            type="checkbox"
+                            value={line.value === "Verdadeiro" ? true : false}
+                          />
+                        </div>
+                      );
+                    case "Foto":
+                      const mnData = document.getElementById("mainData");
+
+                      const div = document.createElement("div");
+                      // Ativa flexbox e define a direção da coluna
+                      div.style.display = "flex";
+                      div.style.marginTop = "10px";
+                      div.style.flexDirection = "column";
+
+                      // Se tiver boxStyle como objeto JS
+                      Object.assign(div.style, st_translucedBox);
+
+                      // Cria o label
+                      const label = document.createElement("label");
+                      label.style.paddingRight = "5px";
+                      label.style.borderRight = "2px solid white";
+                      label.style.width = "50%";
+                      label.textContent = line.descricao;
+
+                      // Cria a imagem
+                      const teste = bufferParaBase64(selectedCk[3].value.data);
+                      const img = document.createElement("img");
+                      img.src = `data:image/png;base64,${teste}`;
+                      img.style.width = props.isMobile ? "100px" : "600px"; // opcional, para caber na div
+
+                      // Adiciona elementos na div
+                      div.appendChild(label);
+                      div.appendChild(img);
+
+                      // Adiciona a div no DOM
+                      mnData.appendChild(div);
+
+                    default:
+                      return null;
                   }
                 })}
             {selectedCk && ready && selectedCk.length > 0 && (
