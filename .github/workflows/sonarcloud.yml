@@ -1,41 +1,54 @@
-name: SonarCloud Analysis
+name: SonarCloud + Coverage
 
 on:
   push:
     branches:
       - main
+      - principal
   pull_request:
     types: [opened, synchronize, reopened]
     branches:
       - main
+      - principal
 
 jobs:
-  sonarcloud:
-    name: SonarCloud + Coverage
+  build:
+    name: Run Tests and SonarCloud Analysis
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0
+          fetch-depth: 0  # necessário para análise completa do SonarCloud
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: 20
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci
 
-      - name: Run tests and generate coverage
-        run: npm test -- --coverage --watchAll=false
+      # Testes de backend
+      - name: Run backend tests with coverage
+        run: npm run test:backend
 
+      # Testes de frontend
+      - name: Run frontend tests with coverage
+        run: npm run test:frontend
+
+      # Envio dos relatórios para o SonarCloud
       - name: SonarCloud Scan
-        uses: SonarSource/sonarcloud-github-action@master
+        uses: SonarSource/sonarcloud-github-action@v3
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # necessário para associar PRs
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         with:
           args: >
-            -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
+            -Dsonar.projectKey=luizh1406_TCC
+            -Dsonar.organization=luizh1406
+            -Dsonar.sources=src,pages
+            -Dsonar.javascript.lcov.reportPaths=coverage/backend/lcov.info,coverage/frontend/lcov.info
+            -Dsonar.test.inclusions=**/__tests__/**/*.test.js,**/__tests__/**/*.test.jsx
+            -Dsonar.exclusions=**/node_modules/**
