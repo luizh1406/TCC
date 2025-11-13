@@ -662,63 +662,6 @@ export default function home(props) {
                       Cadastro de usuários
                     </label>
                   </div>
-                  <div
-                    style={{ ...st_translucedBox }}
-                    id="tickets"
-                    onMouseEnter={(e) =>
-                      (e.target.style.border = "2px solid orange")
-                    }
-                    onMouseLeave={(e) => (e.target.style.border = "")}
-                    onClick={() => {
-                      setLoading(true);
-                      window.location.href = "/Infra/tickets";
-                    }}
-                  >
-                    <a style={{ ...support }} />
-                    <label style={{ padding: "10px" }}>Abrir chamado</label>
-                  </div>
-                  {(props.user.role === "adm" ||
-                    props.user.role === "infra") && (
-                    <div
-                      style={{ ...st_translucedBox }}
-                      id="addDevice"
-                      onMouseEnter={() =>
-                        (document.getElementById("addDevice").style.border =
-                          "2px solid orange")
-                      }
-                      onMouseLeave={() =>
-                        (document.getElementById("addDevice").style.border = "")
-                      }
-                      onClick={() => {
-                        setLoading(true);
-                        window.location.href = "/Infra/addDevice";
-                      }}
-                    >
-                      <a style={{ ...device }} />
-                      <label style={{ padding: "10px" }}>
-                        Cadastro de Dispositivos
-                      </label>
-                    </div>
-                  )}
-                  {(props.user.role === "adm" ||
-                    props.user.role === "infra") && (
-                    <div
-                      style={{ ...st_translucedBox }}
-                      id="searchTickets"
-                      onMouseEnter={(e) =>
-                        (e.target.style.border = "2px solid orange")
-                      }
-                      onMouseLeave={(e) => (e.target.style.border = "")}
-                      onClick={() => {
-                        window.open("/Infra/openTickets");
-                      }}
-                    >
-                      <a style={{ ...searchSales }} />
-                      <label style={{ padding: "10px" }}>
-                        Histórico de chamados
-                      </label>
-                    </div>
-                  )}
                 </div>
               )}
             </div>
