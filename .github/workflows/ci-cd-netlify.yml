@@ -77,7 +77,7 @@ jobs:
         run: npm run build
 
       - name: Deploy na Netlify
-        uses: netlify/actions/cli@v2
+        uses: netlify/actions/cli@v1
         with:
           args: deploy --dir=build --prod
         env:
