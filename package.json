@@ -6,9 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "test": "jest --config jest.config.js --coverage --watchAll=false",
-    "test:backend": "jest --config jest.config.js --testMatch \"**/tests/backend/**/*(*.)+(test|spec).js\" --coverage --watchAll=false",
-   "test:frontend": "jest --config jest.config.js --testMatch \"**/tests/frontend/**/*(*.)+(test|spec).js\" --coverage --watchAll=false"
+"test": "jest --config jest.config.js --coverage --watchAll=false",
+    "test:backend": "jest --config jest.config.js --testMatch \"**/tests/backend/**/*(*.)+(test|spec).js\" --coverage --watchAll=false --coverageDirectory=coverage/backend",
+    "test:frontend": "jest --config jest.config.js --testMatch \"**/tests/frontend/**/*(*.)+(test|spec).js\" --coverage --watchAll=false --coverageDirectory=coverage/frontend"
   },
   "keywords": [],
   "author": "",
