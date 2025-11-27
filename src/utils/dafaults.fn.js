@@ -1,5 +1,5 @@
 import { sidebarItems } from "../styles/containers/containers";
-import {stylesColor} from "../styles/colors/styles.color";
+import { stylesColor } from "../styles/colors/styles.color";
 
 export function handleSidebar(element, menuBtn, list, sidebar, dm){
   if(element !== ""){
@@ -24,52 +24,55 @@ export function handleSidebar(element, menuBtn, list, sidebar, dm){
 
 export function sidebarLinks(list, sidebar, fn, sbItemsStyle){
   const headers = Object.keys(list);
-  
+
   if(fn === "add"){
-    headers.map((hd)=>{
+    headers.forEach((hd) => {
       const label = document.createElement("label");
       label.textContent = list[hd]["descricao"];
       label.id = list[hd]["id"];
       label.style.cursor = "pointer";
       label.style.fontWeight = "bold";
       label.onclick = () => window.location.href = '/' + list[hd].route.replace(/^\/?/, '');
-      label.onmouseenter = (e) =>{
-        (e.target.style.color = stylesColor.dark.orange0);
+      label.onmouseenter = (e) => {
+        e.target.style.color = stylesColor.dark.orange0;
       };
-      label.onmouseleave = (e) =>{
-        (e.target.style.color = "white");
+      label.onmouseleave = (e) => {
+        e.target.style.color = "white";
       };
       Object.assign(label.style, sbItemsStyle.sidebarItems);
 
       sidebar.appendChild(label);
     });
-  }else if(fn === "remove"){
-    headers.map((hd)=>{
-      const label = document.getElementById(list[hd]["id"])
-      label.remove()
+  } else if(fn === "remove"){
+    headers.forEach((hd) => {
+      const label = document.getElementById(list[hd]["id"]);
+      if(label) label.remove(); // ✅ protege contra null
     });
   }
 }
 
 export async function logout(setLoad) {
-  const page = ["/login"]
+  const page = ["/login"];
 
   setLoad(true);
 
-  await fetch("/api/logout", {method:'POST'});
-  window.location.href = page[0];
+  await fetch("/api/logout", { method: 'POST' });
+
+  // Para testes com Jest / jsdom, podemos proteger contra erro de navegação:
+  if(typeof window !== 'undefined' && window.location) {
+    window.location.href = page[0];
+  }
 }
 
 export async function resultFetch(res) {
   const dataJSON = await res.json();
   const data = dataJSON.props.resultRows;
-
   return data;
 }
 
 export function getTime(){
   const now = new Date();
-  
+
   const pad = (num, size = 2) => String(num).padStart(size, '0');
 
   const year = now.getFullYear();

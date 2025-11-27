@@ -2,14 +2,17 @@
   "name": "tese",
   "version": "1.0.0",
   "main": "index.js",
-  "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "test": "jest --coverage --watchAll=false",
-    "test:backend": "jest --testMatch \"**/tests/backend/**/*_test.js\" --coverage --watchAll=false",
-    "test:frontend": "jest --testMatch \"**/tests/frontend/**/*_test.js\" --coverage --watchAll=false"
-  },
+"scripts": {
+  "dev": "next dev",
+  "build": "next build",
+  "start": "next start",
+
+  "test": "jest --coverage --watchAll=false",
+
+  "test:backend": "jest --testMatch \"**/tests/backend/**/*(*.)+(test|spec).js\" --testMatch \"**/tests/backend/**/*_test.js\" --coverage --watchAll=false",
+
+  "test:frontend": "jest --testMatch \"**/tests/frontend/**/*(*.)+(test|spec).js\" --testMatch \"**/tests/frontend/**/*_test.js\" --coverage --watchAll=false"
+},
   "keywords": [],
   "author": "",
   "license": "ISC",
