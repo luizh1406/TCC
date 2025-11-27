@@ -9,7 +9,7 @@ on:
 
 jobs:
   ci:
-    name: Testes + Sonar + Build
+    name: Testes + Build
     runs-on: ubuntu-latest
 
     steps:
@@ -35,21 +35,19 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: SonarCloud
-        uses: SonarSource/sonarcloud-github-action@v3
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        with:
-          args: >
-            -Dsonar.projectKey=seuProjectKey
-            -Dsonar.organization=suaOrg
-            -Dsonar.sources=src,pages
-            -Dsonar.javascript.lcov.reportPaths=coverage/backend/lcov.info,coverage/frontend/lcov.info
+  sonar:
+    # Chama o job de análise do SonarCloud
+    name: SonarCloud Analysis
+    uses: ./.github/workflows/sonarcloud.yml # Assumindo que este é o caminho do seu arquivo
+    needs: ci
+    secrets: inherit # Passa os tokens automaticamente para o workflow chamado
 
   deploy:
     name: Deploy para Netlify
-    needs: ci
+    # O deploy só roda se os testes (ci) E o Sonar (sonar) forem bem-sucedidos
+    needs: [ci, sonar]
+    # O deploy só deve rodar em 'push' para main ou principal
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/principal')
     runs-on: ubuntu-latest
 
     steps:

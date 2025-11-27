@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1764273969560" clover="3.2.0">
-  <project timestamp="1764273969560" name="All files">
+<coverage generated="1764282721844" clover="3.2.0">
+  <project timestamp="1764282721844" name="All files">
     <metrics statements="218" coveredstatements="106" conditionals="125" coveredconditionals="60" methods="87" coveredmethods="13" elements="430" coveredelements="179" complexity="0" loc="218" ncloc="218" packages="4" files="4" classes="4"/>
     <package name="pages">
       <metrics statements="142" coveredstatements="59" conditionals="110" coveredconditionals="52" methods="54" coveredmethods="5"/>
-      <file name="index.js" path="C:\Users\infra\OneDrive\Ambiente de Trabalho\tcc\TCC\pages\index.js">
+      <file name="index.js" path="C:\Users\Luiz.DESKTOP-1AU5235\Desktop\tcc\TCC\pages\index.js">
         <metrics statements="142" coveredstatements="59" conditionals="110" coveredconditionals="52" methods="54" coveredmethods="5"/>
         <line num="13" count="0" type="cond" truecount="0" falsecount="2"/>
         <line num="15" count="0" type="stmt"/>
@@ -152,14 +152,14 @@
     </package>
     <package name="src.styles.colors">
       <metrics statements="1" coveredstatements="1" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
-      <file name="styles.color.js" path="C:\Users\infra\OneDrive\Ambiente de Trabalho\tcc\TCC\src\styles\colors\styles.color.js">
+      <file name="styles.color.js" path="C:\Users\Luiz.DESKTOP-1AU5235\Desktop\tcc\TCC\src\styles\colors\styles.color.js">
         <metrics statements="1" coveredstatements="1" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
         <line num="1" count="2" type="stmt"/>
       </file>
     </package>
     <package name="src.styles.containers">
       <metrics statements="22" coveredstatements="1" conditionals="0" coveredconditionals="0" methods="22" coveredmethods="1"/>
-      <file name="containers.ts" path="C:\Users\infra\OneDrive\Ambiente de Trabalho\tcc\TCC\src\styles\containers\containers.ts">
+      <file name="containers.ts" path="C:\Users\Luiz.DESKTOP-1AU5235\Desktop\tcc\TCC\src\styles\containers\containers.ts">
         <metrics statements="22" coveredstatements="1" conditionals="0" coveredconditionals="0" methods="22" coveredmethods="1"/>
         <line num="4" count="0" type="stmt"/>
         <line num="12" count="0" type="stmt"/>
@@ -187,7 +187,7 @@
     </package>
     <package name="src.utils">
       <metrics statements="53" coveredstatements="45" conditionals="15" coveredconditionals="8" methods="11" coveredmethods="7"/>
-      <file name="dafaults.fn.js" path="C:\Users\infra\OneDrive\Ambiente de Trabalho\tcc\TCC\src\utils\dafaults.fn.js">
+      <file name="dafaults.fn.js" path="C:\Users\Luiz.DESKTOP-1AU5235\Desktop\tcc\TCC\src\utils\dafaults.fn.js">
         <metrics statements="53" coveredstatements="45" conditionals="15" coveredconditionals="8" methods="11" coveredmethods="7"/>
         <line num="5" count="2" type="cond" truecount="1" falsecount="1"/>
         <line num="6" count="2" type="cond" truecount="2" falsecount="0"/>
