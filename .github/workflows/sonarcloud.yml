@@ -39,11 +39,10 @@ jobs:
         run: npm run test:frontend
 
       # Envio dos relatórios para o SonarCloud
-# Envio dos relatórios para o SonarCloud
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@v3
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # necessário para associar PRs
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         with:
           args: >
@@ -53,5 +52,3 @@ jobs:
             -Dsonar.javascript.lcov.reportPaths=coverage/backend/lcov.info,coverage/frontend/lcov.info
             -Dsonar.test.inclusions=**/__tests__/**/*.test.js,**/__tests__/**/*.test.jsx
             -Dsonar.exclusions=**/node_modules/**
-            # >>> NOVA LINHA ADICIONADA: Força o nome do branch
-            -Dsonar.branch.name=${{ github.ref_name }}
