@@ -1,0 +1,76 @@
+name: CI + CD Netlify
+
+on:
+  push:
+    branches:
+      - main
+      - principal
+  pull_request:
+
+jobs:
+  ci:
+    name: Testes + Sonar + Build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Instalar dependências
+        run: npm ci
+
+      - name: Testes backend
+        run: npm run test:backend
+
+      - name: Testes frontend
+        run: npm run test:frontend
+
+      - name: Build
+        run: npm run build
+
+      - name: SonarCloud
+        uses: SonarSource/sonarcloud-github-action@v3
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          args: >
+            -Dsonar.projectKey=seuProjectKey
+            -Dsonar.organization=suaOrg
+            -Dsonar.sources=src,pages
+            -Dsonar.javascript.lcov.reportPaths=coverage/backend/lcov.info,coverage/frontend/lcov.info
+
+  deploy:
+    name: Deploy para Netlify
+    needs: ci
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Instalar dependências
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Deploy na Netlify
+        uses: netlify/actions/cli@v2
+        with:
+          args: deploy --dir=build --prod
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
