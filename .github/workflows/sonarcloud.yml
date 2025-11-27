@@ -1,33 +1,31 @@
 name: SonarCloud + Coverage
 
-# Este workflow é acionado tanto por pushes quanto por Pull Requests
+# Gatilho para ser um fluxo de trabalho reutilizável
 on:
-  push:
-    branches:
-      - main
-      - principal
-  pull_request:
-    types: [opened, synchronize, reopened]
-    branches:
-      - main
-      - principal
+  workflow_call:
+    # Define os secrets que este workflow deve receber do workflow chamador
+    secrets:
+      GITHUB_TOKEN:
+        required: true
+      SONAR_TOKEN:
+        required: true
 
 jobs:
   build:
     name: Run Tests and SonarCloud Analysis
     runs-on: ubuntu-latest
     
-    # >> CORREÇÃO CRÍTICA: PERMISSÕES ADICIONADAS PARA O ALM BINDING <<
+    # PERMISSÕES CRÍTICAS para resolver o erro "NONEXISTENT"
     permissions:
       contents: read
       pull-requests: read
-      security-events: write # Permissão para postar resultados de segurança
+      security-events: write
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # Necessário para análise completa do SonarCloud
+          fetch-depth: 0 # Necessário para análise completa do SonarCloud
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -37,15 +35,13 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      # Testes de backend
       - name: Run backend tests with coverage
         run: npm run test:backend
 
-      # Testes de frontend
       - name: Run frontend tests with coverage
         run: npm run test:frontend
 
-      # Envio dos relatórios para o SonarCloud
+      # Passo SonarCloud Scan (sem comentários de linha no args)
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@v3
         env:
