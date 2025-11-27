@@ -12,7 +12,6 @@ jobs:
     name: Testes + Build
     runs-on: ubuntu-latest
     
-    # Permissão necessária para o checkout (boa prática)
     permissions:
       contents: read
 
@@ -41,20 +40,15 @@ jobs:
 
   sonar:
     name: SonarCloud Analysis
-    # Adicionando dependência para garantir que os arquivos de cobertura existam antes de chamar
     needs: ci 
-    # CHAMADA DO FLUXO DE TRABALHO REUTILIZÁVEL
     uses: ./.github/workflows/sonarcloud.yml
-    # Passa explicitamente os secrets necessários para o fluxo de trabalho chamado
+    # APENAS O SONAR_TOKEN É PASSADO!
     secrets:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
   deploy:
     name: Deploy para Netlify
-    # O deploy só roda se os testes (ci) E o Sonar (sonar) forem bem-sucedidos
     needs: [ci, sonar]
-    # Restringe o deploy apenas para eventos de push nas branches principais (main e principal)
     if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/principal')
     runs-on: ubuntu-latest
 

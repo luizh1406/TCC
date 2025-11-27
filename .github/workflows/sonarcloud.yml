@@ -1,12 +1,9 @@
 name: SonarCloud + Coverage
 
-# Gatilho para ser um fluxo de trabalho reutilizável
 on:
   workflow_call:
-    # Define os secrets que este workflow deve receber do workflow chamador
     secrets:
-      GITHUB_TOKEN:
-        required: true
+      # AGORA PASSAMOS APENAS O SONAR_TOKEN
       SONAR_TOKEN:
         required: true
 
@@ -15,7 +12,7 @@ jobs:
     name: Run Tests and SonarCloud Analysis
     runs-on: ubuntu-latest
     
-    # PERMISSÕES CRÍTICAS para resolver o erro "NONEXISTENT"
+    # PERMISSÕES CONTINUAM NECESSÁRIAS
     permissions:
       contents: read
       pull-requests: read
@@ -25,7 +22,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0 # Necessário para análise completa do SonarCloud
+          fetch-depth: 0
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -41,10 +38,10 @@ jobs:
       - name: Run frontend tests with coverage
         run: npm run test:frontend
 
-      # Passo SonarCloud Scan (sem comentários de linha no args)
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@v3
         env:
+          # O GITHUB_TOKEN é injetado automaticamente pelo ambiente
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         with:
