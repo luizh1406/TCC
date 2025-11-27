@@ -2,17 +2,14 @@
   "name": "tese",
   "version": "1.0.0",
   "main": "index.js",
-"scripts": {
-  "dev": "next dev",
-  "build": "next build",
-  "start": "next start",
-
-  "test": "jest --coverage --watchAll=false || true",
-
-  "test:backend": "jest --testMatch \"**/tests/backend/**/*(*.)+(test|spec).js\" --testMatch \"**/tests/backend/**/*_test.js\" --coverage --watchAll=false",
-
-  "test:frontend": "jest --testMatch \"**/tests/frontend/**/*(*.)+(test|spec).js\" --testMatch \"**/tests/frontend/**/*_test.js\" --coverage --watchAll=false"
-},
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "test": "jest --config jest.config.js --coverage --watchAll=false",
+    "test:backend": "jest --config jest.config.js --testMatch \"**/tests/backend/**/*(*.)+(test|spec).js\" --coverage --watchAll=false",
+   "test:frontend": "jest --config jest.config.js --testMatch \"**/tests/frontend/**/*(*.)+(test|spec).js\" --coverage --watchAll=false"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
