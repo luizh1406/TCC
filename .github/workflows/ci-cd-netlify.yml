@@ -12,6 +12,7 @@ jobs:
     name: Testes + Build
     runs-on: ubuntu-latest
     
+    # Permissão básica para checkout (necessária para actions/checkout)
     permissions:
       contents: read
 
@@ -42,7 +43,15 @@ jobs:
     name: SonarCloud Analysis
     needs: ci 
     uses: ./.github/workflows/sonarcloud.yml
-    # APENAS O SONAR_TOKEN É PASSADO!
+    
+    # CORREÇÃO FINAL: Permissões para o token de acesso (GITHUB_TOKEN)
+    # Essas permissões são herdadas pelo fluxo de trabalho chamado (sonarcloud.yml)
+    permissions:
+      contents: read
+      pull-requests: read
+      security-events: write
+
+    # Passa apenas o secret que o SonarCloud precisa para autenticação
     secrets:
       SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
