@@ -79,7 +79,7 @@ jobs:
       - name: Deploy na Netlify
         uses: netlify/actions/cli@v1
         with:
-          args: deploy --dir=build --prod
+          args: netlify deploy --dir=build --prod
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_TOKEN }}
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
