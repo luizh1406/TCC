@@ -37,6 +37,14 @@ jobs:
 
       - name: Build
         run: npm run build
+      
+      # PASSO DE OTIMIZAÇÃO: Salva a pasta de build para o job de deploy
+      - name: 📦 Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: site-artifact # Nome do artefato que será baixado no deploy
+          path: build/ # Substitua 'build/' se a sua pasta de saída for diferente
+          if-no-files-found: error # Garante que o build gerou arquivos
 
   sonar:
     name: SonarCloud Analysis
@@ -60,22 +68,22 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
-      - name: Node
-        uses: actions/setup-node@v4
+      
+      # NOVO PASSO: Baixa a pasta de build gerada no job 'ci'
+      - name: 📥 Download Artifact
+        uses: actions/download-artifact@v4
         with:
-          node-version: 20
+          name: site-artifact
+          
+      # Os passos 'Node', 'Instalar dependências' e 'Build' foram removidos aqui,
+      # pois o artefato baixado já contém a aplicação pronta para deploy.
 
-      - name: Instalar dependências
-        run: npm ci
-
-      - name: Build
-        run: npm run build
-
-      - name: Deploy na Netlify 
-        uses: netlify/actions/cli@v1 
+      - name: 🚀 Deploy na Netlify
+        # CORREÇÃO DO ERRO: Usa uma ação de terceiros estável para o Netlify CLI
+        uses: South-Paw/action-netlify-cli@v2 
         with:
-          args: deploy --dir=build --prod 
+          # CORREÇÃO DO ARGS: Aponta para a pasta do artefato baixado
+          args: deploy --dir=site-artifact --prod 
         env:
-          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_TOKEN }}
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_TOKEN }} # Usando o secret que você definiu
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
