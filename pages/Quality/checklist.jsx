@@ -65,7 +65,6 @@ function printCkSelected(
       ft.setor === setor &&
       ft.nome === nome
   );
-  console.log(filteredChecklist);
   setSelectedCk(filteredChecklist);
   setSelectCk(false);
 
@@ -161,8 +160,6 @@ export default function sh(props) {
 
     document.head.appendChild(fontLink);
     document.head.appendChild(iconLink);
-
-    console.log("User Agent:", props.user);
 
     listOfChecklist(setLoading, setLtCheckList, setChecklists);
   }, []);
@@ -584,30 +581,6 @@ export default function sh(props) {
                           id={line.codigo_pergunta}
                           style={inputStyle}
                           type="text"
-                        />
-                      </div>
-                    );
-                  } else if (line.preenchimento === "Foto") {
-                    return (
-                      <div
-                        key={line.codigo_pergunta}
-                        style={{
-                          ...st_translucedBox,
-                          marginTop: "10px",
-                          flexDirection: "column",
-                        }}
-                      >
-                        <label style={{ width: "100%" }}>
-                          {line.descricao}
-                        </label>
-                        <input
-                          id={line.codigo_pergunta}
-                          style={inputStyle}
-                          type="file"
-                          accept="image/*"
-                          onChange={(e) =>
-                            setInputfoto(e, `foto-${line.codigo_pergunta}`)
-                          }
                         />
                       </div>
                     );

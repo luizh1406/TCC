@@ -43,7 +43,6 @@ async function resumeSales(
   const allSalesRes = await fetch("/api/get/all_sales");
   const allSales = await resultFetch(allSalesRes);
 
-  console.log(sales);
   await setLastSales(sales);
   await setSales(sales);
   await setAllSales(allSales);
@@ -288,13 +287,10 @@ export default function home(props) {
     fontLink.rel = "icon";
     fontLink.href = "/icons/icon1.png";
 
-    console.log(props.user);
-
     document.head.appendChild(fontLink);
     document.head.appendChild(iconLink);
 
     if (module === 1.1) {
-      console.log("Entrei");
       resumeSales(setSales, setLastSales, setAllSales, setFilteredSale);
     }
 

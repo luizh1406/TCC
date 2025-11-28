@@ -120,8 +120,6 @@ function editServices(
     soma = item.valorTotal + soma;
   });
 
-  console.table(newServices);
-
   setTotalServicos(soma);
   setServicos(newServices);
 }
@@ -174,7 +172,6 @@ async function save(inforGeral, materiais, servicos, plano) {
     ...data[0],
     id: id,
   };
-  console.log(data);
   await fetch("/api/add/quality/headRNC", {
     method: "POST",
     headers: {
@@ -213,8 +210,6 @@ async function save(inforGeral, materiais, servicos, plano) {
     },
   ];
   pushList(data, "planos");
-
-  console.table(servicos);
 
   let nextId = parseInt(id) + 1;
   let sequence = [{ id: 6, posicao: nextId }];
@@ -264,7 +259,6 @@ export default function index(props) {
   const [loading, setLoading] = useState(false);
 
   const styleObj = styles(props.isMobile);
-  console.log(props.user);
 
   useEffect(() => {
     document.body.style.height = "100vh";
@@ -283,7 +277,6 @@ export default function index(props) {
     fontLink.href = "/icons/icon1.png";
     document.head.appendChild(fontLink);
 
-    console.table(inforGeral);
   }, [inforGeral]);
 
   const st_topDiv = {
@@ -551,41 +544,6 @@ export default function index(props) {
                         index === 0 ? { ...item, projeto: value } : item
                       )
                     );
-                  }}
-                />
-              </div>
-              <div
-                style={{
-                  display: "flex",
-                  width: "50%",
-                  gap: "15px",
-                  alignItems: "center",
-                  backgroundColor: "rgba(0, 0, 0, 0.5)",
-                }}
-              >
-                <label style={{ width: "50%" }}>Adicionar imagem</label>
-                <input
-                  type="file"
-                  accept="image/*"
-                  style={{ ...styleObj.inputFile, width: "50%" }}
-                  onChange={(e) => {
-                    const file = e.target.files[0];
-                    if (!file) return;
-
-                    const reader = new FileReader();
-                    reader.onload = () => {
-                      const base64 = reader.result.split(",")[1]; // remove o prefixo "data:image/png;base64,"
-                      console.log("Imagem convertida em Base64:", base64);
-                      setImg(base64);
-                      setInforGeral((prev) =>
-                        prev.map((item, index) =>
-                          index === 0 ? { ...item, image: base64 } : item
-                        )
-                      );
-                    };
-                    reader.onerror = (err) =>
-                      console.error("Erro ao ler imagem:", err);
-                    reader.readAsDataURL(file); // <-- Converte automaticamente em Base64
                   }}
                 />
               </div>

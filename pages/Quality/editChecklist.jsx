@@ -96,9 +96,7 @@ function selectChecklist(
   const filteredMixed = clChecklistIMG.filter(
     (ft) => String(ft.ns) === String(ns)
   );
-  console.log([...filteredCk, ...filteredMixed]);
 
-  //setSelectedCk({ ...filteredCk, ...filteredMixed });
   setSelectedCk([...filteredCk, ...filteredMixed]);
   setReady(true);
   setLoading(false);
@@ -564,42 +562,10 @@ export default function sh(props) {
                             id={line.codigo_pergunta}
                             style={{ paddingLeft: "5px", width: "50px" }}
                             type="checkbox"
-                            value={line.value === "Verdadeiro" ? true : false}
+                            checked={line.value === "Verdadeiro"}
                           />
                         </div>
                       );
-                    case "Foto":
-                      const mnData = document.getElementById("mainData");
-
-                      const div = document.createElement("div");
-                      // Ativa flexbox e define a direção da coluna
-                      div.style.display = "flex";
-                      div.style.marginTop = "10px";
-                      div.style.flexDirection = "column";
-
-                      // Se tiver boxStyle como objeto JS
-                      Object.assign(div.style, st_translucedBox);
-
-                      // Cria o label
-                      const label = document.createElement("label");
-                      label.style.paddingRight = "5px";
-                      label.style.borderRight = "2px solid white";
-                      label.style.width = "50%";
-                      label.textContent = line.descricao;
-
-                      // Cria a imagem
-                      const teste = bufferParaBase64(selectedCk[3].value.data);
-                      const img = document.createElement("img");
-                      img.src = `data:image/png;base64,${teste}`;
-                      img.style.width = props.isMobile ? "100px" : "600px"; // opcional, para caber na div
-
-                      // Adiciona elementos na div
-                      div.appendChild(label);
-                      div.appendChild(img);
-
-                      // Adiciona a div no DOM
-                      mnData.appendChild(div);
-
                     default:
                       return null;
                   }

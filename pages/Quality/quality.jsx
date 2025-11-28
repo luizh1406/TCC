@@ -57,8 +57,6 @@ async function saveCk(
     }
   }
 
-  console.log(questions);
-
   if (block) {
     alert("Preencha todas as informações necessárias");
   } else {
@@ -295,10 +293,6 @@ export default function sh(props) {
     opCheck.value = "Verdadeiro ou falso";
     opCheck.textContent = "Verdadeiro ou falso";
 
-    const opFoto = document.createElement("option");
-    opFoto.value = "Foto";
-    opFoto.textContent = "Foto";
-
     const divDelete = document.createElement("div");
     for (const prop in trash) {
       if (trash.hasOwnProperty(prop)) {
@@ -312,7 +306,6 @@ export default function sh(props) {
     preenchimento.appendChild(opNumber);
     preenchimento.appendChild(opText);
     preenchimento.appendChild(opCheck);
-    preenchimento.appendChild(opFoto);
 
     row.appendChild(sequencia);
     row.appendChild(descricao);
