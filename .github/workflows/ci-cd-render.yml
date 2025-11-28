@@ -1,0 +1,52 @@
+name: CI + CD Render
+
+on:
+  push:
+    branches:
+      - main
+      - principal
+  pull_request:
+
+jobs:
+  ci:
+    name: Testes + Build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Usar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Instalar dependências
+        run: npm ci
+
+      - name: Testes backend
+        run: npm run test:backend
+
+      - name: Testes frontend
+        run: npm run test:frontend
+
+      - name: Build
+        run: npm run build
+
+  sonar:
+    name: SonarCloud Analysis
+    needs: ci
+    uses: ./.github/workflows/sonarcloud.yml
+    secrets:
+      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+  deploy:
+    name: Deploy no Render
+    needs: [ci, sonar]
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/principal')
+
+    steps:
+      - name: Chamar Deploy Hook do Render
+        run: |
+          curl -X POST "${{ secrets.RENDER_DEPLOY_HOOK }}"
