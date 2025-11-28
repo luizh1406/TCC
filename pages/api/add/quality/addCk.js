@@ -1,31 +1,60 @@
 import pool from "../../database.js";
 
 // Helper to escape single quotes for SQL
-const escapeSQL = str => str ? str.replace(/'/g, "''") : "";
+const escapeSQL = (str) => (str ? str.toString().replace(/'/g, "''") : "");
 
 export default async function insertQuery(request, response) {
-  if (request.method === "POST") {
-    const questions = request.body;
+  if (request.method !== "POST") {
+    return response
+      .status(405)
+      .json({ success: false, error: "Method not allowed" });
+  }
 
-    // Build values array with proper escaping
-    const valuesArr = questions.map(row =>
-      `('${escapeSQL(row.nome)}','${escapeSQL(row.linha)}','${escapeSQL(row.familia)}','${escapeSQL(row.setor)}','${escapeSQL(row.sequencia)}','${escapeSQL(row.descricao)}','${escapeSQL(row.preenchimento)}','${escapeSQL(row.codigo_pergunta)}')`
-    );
+  try {
+    let questions = request.body;
 
-    const select = `INSERT INTO checklists (nome, linha, familia, setor, sequencia, descricao, preenchimento, codigo_pergunta) VALUES ${valuesArr.join(",")}`;
-
-    console.log(select);
-    try {
-      const result = await pool.query(select);
-      response.status(201).json({ success: true, cfData: result.rows[0] });
-      console.log("Data inserted:", result.rows[0]);
-    } catch (error) {
-      console.error("Error inserting data:", error);
-      response
-        .status(500)
-        .json({ success: false, error: "Failed to insert data" });
+    if (typeof questions === "string") {
+      questions = JSON.parse(questions);
     }
-  } else {
-    response.status(405).json({ success: false, error: "Method not allowed" });
+
+    if (questions && questions.questions) {
+      questions = questions.questions;
+    }
+
+    if (!Array.isArray(questions)) {
+      return response
+        .status(400)
+        .json({ success: false, error: "`questions` deve ser um array" });
+    }
+
+    const valuesArr = questions.map((row) => {
+      return `('${escapeSQL(row.nome)}','${escapeSQL(
+        row.linha
+      )}','${escapeSQL(row.familia)}','${escapeSQL(row.setor)}','${escapeSQL(
+        row.sequencia
+      )}','${escapeSQL(row.descricao)}','${escapeSQL(
+        row.preenchimento
+      )}','${escapeSQL(row.codigo_pergunta)}')`;
+    });
+
+    const query = `
+      INSERT INTO checklists
+      (nome, linha, familia, setor, sequencia, descricao, preenchimento, codigo_pergunta)
+      VALUES ${valuesArr.join(",")}
+      RETURNING *;
+    `;
+
+    const result = await pool.query(query);
+
+    return response.status(201).json({
+      success: true,
+      cfData: result.rows?.[0] ?? null,
+    });
+
+  } catch (error) {
+    console.error("Error inserting data:", error);
+    return response
+      .status(500)
+      .json({ success: false, error: "Failed to insert data" });
   }
 }
