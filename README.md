@@ -1,92 +1,124 @@
-# Módulo de Qualidade para Gestão de RNCs e Checklists
+# Módulo de Qualidade – Checklists e RNCs
 
-## 📌 Resumo
-Este projeto apresenta a proposta de desenvolvimento de um módulo de qualidade para a **gestão de Registros de Não Conformidade (RNCs)** e controle de **checklists de produtos**, com o objetivo de padronizar o controle e promover a melhoria contínua de processos.  
-O sistema é parte do Trabalho de Conclusão de Curso em Engenharia de Software e segue os princípios da **ISO 9001**.
-
----
-
-## 🎯 Objetivo Principal
-Desenvolver um módulo web para gerenciamento de **checklists** e **RNCs**, com foco em rastreabilidade, padronização do fluxo e alinhamento com a ISO 9001.
-
-### Objetivos Secundários
-- Padronizar o fluxo de verificação de produtos por meio de checklists;
-- Permitir o registro e consulta de checklists executados;
-- Garantir a rastreabilidade de não conformidades originadas a partir de checklists;
-- Aplicar conceitos práticos da ISO 9001 dentro do contexto acadêmico ou organizacional;
-- Desenvolver uma interface amigável com usabilidade testada com pelo menos 5 usuários;
-- Garantir maior rastreabilidade, mantendo histórico completo de alterações em cada RNC.
+Este projeto implementa um módulo completo de qualidade composto por **Checklists de inspeção** e **Registros de Não Conformidade (RNCs)**.  
+O objetivo é padronizar processos, garantir rastreabilidade e facilitar auditorias internas, alinhado aos princípios da ISO 9001.
 
 ---
 
-## 🚨 Problema a Resolver
-Atualmente, muitas organizações ainda realizam o controle de checklists e RNCs de forma **manual** ou **descentralizada**, dificultando:
-- A rastreabilidade das não conformidades;
-- O acompanhamento de inspeções;
-- A padronização do fluxo de tratamento;
-- A conformidade com normas como a **ISO 9001**.
+##  Funcionalidades
+
+###  Módulo de Checklists
+- Cadastro de checklists com campos configuráveis  
+- Preenchimento via interface web  
+- Marcação de itens verificados  
+- Observações e anotações  
+- Histórico completo de inspeções  
+- *Não gera RNC automaticamente*  
+  - Caso haja falhas, o usuário decide manualmente se abrirá uma RNC
+
+### ✔ Módulo de RNCs
+- Cadastro manual de RNCs  
+- Informações completas do produto  
+- Descrição do ocorrido  
+- Plano de ação  
+- Registro de materiais e serviços utilizados  
+- Upload de anexos (imagens/documentos)  
+- Atualização de status  
+- Histórico e rastreabilidade  
 
 ---
 
-## ⚙️ Requisitos de Software
+##  Stack Tecnológico
 
-### Requisitos Funcionais (RF)
-- RF01: Cadastro de checklists, incluindo itens de verificação;
-- RF02: Execução e preenchimento de checklists;
-- RF03: Consulta de checklists executados;
-- RF04: Cadastro de RNCs (família, tipo, número de série, status, descrição, responsável e data);
-- RF05: Consulta e filtragem de RNCs por status;
-- RF06: Edição de RNCs;
-- RF07: Cancelamento de RNCs;
-- RF08: Upload de anexos (documentos ou imagens);
-- RF09: Histórico de alterações em RNCs;
-- RF10: Login de usuários;
-- RF11: Emissão de relatórios de RNCs por período e status;
-- RF12: Exportação de dados de RNCs em PDF.
+###  Front-end
+- **React + Next.js**
+- SSR, SSG e SPA
+- Roteamento simplificado
+- Interface rápida e responsiva
 
-### Requisitos Não Funcionais (RNF)
-- RNF01: Sistema intuitivo e fácil de usar;
-- RNF02: Segurança no armazenamento dos dados;
-- RNF03: Escalabilidade para futuras melhorias;
-- RNF04: Validação de dados antes do envio.
+###  Back-end
+- **Node.js + API RESTful**
+- Arquitetura em camadas  
+  `Controllers → Services → Repositories`
 
----
+###  Banco de Dados
+- **PostgreSQL (NeonDB)**  
+- Suporte a transações, integridade e alta performance
 
-## 🚀 Escopo do MVP (Portfólio I)
-- RF01: Cadastro de checklists;
-- RF02: Execução e preenchimento de checklists;
-- RF03: Consulta de checklists executados;
-- RF10: Login de usuários.
+###  Deploy
+- **Render**
+- Deploy automático via CI/CD
+- Logs centralizados
 
-🔜 **Portfólio II**: Implementação da abertura automática de RNCs a partir dos checklists e fluxo completo de gestão.
-
----
-
-## 🛠️ Stack Tecnológica
-- **Frontend:** React + Next.js  
-- **Backend:** Node.js (API RESTful)  
-- **Banco de Dados:** PostgreSQL  
-- **Arquitetura:** APIs separadas por operação + MVC
+###  CI/CD
+- **GitHub Actions**
+- Pipeline completo:
+  1. Instala dependências  
+  2. Executa testes (Jest)  
+  3. Envia cobertura ao SonarCloud  
+  4. Análise estática  
+  5. Build + Deploy automático
 
 ---
 
-## 🔒 Segurança
-- Autenticação por login/token;
-- Proteção contra SQL Injection (ORM);
-- Validação de dados em formulários.
+##  Qualidade de Código
+
+###  Testes Unitários
+- Biblioteca **Jest**
+- Cobertura das regras de negócio e serviços
+
+###  Teste de Caixa Branca
+- **SonarCloud**
+  - Code smells  
+  - Complexidade  
+  - Vulnerabilidades  
+  - Duplicações  
+  - Cobertura dos testes  
+
+###  Monitoramento
+- **UptimeRobot**
+- Monitoramento contínuo:
+  - Uptime  
+  - Tempo de resposta  
+  - Quedas  
+  - Estabilidade  
 
 ---
 
-## 📅 Próximos Passos
-**Portfólio I**
-- Levantamento detalhado de requisitos;
-- Modelagem do banco de dados;
-- Protótipo de interfaces;
-- CRUD inicial de checklists.
+##  Segurança
 
-**Portfólio II**
-- Abertura automática de RNCs a partir dos checklists;
-- Gestão completa de RNCs;
-- Regras de segurança avançadas;
-- Testes e validações;
-- Documentação final e apresentação do TCC.
+- Autenticação por token  
+- Prevenção contra SQL Injection (ORM)  
+- Validações no back-end e front-end  
+- HTTPS via Render  
+
+---
+
+##  Arquitetura
+
+- Arquitetura modular  
+- Front-end separado do back-end  
+- API REST desacoplada  
+- MVC + camadas de serviço  
+- Modelos C4 utilizados no planejamento  
+  - Contexto  
+  - Contêineres  
+  - Componentes  
+  - Código  
+
+---
+
+##  Sobre o Projeto
+
+Este sistema foi desenvolvido como parte do **Trabalho de Conclusão de Curso em Engenharia de Software**, com foco em:
+
+- padronização de inspeções,  
+- rastreabilidade de falhas,  
+- melhoria contínua,  
+- boas práticas de desenvolvimento moderno.
+
+---
+
+##  Autor
+**Luiz Henrique de Oliveira**  
+Joinville – SC  
