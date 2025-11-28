@@ -50,7 +50,6 @@ async function resumeSales(
   await setFilteredSale(allSales);
 }
 
-
 export default function home(props) {
   const [loading, setLoading] = useState(false);
   const [module, setModule] = useState(3);
@@ -84,7 +83,7 @@ export default function home(props) {
   };
 
   const mainBkgImage = {
-    backgroundImage: "url('/images/background/model6.png')",
+    backgroundImage: "url('/images/background/model8.png')",
     backgroundSize: "cover",
     backgroundPosition: "center",
     backgroundRepeat: "no-repeat",
@@ -468,9 +467,9 @@ export default function home(props) {
                     style={{ ...st_translucedBox }}
                     id="addSales"
                     onMouseEnter={(e) =>
-                      (e.target.style.border = "2px solid orange")
+                      (e.currentTarget.style.border = "2px solid orange")
                     }
-                    onMouseLeave={(e) => (e.target.style.border = "")}
+                    onMouseLeave={(e) => (e.currentTarget.style.border = "")}
                     onClick={() => {
                       setLoading(true);
                       window.location.href = "/Infra/tickets";
@@ -565,9 +564,9 @@ export default function home(props) {
                   <div
                     style={{ ...st_translucedBox }}
                     onMouseEnter={(e) =>
-                      (e.target.style.border = "2px solid orange")
+                      (e.currentTarget.style.border = "2px solid orange")
                     }
-                    onMouseLeave={(e) => (e.target.style.border = "")}
+                    onMouseLeave={(e) => (e.currentTarget.style.border = "")}
                     onClick={() => {
                       setLoading(true);
                       window.location.href = "/Quality/checklist";

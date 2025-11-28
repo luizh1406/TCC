@@ -1,7 +1,9 @@
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import styles from "../../src/styles";
 import { stylesColor } from "../../src/styles/colors/styles.color";
 import jwt from "jsonwebtoken";
+import { logout, resultFetch } from "../../src/utils/dafaults.fn";
+import { Buffer } from "buffer";
 
 export async function getServerSideProps(context) {
   const userAgent = context.req.headers["user-agent"] || "indisponível";
@@ -26,7 +28,7 @@ export async function getServerSideProps(context) {
 
 async function pushList(data, tabela) {
   if (tabela === "materiais") {
-    const response = await fetch("/api/add/quality/materials", {
+    const response = await fetch("/api/update/materials", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -35,7 +37,7 @@ async function pushList(data, tabela) {
     });
     const res = await response.json();
   } else if (tabela === "servicos") {
-    const response = await fetch("/api/add/quality/services", {
+    const response = await fetch("/api/update/services", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -44,7 +46,7 @@ async function pushList(data, tabela) {
     });
     const res = await response.json();
   } else if (tabela === "planos") {
-    const response = await fetch("/api/add/quality/plan", {
+    const response = await fetch("/api/update/plan", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -162,19 +164,15 @@ function editMaterial(
   setMateriais(newMateriais);
 }
 
-async function save(inforGeral, materiais, servicos, plano) {
+async function save(inforGeral, materiais, servicos, plano, solucao) {
   const sequenciaRes = await fetch(`/api/get/get_sequence?id=${6}`);
   const sequenciaJSON = await sequenciaRes.json();
   const sequencia = await sequenciaJSON.props.resultRows;
-  const id = sequencia[0].posicao;
 
-  let data = inforGeral;
-  data[0] = {
-    ...data[0],
-    id: id,
+  let data = {
+    ...inforGeral,
   };
-  console.log(data);
-  await fetch("/api/add/quality/headRNC", {
+  await fetch("/api/update/headRNC", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -193,48 +191,29 @@ async function save(inforGeral, materiais, servicos, plano) {
     });
 
   materiais.map((item) => {
-    data = [{ ...item, id: id }];
+    data = [{ ...item }];
+    console.table(data);
+
     pushList(data, "materiais");
   });
 
   servicos.map((item) => {
-    data = [{ ...item, id: id }];
+    data = [{ ...item }];
     pushList(data, "servicos");
   });
 
   data = [
     {
-      id: id,
+      id: inforGeral.id,
       codigo: 0,
-      descricao: plano,
+      descricao: plano[0].descricao,
       ativo: true,
-      solucao: "em andamento",
+      solucao: solucao,
     },
   ];
   pushList(data, "planos");
 
-  console.table(servicos);
-
-  let nextId = parseInt(id) + 1;
-  let sequence = [{ id: 6, posicao: nextId }];
-
-  await fetch("/api/update_vl/update_sequences", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(sequence),
-  })
-    .then((response) => response.json())
-    .then((result) => {
-      console.log("Inserção bem-sucedida:", result);
-    })
-    .catch((error) => {
-      console.error("Erro ao inserir dados:", error);
-      alert(
-        "Ocorreu um erro inesperado com seu pedido. Por favor contate os administradores do sistema. \n :|"
-      );
-    });
+  window.location.href = "/Quality/openRNC"
 }
 
 async function searchRNC(setSearch) {
@@ -255,7 +234,9 @@ async function currentRNC(
   setPlano,
   setID,
   setTotalMateriais,
-  setServicos
+  setServicos,
+  setImage,
+  setSolucao
 ) {
   const resMaterial = await fetch(`/api/get/quality/materials?id=${id}`);
   const materialJSON = await resMaterial.json();
@@ -281,37 +262,45 @@ async function currentRNC(
   const PlanJSON = await resPlan.json();
   const PlanData = await PlanJSON.props.resultRows;
 
+  const image = header.image;
+  const hexLimpo = image.substring(2);
+  const base64 = Buffer.from(hexLimpo, "hex").toString("utf8");
+  const imageUrl = `data:image/jpeg;base64,${base64}`;
+
+  setImage(imageUrl);
+  setSolucao(header.solucao)
+
+  console.log(image);
   setInforGeral(header);
   setMateriais(materialData);
   setServicos(serviceData);
   setPlano(PlanData);
   setID(id);
   console.table(PlanData);
-  console.log(PlanData[0].descricao);
 }
 
 export default function index(props) {
-  const [inforGeral, setInforGeral] = useState([
-    {
-      id: "",
-      op: 0,
-      ns: 0,
-      setor: "corte/dobra",
-      data_ocorrido: "",
-      projeto: 0,
-      image: "",
-      ocorrencia: "",
-      email: props.user.email,
-    },
-  ]);
+  const [inforGeral, setInforGeral] = useState({
+    id: "",
+    nr_op: 0,
+    ns: 0,
+    setor: "corte/dobra",
+    data_ocorrencia: "",
+    codigo_projeto: 0,
+    image: "",
+    descricao: "",
+    email: props.user.email,
+  });
   const [materiais, setMateriais] = useState([]);
   const [search, setSearch] = useState([]);
   const [totalMateriais, setTotalMateriais] = useState(0);
   const [servicos, setServicos] = useState([]);
   const [totalServicos, setTotalServicos] = useState(0);
-  const [img, setImg] = useState("");
   const [plano, setPlano] = useState("");
   const [id, setID] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [image64, setImage] = useState("");
+  const [solucao, setSolucao] = useState([])
 
   const styleObj = styles(props.isMobile);
   console.log(props.user);
@@ -454,207 +443,282 @@ export default function index(props) {
                   </div>
                   <div
                     style={{
+                      width: "100%",
                       display: "flex",
-                      width: "50%",
+                      flexDirection: "row",
+                      boxSizing: "border-box",
+                      border: "3px solid white",
                       gap: "15px",
-                      alignItems: "center",
-                      backgroundColor: "rgba(0, 0, 0, 0.5)",
                     }}
                   >
-                    <label style={{ width: "50%" }}>
-                      Informe o número da OP
-                    </label>
-                    <input
-                      style={{ ...styleObj.tableInput, width: "50%" }}
-                      type="number"
-                      defaultValue={inforGeral.nr_op}
-                      onBlur={(e) => {
-                        const value = e.currentTarget.value;
-                        setInforGeral((prev) =>
-                          prev.map((item, index) =>
-                            index === 0 ? { ...item, op: value } : item
-                          )
-                        );
-                      }}
-                    />
-                  </div>
-                  <div
-                    style={{
-                      display: "flex",
-                      width: "50%",
-                      gap: "15px",
-                      alignItems: "center",
-                      backgroundColor: "rgba(0, 0, 0, 0.5)",
-                    }}
-                  >
-                    <label style={{ width: "50%" }}>
-                      Informe o Nº de série de produto
-                    </label>
-                    <input
-                      style={{ ...styleObj.tableInput, width: "50%" }}
-                      type="number"
-                      defaultValue={inforGeral.ns}
-                      onBlur={(e) => {
-                        const value = e.currentTarget.value;
-                        setInforGeral((prev) =>
-                          prev.map((item, index) =>
-                            index === 0 ? { ...item, ns: value } : item
-                          )
-                        );
-                      }}
-                    />
-                  </div>
-                  <div
-                    style={{
-                      display: "flex",
-                      width: "50%",
-                      gap: "15px",
-                      alignItems: "center",
-                      backgroundColor: "rgba(0, 0, 0, 0.5)",
-                    }}
-                  >
-                    <label style={{ width: "50%" }}>
-                      Selecione o setor da ocorrência
-                    </label>
-                    <select
-                      style={{ ...styleObj.tableSelect, width: "50%" }}
-                      defaultValue={inforGeral.setor}
-                      onChange={(e) => {
-                        const value = e.currentTarget.value;
-                        setInforGeral((prev) =>
-                          prev.map((item, index) =>
-                            index === 0 ? { ...item, setor: value } : item
-                          )
-                        );
+                    <div
+                      style={{
+                        width: "50%",
+                        display: "flex",
+                        flexDirection: "column",
+                        boxSizing: "border-box",
+                        gap: "15px",
                       }}
                     >
-                      <option
-                        value={"corte/dobra"}
-                        style={styleObj.tableOption}
+                      <div
+                        style={{
+                          display: "flex",
+                          width: "100%",
+                          gap: "15px",
+                          alignItems: "center",
+                          backgroundColor: "rgba(0, 0, 0, 0.5)",
+                        }}
                       >
-                        Corte e Dobra
-                      </option>
-                      <option value={"base"} style={styleObj.tableOption}>
-                        Base
-                      </option>
-                      <option value={"montagem"} style={styleObj.tableOption}>
-                        Montagem
-                      </option>
-                      <option value={"pintura"} style={styleObj.tableOption}>
-                        Pintura
-                      </option>
-                      <option value={"chapeacao"} style={styleObj.tableOption}>
-                        Chapeação
-                      </option>
-                      <option value={"portas"} style={styleObj.tableOption}>
-                        Portas
-                      </option>
-                      <option value={"instalacao"} style={styleObj.tableOption}>
-                        Instalação
-                      </option>
-                      <option value={"eletrica"} style={styleObj.tableOption}>
-                        Elétrica
-                      </option>
-                      <option value={"abs/ebs"} style={styleObj.tableOption}>
-                        ABS/EBS
-                      </option>
-                      <option value={"mecanica"} style={styleObj.tableOption}>
-                        Mecânica
-                      </option>
-                      <option
-                        value={"borracharia"}
-                        style={styleObj.tableOption}
+                        <label style={{ width: "50%" }}>
+                          Status da Solução
+                        </label>
+                          <select style={{ ...styleObj.tableSelect, width: "50%" }} defaultValue={inforGeral.solucao} onBlur={(e)=> setSolucao(e.currentTarget.value)}>
+                            <option style={styleObj.tableOption} value={"Cancelado"}>Cancelado</option>
+                            <option style={styleObj.tableOption} value={"Em andamento"}>Em andamento</option>
+                            <option style={styleObj.tableOption} value={"Concluído"}>Concluído</option>
+                          </select>
+                      </div>
+                      <div
+                        style={{
+                          display: "flex",
+                          width: "100%",
+                          gap: "15px",
+                          alignItems: "center",
+                          backgroundColor: "rgba(0, 0, 0, 0.5)",
+                        }}
                       >
-                        Borracharia
-                      </option>
-                    </select>
-                  </div>
-                  <div
-                    style={{
-                      display: "flex",
-                      width: "50%",
-                      gap: "15px",
-                      alignItems: "center",
-                      backgroundColor: "rgba(0, 0, 0, 0.5)",
-                    }}
-                  >
-                    <label style={{ width: "50%" }}>Data do ocorrido</label>
-                    <input
-                      style={{ ...styleObj.tableInput, width: "50%" }}
-                      type="date"
-                      value={inforGeral.data_ocorrencia}
-                      onChange={(e) => {
-                        const value = e.currentTarget.value;
-                        setInforGeral((prev) =>
-                          prev.map((item, index) =>
-                            index === 0
-                              ? { ...item, data_ocorrido: value }
-                              : item
-                          )
-                        );
-                      }}
-                    />
-                  </div>
-                  <div
-                    style={{
-                      display: "flex",
-                      width: "50%",
-                      gap: "15px",
-                      alignItems: "center",
-                      backgroundColor: "rgba(0, 0, 0, 0.5)",
-                    }}
-                  >
-                    <label style={{ width: "50%" }}>
-                      Informe o código do projeto/ peça
-                    </label>
-                    <input
-                      style={{ ...styleObj.tableInput, width: "50%" }}
-                      type="number"
-                      defaultValue={inforGeral.codigo_projeto}
-                      onBlur={(e) => {
-                        const value = e.currentTarget.value;
-                        setInforGeral((prev) =>
-                          prev.map((item, index) =>
-                            index === 0 ? { ...item, projeto: value } : item
-                          )
-                        );
-                      }}
-                    />
-                  </div>
-                  <div
-                    style={{
-                      display: "flex",
-                      width: "50%",
-                      gap: "15px",
-                      alignItems: "center",
-                      backgroundColor: "rgba(0, 0, 0, 0.5)",
-                    }}
-                  >
-                    <label style={{ width: "50%" }}>Adicionar imagem</label>
-                    <input
-                      type="file"
-                      accept="image/*"
-                      style={{ ...styleObj.inputFile, width: "50%" }}
-                      onChange={(e) => {
-                        const file = e.target.files[0];
-                        if (!file) return;
+                        <label style={{ width: "50%" }}>
+                          Informe o número da OP
+                        </label>
+                        <input
+                          style={{ ...styleObj.tableInput, width: "50%" }}
+                          type="number"
+                          defaultValue={inforGeral.nr_op}
+                          onBlur={(e) => {
+                            const value = e.currentTarget.value;
+                            setInforGeral((prev) => ({
+                              ...prev,
+                              nr_op: value,
+                            }));
+                          }}
+                        />
+                      </div>
+                      <div
+                        style={{
+                          display: "flex",
+                          width: "100%",
+                          gap: "15px",
+                          alignItems: "center",
+                          backgroundColor: "rgba(0, 0, 0, 0.5)",
+                        }}
+                      >
+                        <label style={{ width: "50%" }}>
+                          Informe o Nº de série de produto
+                        </label>
+                        <input
+                          style={{ ...styleObj.tableInput, width: "50%" }}
+                          type="number"
+                          defaultValue={inforGeral.ns}
+                          onBlur={(e) => {
+                            const value = e.currentTarget.value;
+                            setInforGeral((prev) =>
+                              prev.map((item, index) =>
+                                index === 0 ? { ...item, ns: value } : item
+                              )
+                            );
+                          }}
+                        />
+                      </div>
+                      <div
+                        style={{
+                          display: "flex",
+                          width: "100%",
+                          gap: "15px",
+                          alignItems: "center",
+                          backgroundColor: "rgba(0, 0, 0, 0.5)",
+                        }}
+                      >
+                        <label style={{ width: "50%" }}>
+                          Selecione o setor da ocorrência
+                        </label>
+                        <select
+                          style={{ ...styleObj.tableSelect, width: "50%" }}
+                          defaultValue={inforGeral.setor}
+                          onChange={(e) => {
+                            const value = e.currentTarget.value;
+                            setInforGeral((prev) =>
+                              prev.map((item, index) =>
+                                index === 0 ? { ...item, setor: value } : item
+                              )
+                            );
+                          }}
+                        >
+                          <option
+                            value={"corte/dobra"}
+                            style={styleObj.tableOption}
+                          >
+                            Corte e Dobra
+                          </option>
+                          <option value={"base"} style={styleObj.tableOption}>
+                            Base
+                          </option>
+                          <option
+                            value={"montagem"}
+                            style={styleObj.tableOption}
+                          >
+                            Montagem
+                          </option>
+                          <option
+                            value={"pintura"}
+                            style={styleObj.tableOption}
+                          >
+                            Pintura
+                          </option>
+                          <option
+                            value={"chapeacao"}
+                            style={styleObj.tableOption}
+                          >
+                            Chapeação
+                          </option>
+                          <option value={"portas"} style={styleObj.tableOption}>
+                            Portas
+                          </option>
+                          <option
+                            value={"instalacao"}
+                            style={styleObj.tableOption}
+                          >
+                            Instalação
+                          </option>
+                          <option
+                            value={"eletrica"}
+                            style={styleObj.tableOption}
+                          >
+                            Elétrica
+                          </option>
+                          <option
+                            value={"abs/ebs"}
+                            style={styleObj.tableOption}
+                          >
+                            ABS/EBS
+                          </option>
+                          <option
+                            value={"mecanica"}
+                            style={styleObj.tableOption}
+                          >
+                            Mecânica
+                          </option>
+                          <option
+                            value={"borracharia"}
+                            style={styleObj.tableOption}
+                          >
+                            Borracharia
+                          </option>
+                        </select>
+                      </div>
+                      <div
+                        style={{
+                          display: "flex",
+                          width: "100%",
+                          gap: "15px",
+                          alignItems: "center",
+                          backgroundColor: "rgba(0, 0, 0, 0.5)",
+                        }}
+                      >
+                        <label style={{ width: "50%" }}>Data do ocorrido</label>
+                        <input
+                          style={{ ...styleObj.tableInput, width: "50%" }}
+                          type="date"
+                          value={inforGeral.data_ocorrencia}
+                          onChange={(e) => {
+                            const value = e.currentTarget.value;
+                            setInforGeral((prev) =>
+                              prev.map((item, index) =>
+                                index === 0
+                                  ? { ...item, data_ocorrencia: value }
+                                  : item
+                              )
+                            );
+                          }}
+                        />
+                      </div>
+                      <div
+                        style={{
+                          display: "flex",
+                          width: "100%",
+                          gap: "15px",
+                          alignItems: "center",
+                          backgroundColor: "rgba(0, 0, 0, 0.5)",
+                        }}
+                      >
+                        <label style={{ width: "50%" }}>
+                          Informe o código do projeto/ peça
+                        </label>
+                        <input
+                          style={{ ...styleObj.tableInput, width: "50%" }}
+                          type="number"
+                          defaultValue={inforGeral.codigo_projeto}
+                          onBlur={(e) => {
+                            const value = e.currentTarget.value;
+                            setInforGeral((prev) =>
+                              prev.map((item, index) =>
+                                index === 0
+                                  ? { ...item, codigo_projeto: value }
+                                  : item
+                              )
+                            );
+                          }}
+                        />
+                      </div>
+                      <div
+                        style={{
+                          display: "flex",
+                          width: "100%",
+                          gap: "15px",
+                          alignItems: "center",
+                          backgroundColor: "rgba(0, 0, 0, 0.5)",
+                        }}
+                      >
+                        <label style={{ width: "50%" }}>Adicionar imagem</label>
+                        <input
+                          type="file"
+                          accept="image/*"
+                          style={{ ...styleObj.inputFile, width: "50%" }}
+                          onChange={(e) => {
+                            const file = e.target.files[0];
+                            if (!file) return;
 
-                        const reader = new FileReader();
-                        reader.onload = () => {
-                          const base64 = reader.result.split(",")[1]; // remove o prefixo "data:image/png;base64,"
-                          console.log("Imagem convertida em Base64:", base64);
-                          setImg(base64);
-                          setInforGeral((prev) =>
-                            prev.map((item, index) =>
-                              index === 0 ? { ...item, image: base64 } : item
-                            )
-                          );
-                        };
-                        reader.onerror = (err) =>
-                          console.error("Erro ao ler imagem:", err);
-                        reader.readAsDataURL(file); // <-- Converte automaticamente em Base64
-                      }}
+                            const reader = new FileReader();
+                            reader.onload = () => {
+                              const base64 = reader.result.split(",")[1]; // remove o prefixo "data:image/png;base64,"
+                              console.log(
+                                "Imagem convertida em Base64:",
+                                base64
+                              );
+                              setImg(base64);
+                              setInforGeral((prev) =>
+                                prev.map((item, index) =>
+                                  index === 0
+                                    ? { ...item, image: base64 }
+                                    : item
+                                )
+                              );
+                            };
+                            reader.onerror = (err) =>
+                              console.error("Erro ao ler imagem:", err);
+                            reader.readAsDataURL(file); // <-- Converte automaticamente em Base64
+                          }}
+                        />
+                      </div>
+                    </div>
+                    <br />
+                    <img
+                      src={inforGeral.image}
+                      alt="imagem"
+                      style={{ maxWidth: "30%", height: "auto" }}
                     />
+                    <label style={{ writingMode: "vertical-rl" }}>
+                      Imagem anexada
+                    </label>
                   </div>
                   <div
                     style={{
@@ -816,7 +880,7 @@ export default function index(props) {
                                         setMateriais,
                                         materiais,
                                         index,
-                                        "valorUnitario",
+                                        "valorunitario",
                                         e.currentTarget.value,
                                         setTotalMateriais
                                       )
@@ -1071,8 +1135,8 @@ export default function index(props) {
                   >
                     <textarea
                       style={{ width: "100%", height: "200px" }}
-                      value={plano[0].descricao}
-                      onBlur={(e) => setPlano(e.currentTarget.value)}
+                      defaultValue={plano[0].descricao}
+                      onBlur={(e) => plano[0].descricao = e.currentTarget.value}
                     />
                   </div>
                 </div>
@@ -1095,10 +1159,7 @@ export default function index(props) {
                       fontWeight: "bold",
                       cursor: "pointer",
                     }}
-                    onClick={() => (
-                      alert("RNC salva com sucesso!"),
-                      (window.location.href = "/")
-                    )}
+                    onClick={() => save(inforGeral, materiais, servicos, plano, solucao)}
                   >
                     Salvar RNC
                   </button>
@@ -1115,49 +1176,73 @@ export default function index(props) {
                       <th style={styleObj.th}>Nº série</th>
                       <th style={styleObj.th}>Setor</th>
                       <th style={styleObj.th}>Projeto</th>
+                      <th style={styleObj.th}>Solução</th>
                       <th style={styleObj.th}>Ação</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {search.map((item, index) => {
-                      return (
-                        <tr>
-                          <td style={styleObj.td}>{item.id}</td>
-                          <td style={styleObj.td}>{item.nr_op}</td>
-                          <td style={styleObj.td}>{item.ns}</td>
-                          <td style={styleObj.td}>{item.setor}</td>
-                          <td style={styleObj.td}>{item.codigo_projeto}</td>
-                          <td style={{ padding: 0 }}>
-                            <button
+                    {search
+                      .sort((a, b) => a.id - b.id)
+                      .map((item, index) => {
+                        return (
+                          <tr>
+                            <td style={styleObj.td}>{item.id}</td>
+                            <td style={styleObj.td}>{item.nr_op}</td>
+                            <td style={styleObj.td}>{item.ns}</td>
+                            <td style={styleObj.td}>{item.setor}</td>
+                            <td style={styleObj.td}>{item.codigo_projeto}</td>
+                            <td
                               style={{
-                                width: "100%",
-                                height: "100%",
-                                padding: "10px",
-                                border: "none",
-                                backgroundColor: "#ff9800",
-                                color: "white",
-                                cursor: "pointer",
+                                ...styleObj.td,
+                                padding: "8px",
+                                backgroundColor:
+                                  item.solucao === "Cancelado"
+                                    ? "rgba(255, 0, 0, 1)"
+                                    : item.solucao === "Em andamento"
+                                    ? "rgba(241, 100, 38, 0.5)"
+                                    : item.solucao === "Concluído"
+                                    ? "rgba(40, 167, 69, 0.7)"
+                                    : "transparent",
+                                borderRadius:
+                                  item.solucao === "PENDENTE" ? "4px" : "0",
+                                textAlign: "center",
                               }}
-                              onClick={() =>
-                                currentRNC(
-                                  item.id,
-                                  search[index],
-                                  setInforGeral,
-                                  setMateriais,
-                                  setTotalServicos,
-                                  setPlano,
-                                  setID,
-                                  setTotalMateriais,
-                                  setServicos
-                                )
-                              }
                             >
-                              Abrir
-                            </button>
-                          </td>
-                        </tr>
-                      );
-                    })}
+                              {item.solucao}
+                            </td>
+                            <td style={{ ...styleObj.td, padding: 0 }}>
+                              <button
+                                style={{
+                                  width: "100%",
+                                  height: "100%",
+                                  padding: "10px",
+                                  border: "none",
+                                  backgroundColor: "#ff9800",
+                                  color: "white",
+                                  cursor: "pointer",
+                                }}
+                                onClick={() =>
+                                  currentRNC(
+                                    item.id,
+                                    search[index],
+                                    setInforGeral,
+                                    setMateriais,
+                                    setTotalServicos,
+                                    setPlano,
+                                    setID,
+                                    setTotalMateriais,
+                                    setServicos,
+                                    setImage,
+                                    setSolucao
+                                  )
+                                }
+                              >
+                                Abrir
+                              </button>
+                            </td>
+                          </tr>
+                        );
+                      })}
                   </tbody>
                 </table>
               </>

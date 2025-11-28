@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import styles from "../../src/styles";
 import { stylesColor } from "../../src/styles/colors/styles.color";
 import jwt from "jsonwebtoken";
+import { logout, resultFetch } from "../../src/utils/dafaults.fn";
 
 export async function getServerSideProps(context) {
   const userAgent = context.req.headers["user-agent"] || "indisponível";
@@ -260,6 +261,7 @@ export default function index(props) {
   const [totalServicos, setTotalServicos] = useState(0);
   const [img, setImg] = useState("");
   const [plano, setPlano] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const styleObj = styles(props.isMobile);
   console.log(props.user);
@@ -330,7 +332,7 @@ export default function index(props) {
   };
 
   return (
-    <div style={styleObj.background}>
+    <div style={{ ...styleObj.background }}>
       <div style={{ ...st_topDiv }}>
         <button
           style={{ ...st_homeBtn }}

@@ -45,7 +45,7 @@ export default function styles(isMobile) {
       justifyContent: "center",
       alignItems: "center",
       padding: "20px",
-      backgroundImage: "url('/images/background/model6.png')",
+      backgroundImage: "url('/images/background/model8.png')",
       backgroundSize: "cover",
       backgroundPosition: "center",
       backgroundRepeat: "no-repeat",
