@@ -224,9 +224,6 @@ async function save(inforGeral, materiais, servicos, plano) {
     })
     .catch((error) => {
       console.error("Erro ao inserir dados:", error);
-      alert(
-        "Ocorreu um erro inesperado com seu pedido. Por favor contate os administradores do sistema. \n :|"
-      );
     });
 
   alert("RNC salva com sucesso!");
