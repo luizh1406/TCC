@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1764369863121" clover="3.2.0">
-  <project timestamp="1764369863121" name="All files">
-    <metrics statements="211" coveredstatements="134" conditionals="139" coveredconditionals="121" methods="68" coveredmethods="18" elements="418" coveredelements="273" complexity="0" loc="211" ncloc="211" packages="4" files="4" classes="4"/>
+<coverage generated="1764371392927" clover="3.2.0">
+  <project timestamp="1764371392927" name="All files">
+    <metrics statements="229" coveredstatements="146" conditionals="148" coveredconditionals="128" methods="69" coveredmethods="19" elements="446" coveredelements="293" complexity="0" loc="229" ncloc="229" packages="5" files="5" classes="5"/>
     <package name="pages">
       <metrics statements="139" coveredstatements="71" conditionals="110" coveredconditionals="102" methods="54" coveredmethods="8"/>
       <file name="index.js" path="C:\Users\Luiz.DESKTOP-1AU5235\Desktop\tcc\TCC\pages\index.js">
@@ -169,6 +169,30 @@
         <line num="49" count="1" type="stmt"/>
         <line num="55" count="1" type="stmt"/>
         <line num="56" count="1" type="stmt"/>
+      </file>
+    </package>
+    <package name="pages.api.update">
+      <metrics statements="18" coveredstatements="12" conditionals="9" coveredconditionals="7" methods="1" coveredmethods="1"/>
+      <file name="headRNC.js" path="C:\Users\Luiz.DESKTOP-1AU5235\Desktop\tcc\TCC\pages\api\update\headRNC.js">
+        <metrics statements="18" coveredstatements="12" conditionals="9" coveredconditionals="7" methods="1" coveredmethods="1"/>
+        <line num="5" count="7" type="cond" truecount="2" falsecount="0"/>
+        <line num="8" count="6" type="stmt"/>
+        <line num="11" count="6" type="cond" truecount="5" falsecount="0"/>
+        <line num="12" count="3" type="stmt"/>
+        <line num="21" count="3" type="stmt"/>
+        <line num="34" count="3" type="stmt"/>
+        <line num="45" count="3" type="stmt"/>
+        <line num="47" count="3" type="stmt"/>
+        <line num="48" count="3" type="stmt"/>
+        <line num="51" count="0" type="stmt"/>
+        <line num="53" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="55" count="0" type="stmt"/>
+        <line num="62" count="0" type="stmt"/>
+        <line num="67" count="0" type="stmt"/>
+        <line num="73" count="0" type="stmt"/>
+        <line num="76" count="3" type="stmt"/>
+        <line num="77" count="3" type="stmt"/>
+        <line num="82" count="1" type="stmt"/>
       </file>
     </package>
     <package name="src.styles.colors">
