@@ -71,50 +71,59 @@ function printCkSelected(
   setLoading(false);
 }
 
-async function saveChecklist(setLoading, selectedCk, nsProduto, user) {
-  setLoading(true);
-
+function validateNs(nsProduto, setLoading) {
   if (!nsProduto || nsProduto.trim() === "") {
     alert("Por favor, insira a NS do produto.");
     setLoading(false);
-    return;
+    return false;
   }
+  return true;
+}
+
+function getResposta(line) {
+  if (line.preenchimento === "Verdadeiro ou falso") {
+    return document.getElementById(line.codigo_pergunta).checked
+      ? "Verdadeiro"
+      : "Falso";
+  }
+  return document.getElementById(line.codigo_pergunta).value;
+}
+
+function appendFotoOuResposta(formData, line) {
+  if (line.preenchimento === "Foto") {
+    const input = document.getElementById(line.codigo_pergunta);
+    const file = input?.files?.[0];
+    formData.append(line.codigo_pergunta, file || "SEM FOTO");
+  } else {
+    const resposta = getResposta(line);
+    formData.append(line.codigo_pergunta, resposta);
+  }
+
+  // Sempre envia o _info
+  formData.append(`${line.codigo_pergunta}_info`, JSON.stringify(line));
+}
+
+async function sendChecklist(formData) {
+  const response = await fetch("/api/add/quality/clChecklist", {
+    method: "POST",
+    body: formData,
+  });
+  return response.json();
+}
+
+  async function saveChecklist(setLoading, selectedCk, nsProduto, user) {
+  setLoading(true);
+
+  if (!validateNs(nsProduto, setLoading)) return;
 
   const formData = new FormData();
   formData.append("nsProduto", nsProduto);
   formData.append("userEmail", user.email);
 
-  for (const line of selectedCk) {
-    if (line.preenchimento === "Foto") {
-      const input = document.getElementById(line.codigo_pergunta);
-      const file = input && input.files && input.files[0];
-      if (file) {
-        formData.append(line.codigo_pergunta, file);
-      } else {
-        formData.append(line.codigo_pergunta, "SEM FOTO");
-      }
-      // 🔹 sempre envie o _info também!
-      formData.append(`${line.codigo_pergunta}_info`, JSON.stringify(line));
-    } else {
-      let resposta;
-      if (line.preenchimento === "Verdadeiro ou falso") {
-        resposta = document.getElementById(line.codigo_pergunta).checked
-          ? "Verdadeiro"
-          : "Falso";
-      } else {
-        resposta = document.getElementById(line.codigo_pergunta).value;
-      }
-      formData.append(line.codigo_pergunta, resposta);
-      formData.append(`${line.codigo_pergunta}_info`, JSON.stringify(line));
-    }
-  }
+  selectedCk.forEach((line) => appendFotoOuResposta(formData, line));
 
   try {
-    const response = await fetch("/api/add/quality/clChecklist", {
-      method: "POST",
-      body: formData,
-    });
-    const result = await response.json();
+    const result = await sendChecklist(formData);
 
     if (result.success) {
       alert("Checklist salvo com sucesso!");
@@ -129,6 +138,7 @@ async function saveChecklist(setLoading, selectedCk, nsProduto, user) {
 
   setLoading(false);
 }
+
 
 export default function sh(props) {
   const [loading, setLoading] = useState(false);
