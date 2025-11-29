@@ -26,7 +26,7 @@ export async function getServerSideProps(context) {
   return { props: { isMobile, userAgent, user } };
 }
 
-async function pushList(data, tabela) {
+export async function pushList(data, tabela) {
   if (tabela === "materiais") {
     const response = await fetch("/api/update/materials", {
       method: "POST",
@@ -57,7 +57,7 @@ async function pushList(data, tabela) {
   }
 }
 
-async function addServicos(setServicos, servicos) {
+export async function addServicos(setServicos, servicos) {
   const newId = servicos.length > 0 ? servicos[servicos.length - 1].id + 1 : 0;
 
   const newLine = {
@@ -72,7 +72,7 @@ async function addServicos(setServicos, servicos) {
   setServicos([...servicos, newLine]);
 }
 
-async function addMaterial(setMateriais, materiais) {
+export async function addMaterial(setMateriais, materiais) {
   const newId =
     materiais.length > 0 ? materiais[materiais.length - 1].id + 1 : 0;
 
@@ -88,7 +88,7 @@ async function addMaterial(setMateriais, materiais) {
   setMateriais([...materiais, newLine]);
 }
 
-function editServices(
+export function editServices(
   setServicos,
   servicos,
   index,
@@ -125,7 +125,7 @@ function editServices(
   setServicos(newServices);
 }
 
-function editMaterial(
+export function editMaterial(
   setMateriais,
   materiais,
   index,
@@ -162,7 +162,7 @@ function editMaterial(
   setMateriais(newMateriais);
 }
 
-async function save(inforGeral, materiais, servicos, plano, solucao) {
+export async function save(inforGeral, materiais, servicos, plano, solucao) {
   const sequenciaRes = await fetch(`/api/get/get_sequence?id=${6}`);
   const sequenciaJSON = await sequenciaRes.json();
   const sequencia = await sequenciaJSON.props.resultRows;
@@ -213,7 +213,7 @@ async function save(inforGeral, materiais, servicos, plano, solucao) {
   window.location.href = "/Quality/openRNC"
 }
 
-async function searchRNC(setSearch) {
+export async function searchRNC(setSearch) {
   const res = await fetch("/api/get/quality/headerRNC");
   const resJSON = await res.json();
   const data = resJSON.props.resultRows;
@@ -221,7 +221,7 @@ async function searchRNC(setSearch) {
   setSearch(data);
 }
 
-async function currentRNC(
+export async function currentRNC(
   id,
   header,
   setInforGeral,

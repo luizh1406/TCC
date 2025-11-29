@@ -1,10 +1,11 @@
-// headRNC.test.js
+// tests/backend/services.test.js
 
 // Importa o handler a ser testado
-import updateQuery from "../../pages/api/update/headRNC.js";
+import updateQuery from "../../pages/api/update/services.js";
 
 // Mock do banco (Postgres)
 // 🚨 ATENÇÃO: Use o caminho absoluto para o database.js a partir da raiz do teste.
+// services.js está em pages/api/update/, então o DB está em pages/api/
 import pool from "../../pages/api/database.js";
 jest.mock("../../pages/api/database.js", () => ({
   query: jest.fn(),
@@ -12,36 +13,37 @@ jest.mock("../../pages/api/database.js", () => ({
 
 // Mock para os logs de console (essencial para cobertura do catch)
 global.console = {
+  table: jest.fn(),
   log: jest.fn(),
   error: jest.fn(),
 };
 
-describe('updateQuery Handler (headRNC.js)', () => {
-  const mockValidData = {
-    id: 101,
-    nr_op: 'OP-2025',
-    ns: 'NS-001',
-    setor: 'Produção',
-    data_ocorrencia: '2025-11-28',
-    codigo_projeto: 'P-999',
-    email: 'user@example.com',
-    descricao: 'Teste de atualização',
+describe('updateQuery Handler (services.js)', () => {
+  const mockValidService = {
+    id: 99, 
+    codigo: 'S101', 
+    descricao: 'Teste de Atualização',
+    tempo: 5,
+    valorunitario: 100.50,
+    valortotal: 502.50,
   };
-
+  
   const mockResponse = () => ({
     status: jest.fn().mockReturnThis(),
     json: jest.fn(),
   });
 
+  // Limpa os mocks antes de cada teste
   beforeEach(() => {
     pool.query.mockClear();
     global.console.log.mockClear();
     global.console.error.mockClear();
+    global.console.table.mockClear();
   });
   
   // --- 1. SUCESSO (Caminho 200) ---
-  it('deve responder com status 200 quando a atualização é bem-sucedida', async () => {
-    const req = { method: 'POST', body: mockValidData };
+  it('deve responder com status 200 quando a atualização do serviço é bem-sucedida', async () => {
+    const req = { method: 'POST', body: [mockValidService] };
     const res = mockResponse();
     pool.query.mockResolvedValue({ rowCount: 1 });
 
@@ -51,40 +53,30 @@ describe('updateQuery Handler (headRNC.js)', () => {
     expect(res.status).toHaveBeenCalledWith(200);
     expect(res.json).toHaveBeenCalledWith({
       success: true,
-      message: expect.stringContaining('RNC ID 101 atualizada com sucesso.'),
+      message: 'Serviço atualizado com sucesso.',
       rowsAffected: 1,
     });
   });
   
-  // --- 2. VALIDAÇÃO (Caminho 400) ---
-  it('deve retornar status 400 se o corpo da requisição for nulo ou sem ID', async () => {
-    let req = { method: 'POST', body: null }; 
-    let res = mockResponse();
-
-    await updateQuery(req, res);
-    expect(res.status).toHaveBeenCalledWith(400);
-    
-    res = mockResponse();
-    req = { method: 'POST', body: { nr_op: 'teste' } }; 
-    await updateQuery(req, res);
-    expect(res.status).toHaveBeenCalledWith(400);
-  });
-  
-  // --- 3. NENHUMA LINHA AFETADA (Caminho 404) ---
-  it('deve retornar status 404 se o ID existir, mas nenhuma linha for afetada', async () => {
-    const req = { method: 'POST', body: mockValidData };
+  // --- 2. FALHA LÓGICA (Caminho 404) ---
+  it('deve retornar status 404 se o DB for chamado mas 0 linhas forem afetadas', async () => {
+    const req = { method: 'POST', body: [mockValidService] };
     const res = mockResponse();
-    pool.query.mockResolvedValue({ rowCount: 0 });
+    pool.query.mockResolvedValue({ rowCount: 0 }); 
 
     await updateQuery(req, res);
 
     expect(pool.query).toHaveBeenCalledTimes(1);
     expect(res.status).toHaveBeenCalledWith(404);
+    expect(res.json).toHaveBeenCalledWith({
+      success: false,
+      error: expect.stringContaining("Nenhum serviço encontrado"),
+    });
   });
 
-  // --- 4. ERRO DE BANCO DE DADOS (Caminho 500) ---
-  it('deve retornar status 500 se houver um erro no banco de dados', async () => {
-    const req = { method: 'POST', body: mockValidData };
+  // --- 3. ERRO DE BANCO DE DADOS (Caminho 500) ---
+  it('deve retornar status 500 se houver um erro no banco de dados (TRY/CATCH)', async () => {
+    const req = { method: 'POST', body: [mockValidService] };
     const res = mockResponse();
     const dbError = new Error("Simulated DB Failure");
 
@@ -95,11 +87,15 @@ describe('updateQuery Handler (headRNC.js)', () => {
 
     expect(pool.query).toHaveBeenCalledTimes(1);
     expect(res.status).toHaveBeenCalledWith(500);
+    expect(res.json).toHaveBeenCalledWith({
+      success: false,
+      error: "Failed to update data",
+    });
     expect(consoleErrorSpy).toHaveBeenCalledWith("Error updating data:", dbError);
     consoleErrorSpy.mockRestore();
   });
 
-  // --- 5. MÉTODO NÃO PERMITIDO (Caminho 405) ---
+  // --- 4. MÉTODO NÃO PERMITIDO (Caminho 405) ---
   it('deve retornar status 405 se o método da requisição não for POST', async () => {
     const req = { method: 'GET' }; 
     const res = mockResponse();
@@ -108,5 +104,17 @@ describe('updateQuery Handler (headRNC.js)', () => {
 
     expect(pool.query).not.toHaveBeenCalled(); 
     expect(res.status).toHaveBeenCalledWith(405);
+  });
+  
+  // --- 5. CASO INVÁLIDO (TypeError) ---
+  // Testa o cenário de body vazio, forçando o TypeError que não é tratado no código de produção
+  it('deve lançar TypeError se o body for vazio', async () => {
+    const res = mockResponse();
+    const req = { method: 'POST', body: [] }; 
+    
+    await expect(updateQuery(req, res)).rejects.toThrow(
+        /Cannot read properties of undefined/
+    );
+    expect(pool.query).not.toHaveBeenCalled(); 
   });
 });
