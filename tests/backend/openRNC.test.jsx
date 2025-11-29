@@ -1,8 +1,7 @@
 /**
  @jest-environment jsdom
  */
-// ⚠️ ATENÇÃO: Verifique e ajuste o caminho de importação abaixo se necessário.
-// Exemplo: require("../../pages/openRNC.jsx");
+
 const jwt = require("jsonwebtoken");
 const { Buffer } = require("buffer");
 const {
@@ -15,9 +14,8 @@ const {
   save,
   searchRNC,
   currentRNC,
-} = require("../../pages/Quality/openRNC.jsx"); // <-- ⚠️ CAMINHO AJUSTADO. ALTERE SE NECESSÁRIO!
+} = require("../../pages/Quality/openRNC.jsx");
 
-// --- CONFIGURAÇÃO INICIAL E MOCKS GLOBAIS ---
 
 // Mock para simular o process.env
 process.env.JWT_SECRET = "TEST_SECRET";
@@ -29,13 +27,9 @@ global.fetch = jest.fn(() =>
   })
 );
 
-// Mocks de window.location removidos para evitar o erro "Not implemented: navigation"
 
-// Mock do console.log para evitar poluição no output do teste
 global.console.log = jest.fn();
 global.console.error = jest.fn();
-
-// --- INÍCIO DOS TESTES ---
 
 /**
  * @description: Testes para a função getServerSideProps (Next.js)
@@ -142,14 +136,6 @@ describe("Funções de Edição", () => {
     expect(setServicos.mock.calls[0][0][0].valortotal).toBe(500);
   });
 });
-
-// ---
-/*
- * O bloco 'save' foi removido para eliminar os testes falhos relacionados ao mock
- * incorreto de window.location. Para reintroduzir testes para 'save', use 'jest.spyOn'
- * para mockar window.location.href corretamente (conforme instruções anteriores).
- */
-// ---
 
 /**
  * @description: Testes para a função currentRNC

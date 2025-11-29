@@ -31,7 +31,6 @@ jest.mock("../../src/utils/dafaults.fn", () => ({
 
 
 // --- 1. TESTES PARA getServerSideProps (Lógica de SSR - Backend/API) ---
-// Estes testes cobrirão as Linhas 13-30 no index.js
 describe("✅ getServerSideProps (SSR Logic)", () => {
     const mockContext = {
         req: {
@@ -95,7 +94,7 @@ describe("✅ getServerSideProps (SSR Logic)", () => {
 
 
 // --- 2. TESTES PARA O COMPONENTE HOME (Renderização e Interação) ---
-describe("💻 Componente Home", () => {
+describe("Componente Home", () => {
     afterEach(() => {
         jest.clearAllMocks();
     });

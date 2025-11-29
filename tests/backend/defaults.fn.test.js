@@ -52,14 +52,6 @@ describe("dafaults.fn.js - testes sem window.location", () => {
     expect(menuBtn.style.transform).toBe("rotate(0deg)");
   });
 
-  /*--test("sidebarLinks adiciona e remove corretamente", () => {
-    sidebarLinks(list, sidebar, "add", dm);
-    expect(sidebar.children.length).toBe(2);
-    expect(sidebar.children[0].textContent).toBe("Item 1");
-    sidebarLinks(list, sidebar, "remove", dm);
-    expect(sidebar.children.length).toBe(0);
-  })*/
-
   test("resultFetch retorna dados da API", async () => {
     const res = await fetch("/fake");
     const data = await resultFetch(res);

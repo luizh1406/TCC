@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1764374661679" clover="3.2.0">
-  <project timestamp="1764374661679" name="All files">
-    <metrics statements="444" coveredstatements="249" conditionals="238" coveredconditionals="147" methods="131" coveredmethods="30" elements="813" coveredelements="426" complexity="0" loc="444" ncloc="444" packages="7" files="9" classes="9"/>
+<coverage generated="1764376703846" clover="3.2.0">
+  <project timestamp="1764376703846" name="All files">
+    <metrics statements="444" coveredstatements="253" conditionals="238" coveredconditionals="173" methods="131" coveredmethods="33" elements="813" coveredelements="459" complexity="0" loc="444" ncloc="444" packages="7" files="9" classes="9"/>
     <package name="pages">
       <metrics statements="139" coveredstatements="71" conditionals="110" coveredconditionals="102" methods="54" coveredmethods="8"/>
       <file name="index.js" path="C:\Users\Luiz.DESKTOP-1AU5235\Desktop\tcc\TCC\pages\index.js">
@@ -419,13 +419,13 @@
       </file>
     </package>
     <package name="src">
-      <metrics statements="4" coveredstatements="0" conditionals="26" coveredconditionals="0" methods="3" coveredmethods="0"/>
+      <metrics statements="4" coveredstatements="4" conditionals="26" coveredconditionals="26" methods="3" coveredmethods="3"/>
       <file name="styles.js" path="C:\Users\Luiz.DESKTOP-1AU5235\Desktop\tcc\TCC\src\styles.js">
-        <metrics statements="4" coveredstatements="0" conditionals="26" coveredconditionals="0" methods="3" coveredmethods="0"/>
-        <line num="2" count="0" type="stmt"/>
-        <line num="101" count="0" type="stmt"/>
-        <line num="112" count="0" type="stmt"/>
-        <line num="181" count="0" type="stmt"/>
+        <metrics statements="4" coveredstatements="4" conditionals="26" coveredconditionals="26" methods="3" coveredmethods="3"/>
+        <line num="2" count="7" type="stmt"/>
+        <line num="101" count="2" type="stmt"/>
+        <line num="112" count="2" type="stmt"/>
+        <line num="181" count="7" type="stmt"/>
       </file>
     </package>
     <package name="src.styles.colors">

@@ -9,7 +9,6 @@ jest.mock("../../src/utils/dafaults.fn", () => ({
 // mock da página
 jest.mock("../../pages/index", () => ({
   getServerSideProps: jest.fn(async (ctx) => {
-    // 👉 Importa o jwt aqui dentro pra evitar erro do Babel
     const jwt = require("jsonwebtoken");
     const userAgent = ctx.req.headers["user-agent"] || "";
     const isMobile = userAgent.toLowerCase().includes("iphone");

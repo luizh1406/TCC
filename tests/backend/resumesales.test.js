@@ -11,7 +11,6 @@ async function resumeSales(setSales, setLastSales, setAllSales, setFilteredSale)
   await setFilteredSale(allSales);
 }
 
-// ✅ Mock corrigido
 global.fetch = jest.fn((url) =>
   Promise.resolve({
     json: () =>
@@ -23,7 +22,7 @@ global.fetch = jest.fn((url) =>
   })
 );
 
-describe("📊 resumeSales", () => {
+describe(" resumeSales", () => {
   it("atualiza estados corretamente após fetch", async () => {
     const sets = [jest.fn(), jest.fn(), jest.fn(), jest.fn()];
     await resumeSales(...sets);

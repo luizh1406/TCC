@@ -1,10 +1,8 @@
-// tests/backend/plan.test.js
 
 // Importa o handler a ser testado. Assumindo que plan.js está em pages/api/update/
 import updateQuery from "../../pages/api/update/plan.js";
 
 // Mock do banco (Postgres)
-// 🚨 ATENÇÃO: Usando o caminho absoluto bem-sucedido para o database.js
 import pool from "../../pages/api/database.js";
 jest.mock("../../pages/api/database.js", () => ({
   query: jest.fn(),
