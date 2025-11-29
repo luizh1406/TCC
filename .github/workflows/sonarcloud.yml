@@ -4,7 +4,6 @@ name: SonarCloud + Coverage
 on:
   workflow_call:
     secrets:
-      # Apenas o SONAR_TOKEN precisa ser declarado para ser recebido
       SONAR_TOKEN:
         required: true
 
@@ -13,8 +12,6 @@ jobs:
     name: Run Tests and SonarCloud Analysis
     runs-on: ubuntu-latest
     
-    # As permissões aqui são apenas para documentação/clareza, 
-    # pois as permissões efetivas vêm do arquivo chamador (ci-cd-netlify.yml)
     permissions:
       contents: read
       pull-requests: read
@@ -43,7 +40,6 @@ jobs:
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@v3
         env:
-          # O GITHUB_TOKEN é injetado automaticamente pelo ambiente (com as permissões do ci-cd-netlify.yml)
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         with:

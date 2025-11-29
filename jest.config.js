@@ -10,10 +10,8 @@ module.exports = {
   },
   moduleFileExtensions: ["js", "jsx", "ts", "tsx"],
 
-  // Resolve o alias @/ E O CAMINHO RELATIVO DO BANCO DE DADOS
   moduleNameMapper: {
     "^@/(.*)$": "<rootDir>/$1",
-    // Esta linha mapeia o caminho relativo usado em services.js e headRNC.js para o mock
     "^../database.js$": "<rootDir>/pages/api/database.js"
   },
 
@@ -24,8 +22,7 @@ module.exports = {
   collectCoverage: true,
   coverageDirectory: "coverage",
 
-  // ESSENCIAL PARA O SONARQUBE: Gera o arquivo lcov.info
-  coverageReporters: ["lcov", "text", "clover"], // Adicionei 'lcov' e 'clover' (útil para Sonar)
+  coverageReporters: ["lcov", "text", "clover"], 
 
   // Arquivos dos quais coletar cobertura:
   collectCoverageFrom: [
@@ -35,7 +32,6 @@ module.exports = {
     "src/utils/**/*.{js,jsx,ts,tsx}",
   ],
   
-  //  ADICIONADO: Ignora arquivos de estilos ou outros que não contêm lógica de negócios
   coveragePathIgnorePatterns: [
     "/node_modules/", 
     "src/styles/containers/containers.ts" 
