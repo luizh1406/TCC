@@ -9,7 +9,7 @@ on:
         required: true
 
 jobs:
-  build:
+  build:  
     name: Run Tests and SonarCloud Analysis
     runs-on: ubuntu-latest
     

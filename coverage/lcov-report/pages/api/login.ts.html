@@ -3,15 +3,15 @@
 <html lang="en">
 
 <head>
-    <title>Code coverage report for pages/api/add/quality/services.js</title>
+    <title>Code coverage report for pages/api/login.ts</title>
     <meta charset="utf-8" />
-    <link rel="stylesheet" href="../../../../prettify.css" />
-    <link rel="stylesheet" href="../../../../base.css" />
-    <link rel="shortcut icon" type="image/x-icon" href="../../../../favicon.png" />
+    <link rel="stylesheet" href="../../prettify.css" />
+    <link rel="stylesheet" href="../../base.css" />
+    <link rel="shortcut icon" type="image/x-icon" href="../../favicon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <style type='text/css'>
         .coverage-summary .sorter {
-            background-image: url(../../../../sort-arrow-sprite.png);
+            background-image: url(../../sort-arrow-sprite.png);
         }
     </style>
 </head>
@@ -19,7 +19,7 @@
 <body>
 <div class='wrapper'>
     <div class='pad1'>
-        <h1><a href="../../../../index.html">All files</a> / <a href="index.html">pages/api/add/quality</a> services.js</h1>
+        <h1><a href="../../index.html">All files</a> / <a href="index.html">pages/api</a> login.ts</h1>
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
@@ -143,44 +143,44 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js"><span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" ><span class="branch-0 cbranch-no" title="branch not covered" >import pool from "../../database.js";</span></span></span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js"><span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" ><span class="branch-0 cbranch-no" title="branch not covered" >import { NextApiRequest, NextApiResponse } from 'next';</span></span></span>
+<span class="cstat-no" title="statement not covered" >import pool from './database';</span>
+<span class="cstat-no" title="statement not covered" >import bcrypt from 'bcryptjs';</span>
+<span class="cstat-no" title="statement not covered" >import jwt from 'jsonwebtoken';</span>
 <span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >export default async function insertQuery(request, response) {</span>
-<span class="cstat-no" title="statement not covered" >  if (request.method === "POST") {</span>
-<span class="cstat-no" title="statement not covered" >    const data = request.body;</span>
+<span class="cstat-no" title="statement not covered" >export default async function handler(req: NextApiRequest, res: NextApiResponse) {</span>
+<span class="cstat-no" title="statement not covered" >  if (req.method !== 'POST') return res.status(405).end();</span>
 <span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >    console.table(data);</span>
+<span class="cstat-no" title="statement not covered" >  const { email, password } = req.body;</span>
 <span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >    let select = [</span>
-<span class="cstat-no" title="statement not covered" >      "INSERT INTO services (id, codigo, descricao, tempo, valorunitario, valorTotal ) values (",</span>
-<span class="cstat-no" title="statement not covered" >      data[0].id,</span>
-<span class="cstat-no" title="statement not covered" >      ",",</span>
-<span class="cstat-no" title="statement not covered" >      data[0].codigo,</span>
-<span class="cstat-no" title="statement not covered" >      ", '",</span>
-<span class="cstat-no" title="statement not covered" >      data[0].descricao,</span>
-<span class="cstat-no" title="statement not covered" >      "',",</span>
-<span class="cstat-no" title="statement not covered" >      data[0].tempo,</span>
-<span class="cstat-no" title="statement not covered" >      ",",</span>
-<span class="cstat-no" title="statement not covered" >      data[0].valorUnitario,</span>
-<span class="cstat-no" title="statement not covered" >      ",",</span>
-<span class="cstat-no" title="statement not covered" >      data[0].valorTotal,</span>
-<span class="cstat-no" title="statement not covered" >      ")",</span>
-<span class="cstat-no" title="statement not covered" >    ].join("");</span>
+<span class="cstat-no" title="statement not covered" >  try {</span>
+<span class="cstat-no" title="statement not covered" >    const result = await pool.query('SELECT * FROM users WHERE email = $1', [email]);</span>
 <span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >    console.log(select);</span>
-<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >    try {</span>
-<span class="cstat-no" title="statement not covered" >      const result = await pool.query(select);</span>
-<span class="cstat-no" title="statement not covered" >      response.status(201).json({ success: true, data: result.rows[0] });</span>
-<span class="cstat-no" title="statement not covered" >      console.log("Data inserted:", result.rows[0]);</span>
-<span class="cstat-no" title="statement not covered" >    } catch (error) {</span>
-<span class="cstat-no" title="statement not covered" >      console.error("Error inserting data:", error);</span>
-<span class="cstat-no" title="statement not covered" >      response</span>
-<span class="cstat-no" title="statement not covered" >        .status(500)</span>
-<span class="cstat-no" title="statement not covered" >        .json({ success: false, error: "Failed to insert data" });</span>
+<span class="cstat-no" title="statement not covered" >    if (result.rows.length === 0) {</span>
+<span class="cstat-no" title="statement not covered" >      return res.status(401).json({ error: 'Credenciais inválidas' });</span>
 <span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" >  } else {</span>
-<span class="cstat-no" title="statement not covered" >    response.status(405).json({ success: false, error: "Method not allowed" });</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >    const user = result.rows[0];</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >    const passwordMatch = await bcrypt.compare(password, user.password_hash);</span>
+<span class="cstat-no" title="statement not covered" >    if (!passwordMatch) {</span>
+<span class="cstat-no" title="statement not covered" >      return res.status(401).json({ error: 'Credenciais inválidas' });</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >    // Gera token</span>
+<span class="cstat-no" title="statement not covered" >    const token = jwt.sign(</span>
+<span class="cstat-no" title="statement not covered" >      { id: user.id, email: user.email, role: user.role, name:user.nome },</span>
+<span class="cstat-no" title="statement not covered" >      process.env.JWT_SECRET as string,</span>
+<span class="cstat-no" title="statement not covered" >      { expiresIn: '1d' }</span>
+<span class="cstat-no" title="statement not covered" >    );</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >    // Define o cookie com o token</span>
+<span class="cstat-no" title="statement not covered" >    res.setHeader('Set-Cookie', `token=${token}; Path=/; HttpOnly; SameSite=Lax; Max-Age=86400`);</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >    return res.status(200).json({ message: 'Login realizado com sucesso' });</span>
+<span class="cstat-no" title="statement not covered" >  } catch (error) {</span>
+<span class="cstat-no" title="statement not covered" >    console.error('Erro ao fazer login:', error);</span>
+<span class="cstat-no" title="statement not covered" >    return res.status(500).json({ error: 'Erro interno no servidor' });</span>
 <span class="cstat-no" title="statement not covered" >  }</span>
 <span class="cstat-no" title="statement not covered" >}</span>
 &nbsp;</pre></td></tr></table></pre>
@@ -192,14 +192,14 @@
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
                 at 2025-11-29T00:58:38.791Z
             </div>
-        <script src="../../../../prettify.js"></script>
+        <script src="../../prettify.js"></script>
         <script>
             window.onload = function () {
                 prettyPrint();
             };
         </script>
-        <script src="../../../../sorter.js"></script>
-        <script src="../../../../block-navigation.js"></script>
+        <script src="../../sorter.js"></script>
+        <script src="../../block-navigation.js"></script>
     </body>
 </html>
     

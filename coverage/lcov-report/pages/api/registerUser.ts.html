@@ -3,15 +3,15 @@
 <html lang="en">
 
 <head>
-    <title>Code coverage report for src/utils/formatters/formatters.js</title>
+    <title>Code coverage report for pages/api/registerUser.ts</title>
     <meta charset="utf-8" />
-    <link rel="stylesheet" href="../../../prettify.css" />
-    <link rel="stylesheet" href="../../../base.css" />
-    <link rel="shortcut icon" type="image/x-icon" href="../../../favicon.png" />
+    <link rel="stylesheet" href="../../prettify.css" />
+    <link rel="stylesheet" href="../../base.css" />
+    <link rel="shortcut icon" type="image/x-icon" href="../../favicon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <style type='text/css'>
         .coverage-summary .sorter {
-            background-image: url(../../../sort-arrow-sprite.png);
+            background-image: url(../../sort-arrow-sprite.png);
         }
     </style>
 </head>
@@ -19,13 +19,13 @@
 <body>
 <div class='wrapper'>
     <div class='pad1'>
-        <h1><a href="../../../index.html">All files</a> / <a href="index.html">src/utils/formatters</a> formatters.js</h1>
+        <h1><a href="../../index.html">All files</a> / <a href="index.html">pages/api</a> registerUser.ts</h1>
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/65</span>
+                <span class='fraction'>0/63</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/65</span>
+                <span class='fraction'>0/63</span>
             </div>
         
             
@@ -125,9 +125,7 @@
 <a name='L60'></a><a href='#L60'>60</a>
 <a name='L61'></a><a href='#L61'>61</a>
 <a name='L62'></a><a href='#L62'>62</a>
-<a name='L63'></a><a href='#L63'>63</a>
-<a name='L64'></a><a href='#L64'>64</a>
-<a name='L65'></a><a href='#L65'>65</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
+<a name='L63'></a><a href='#L63'>63</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -189,72 +187,68 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js"><span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" ><span class="branch-0 cbranch-no" title="branch not covered" >export function formatCpfCnpj(value) {</span></span></span>
-<span class="cstat-no" title="statement not covered" >  if (!value) return "";</span>
-<span class="cstat-no" title="statement not covered" >  value = value.replace(/\D/g, "");</span>
+<span class="cline-any cline-no">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js"><span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" ><span class="branch-0 cbranch-no" title="branch not covered" >// pages/api/registerUser.ts</span></span></span>
+<span class="cstat-no" title="statement not covered" >import type { NextApiRequest, NextApiResponse } from 'next';</span>
+<span class="cstat-no" title="statement not covered" >import bcrypt from 'bcryptjs';</span>
+<span class="cstat-no" title="statement not covered" >import { db } from '../../lib/db'; // Importa a sua conexão com o banco de dados</span>
 <span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >  if (value.length &lt;= 11) {</span>
-<span class="cstat-no" title="statement not covered" >    // CPF</span>
-<span class="cstat-no" title="statement not covered" >    value = value.replace(/(\d{3})(\d)/, "$1.$2");</span>
-<span class="cstat-no" title="statement not covered" >    value = value.replace(/(\d{3})(\d)/, "$1.$2");</span>
-<span class="cstat-no" title="statement not covered" >    value = value.replace(/(\d{3})(\d{1,2})$/, "$1-$2");</span>
-<span class="cstat-no" title="statement not covered" >  } else {</span>
-<span class="cstat-no" title="statement not covered" >    // CNPJ</span>
-<span class="cstat-no" title="statement not covered" >    value = value.replace(/^(\d{2})(\d)/, "$1.$2");</span>
-<span class="cstat-no" title="statement not covered" >    value = value.replace(/^(\d{2})\.(\d{3})(\d)/, "$1.$2.$3");</span>
-<span class="cstat-no" title="statement not covered" >    value = value.replace(/\.(\d{3})(\d)/, ".$1/$2");</span>
-<span class="cstat-no" title="statement not covered" >    value = value.replace(/(\d{4})(\d)/, "$1-$2");</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
-<span class="cstat-no" title="statement not covered" >  return value;</span>
-<span class="cstat-no" title="statement not covered" >}</span>
-<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >export function formatCep(value) {</span>
-<span class="cstat-no" title="statement not covered" >  if (!value) return "";</span>
-<span class="cstat-no" title="statement not covered" >  value = value.replace(/\D/g, "");</span>
-<span class="cstat-no" title="statement not covered" >  value = value.replace(/^(\d{5})(\d)/, "$1-$2");</span>
-<span class="cstat-no" title="statement not covered" >  return value;</span>
-<span class="cstat-no" title="statement not covered" >}</span>
-<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >export function formatCelular(value) {</span>
-<span class="cstat-no" title="statement not covered" >  if (!value) return "";</span>
-<span class="cstat-no" title="statement not covered" >  value = value.replace(/\D/g, "");</span>
-<span class="cstat-no" title="statement not covered" >  value = value.replace(/^(\d{2})(\d)/g, "($1) $2");</span>
-<span class="cstat-no" title="statement not covered" >  value = value.replace(/(\d)(\d{4})$/, "$1-$2");</span>
-<span class="cstat-no" title="statement not covered" >  return value;</span>
-<span class="cstat-no" title="statement not covered" >}</span>
-<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >export function formatTelefone(value) {</span>
-<span class="cstat-no" title="statement not covered" >  if (!value) return "";</span>
-<span class="cstat-no" title="statement not covered" >  value = value.replace(/\D/g, "");</span>
-<span class="cstat-no" title="statement not covered" >  value = value.replace(/^(\d{2})(\d)/g, "($1) $2");</span>
-<span class="cstat-no" title="statement not covered" >  value = value.replace(/(\d)(\d{4})$/, "$1-$2");</span>
-<span class="cstat-no" title="statement not covered" >  return value;</span>
-<span class="cstat-no" title="statement not covered" >}</span>
-<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >export function formatMoney(value) {</span>
-<span class="cstat-no" title="statement not covered" >  if (value === null || value === undefined || value === "") return "";</span>
-<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >  let cleanValue = String(value).replace(/\D/g, '');</span>
-<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >  if (cleanValue === "") {</span>
-<span class="cstat-no" title="statement not covered" >    return "R$ 0,00";</span>
+<span class="cstat-no" title="statement not covered" >export default async function handler(req: NextApiRequest, res: NextApiResponse) {</span>
+<span class="cstat-no" title="statement not covered" >  if (req.method !== 'POST') {</span>
+<span class="cstat-no" title="statement not covered" >    res.setHeader('Allow', ['POST']);</span>
+<span class="cstat-no" title="statement not covered" >    return res.status(405).end(`Method ${req.method} Not Allowed`);</span>
 <span class="cstat-no" title="statement not covered" >  }</span>
 <span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >  let numericValue = parseInt(cleanValue, 10);</span>
+<span class="cstat-no" title="statement not covered" >  const {</span>
+<span class="cstat-no" title="statement not covered" >    userName,    // Corresponde ao input 'nome'</span>
+<span class="cstat-no" title="statement not covered" >    email,       // Corresponde ao input 'email'</span>
+<span class="cstat-no" title="statement not covered" >    password,    // Corresponde ao input 'password_hash'</span>
+<span class="cstat-no" title="statement not covered" >    sector,      // Corresponde ao input 'setor'</span>
+<span class="cstat-no" title="statement not covered" >    position,    // Corresponde ao input 'cargo'</span>
+<span class="cstat-no" title="statement not covered" >    role         // Corresponde ao input 'role'</span>
+<span class="cstat-no" title="statement not covered" >  } = req.body;</span>
 <span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >  let finalValue = numericValue / 100;</span>
+<span class="cstat-no" title="statement not covered" >  // 1. Validação dos dados de entrada</span>
+<span class="cstat-no" title="statement not covered" >  if (!userName || !email || !password || !sector || !position || !role) {</span>
+<span class="cstat-no" title="statement not covered" >    return res.status(400).json({ message: 'Todos os campos são obrigatórios.' });</span>
+<span class="cstat-no" title="statement not covered" >  }</span>
 <span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >  return finalValue.toLocaleString("pt-BR", {</span>
-<span class="cstat-no" title="statement not covered" >    style: "currency",</span>
-<span class="cstat-no" title="statement not covered" >    currency: "BRL",</span>
-<span class="cstat-no" title="statement not covered" >  });</span>
-<span class="cstat-no" title="statement not covered" >}</span>
+<span class="cstat-no" title="statement not covered" >  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {</span>
+<span class="cstat-no" title="statement not covered" >    return res.status(400).json({ message: 'Formato de e-mail inválido.' });</span>
+<span class="cstat-no" title="statement not covered" >  }</span>
 <span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >export function formatPercentage(value) {</span>
-<span class="cstat-no" title="statement not covered" >  let text = String(value).replace(/%/g, '');</span>
-<span class="cstat-no" title="statement not covered" >  return `${text}%`;</span>
+<span class="cstat-no" title="statement not covered" >  try {</span>
+<span class="cstat-no" title="statement not covered" >    // 2. Verificar se o e-mail já existe no banco de dados</span>
+<span class="cstat-no" title="statement not covered" >    const userExists = await db.query('SELECT email FROM users WHERE email = $1', [email]);</span>
+<span class="cstat-no" title="statement not covered" >    if (userExists.rows.length &gt; 0) {</span>
+<span class="cstat-no" title="statement not covered" >      return res.status(400).json({ message: 'Este e-mail já está em uso.' });</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >    // 3. Criptografar a senha</span>
+<span class="cstat-no" title="statement not covered" >    const hashedPassword = await bcrypt.hash(password, 10); // 10 é o salt rounds</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >    // 4. Inserir o novo usuário no banco de dados</span>
+<span class="cstat-no" title="statement not covered" >    // IMPORTANTE: Certifique-se de que sua tabela 'users' no PostgreSQL tenha as colunas</span>
+<span class="cstat-no" title="statement not covered" >    // 'nome', 'email', 'password_hash', 'setor', 'cargo', 'role'.</span>
+<span class="cstat-no" title="statement not covered" >    const insertQuery = `</span>
+<span class="cstat-no" title="statement not covered" >      INSERT INTO users (nome, email, password_hash, setor, cargo, role)</span>
+<span class="cstat-no" title="statement not covered" >      VALUES ($1, $2, $3, $4, $5, $6)</span>
+<span class="cstat-no" title="statement not covered" >      RETURNING id;</span>
+<span class="cstat-no" title="statement not covered" >    `;</span>
+<span class="cstat-no" title="statement not covered" >    const values = [userName, email, hashedPassword, sector, position, role];</span>
+<span class="cstat-no" title="statement not covered" >    const result = await db.query(insertQuery, values);</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >    // Opcional: Se precisar do ID do novo usuário</span>
+<span class="cstat-no" title="statement not covered" >    const newUserId = result.rows[0].id;</span>
+<span class="cstat-no" title="statement not covered" >    console.log('Novo usuário registrado com ID:', newUserId);</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >    return res.status(201).json({ message: 'Usuário cadastrado com sucesso!', userId: newUserId });</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >  } catch (error) {</span>
+<span class="cstat-no" title="statement not covered" >    console.error('Erro no registro do usuário:', error);</span>
+<span class="cstat-no" title="statement not covered" >    // Verifique se o erro é devido a uma restrição de unicidade ou outro erro do DB</span>
+<span class="cstat-no" title="statement not covered" >    // Você pode adicionar mais lógica de tratamento de erro aqui</span>
+<span class="cstat-no" title="statement not covered" >    return res.status(500).json({ message: 'Erro interno do servidor ao cadastrar usuário.' });</span>
+<span class="cstat-no" title="statement not covered" >  }</span>
 <span class="cstat-no" title="statement not covered" >}</span></pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
@@ -264,14 +258,14 @@
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
                 at 2025-11-29T00:58:38.791Z
             </div>
-        <script src="../../../prettify.js"></script>
+        <script src="../../prettify.js"></script>
         <script>
             window.onload = function () {
                 prettyPrint();
             };
         </script>
-        <script src="../../../sorter.js"></script>
-        <script src="../../../block-navigation.js"></script>
+        <script src="../../sorter.js"></script>
+        <script src="../../block-navigation.js"></script>
     </body>
 </html>
     

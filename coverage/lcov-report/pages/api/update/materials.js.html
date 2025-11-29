@@ -3,7 +3,7 @@
 <html lang="en">
 
 <head>
-    <title>Code coverage report for src/utils/formatters/formatters.js</title>
+    <title>Code coverage report for pages/api/update/materials.js</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="../../../prettify.css" />
     <link rel="stylesheet" href="../../../base.css" />
@@ -19,13 +19,13 @@
 <body>
 <div class='wrapper'>
     <div class='pad1'>
-        <h1><a href="../../../index.html">All files</a> / <a href="index.html">src/utils/formatters</a> formatters.js</h1>
+        <h1><a href="../../../index.html">All files</a> / <a href="index.html">pages/api/update</a> materials.js</h1>
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/65</span>
+                <span class='fraction'>0/72</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/65</span>
+                <span class='fraction'>0/72</span>
             </div>
         
             
@@ -127,7 +127,15 @@
 <a name='L62'></a><a href='#L62'>62</a>
 <a name='L63'></a><a href='#L63'>63</a>
 <a name='L64'></a><a href='#L64'>64</a>
-<a name='L65'></a><a href='#L65'>65</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
+<a name='L65'></a><a href='#L65'>65</a>
+<a name='L66'></a><a href='#L66'>66</a>
+<a name='L67'></a><a href='#L67'>67</a>
+<a name='L68'></a><a href='#L68'>68</a>
+<a name='L69'></a><a href='#L69'>69</a>
+<a name='L70'></a><a href='#L70'>70</a>
+<a name='L71'></a><a href='#L71'>71</a>
+<a name='L72'></a><a href='#L72'>72</a>
+<a name='L73'></a><a href='#L73'>73</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -191,71 +199,87 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js"><span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" ><span class="branch-0 cbranch-no" title="branch not covered" >export function formatCpfCnpj(value) {</span></span></span>
-<span class="cstat-no" title="statement not covered" >  if (!value) return "";</span>
-<span class="cstat-no" title="statement not covered" >  value = value.replace(/\D/g, "");</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js"><span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" ><span class="branch-0 cbranch-no" title="branch not covered" >import pool from "../database.js";</span></span></span>
 <span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >  if (value.length &lt;= 11) {</span>
-<span class="cstat-no" title="statement not covered" >    // CPF</span>
-<span class="cstat-no" title="statement not covered" >    value = value.replace(/(\d{3})(\d)/, "$1.$2");</span>
-<span class="cstat-no" title="statement not covered" >    value = value.replace(/(\d{3})(\d)/, "$1.$2");</span>
-<span class="cstat-no" title="statement not covered" >    value = value.replace(/(\d{3})(\d{1,2})$/, "$1-$2");</span>
+<span class="cstat-no" title="statement not covered" >export default async function updateQuery(request, response) {</span>
+<span class="cstat-no" title="statement not covered" >  if (request.method === "POST") {</span>
+<span class="cstat-no" title="statement not covered" >    // Presumimos que 'data' é um array de um objeto, como em 'data[0]'</span>
+<span class="cstat-no" title="statement not covered" >    const materialData = request.body[0];</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >    console.table(materialData); // Agora exibe o objeto diretamente</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >    // Verifica se os campos necessários existem</span>
+<span class="cstat-no" title="statement not covered" >    if (</span>
+<span class="cstat-no" title="statement not covered" >      !materialData ||</span>
+<span class="cstat-no" title="statement not covered" >      materialData.id === undefined ||</span>
+<span class="cstat-no" title="statement not covered" >      materialData.codigo === undefined</span>
+<span class="cstat-no" title="statement not covered" >    ) {</span>
+<span class="cstat-no" title="statement not covered" >      return response</span>
+<span class="cstat-no" title="statement not covered" >        .status(400)</span>
+<span class="cstat-no" title="statement not covered" >        .json({ success: false, error: "Dados de material incompletos." });</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >    // Usamos UPDATE para editar o registro.</span>
+<span class="cstat-no" title="statement not covered" >    // Usamos WHERE id = $1 AND codigo = $2 para identificar o registro específico a ser atualizado.</span>
+<span class="cstat-no" title="statement not covered" >    const sqlQuery = `</span>
+<span class="cstat-no" title="statement not covered" >      UPDATE materialRNC </span>
+<span class="cstat-no" title="statement not covered" >      SET </span>
+<span class="cstat-no" title="statement not covered" >        descricao = $3, </span>
+<span class="cstat-no" title="statement not covered" >        quantidade = $4, </span>
+<span class="cstat-no" title="statement not covered" >        valorunitario = $5, </span>
+<span class="cstat-no" title="statement not covered" >        valorTotal = $6</span>
+<span class="cstat-no" title="statement not covered" >      WHERE </span>
+<span class="cstat-no" title="statement not covered" >        id = $1 AND codigo = $2</span>
+<span class="cstat-no" title="statement not covered" >    `;</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >    const values = [</span>
+<span class="cstat-no" title="statement not covered" >      materialData.id,</span>
+<span class="cstat-no" title="statement not covered" >      materialData.codigo,</span>
+<span class="cstat-no" title="statement not covered" >      materialData.descricao,</span>
+<span class="cstat-no" title="statement not covered" >      materialData.quantidade,</span>
+<span class="cstat-no" title="statement not covered" >      materialData.valorunitario,</span>
+<span class="cstat-no" title="statement not covered" >      materialData.valortotal,</span>
+<span class="cstat-no" title="statement not covered" >    ];</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >    console.log("SQL Query:", sqlQuery);</span>
+<span class="cstat-no" title="statement not covered" >    console.log("Values:", values);</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >    try {</span>
+<span class="cstat-no" title="statement not covered" >      const result = await pool.query(sqlQuery, values);</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >      // Verifica se alguma linha foi realmente atualizada</span>
+<span class="cstat-no" title="statement not covered" >      if (result.rowCount === 0) {</span>
+<span class="cstat-no" title="statement not covered" >        // Se nenhuma linha foi atualizada, o registro pode não existir.</span>
+<span class="cstat-no" title="statement not covered" >        // Neste caso, você pode decidir se deve Inserir (UPSERT) ou retornar um erro.</span>
+<span class="cstat-no" title="statement not covered" >        // Para este ajuste, vamos apenas indicar que nada foi atualizado:</span>
+<span class="cstat-no" title="statement not covered" >        console.log(</span>
+<span class="cstat-no" title="statement not covered" >          "Aviso: Nenhuma linha atualizada. MaterialRNC não encontrado com ID e Código fornecidos."</span>
+<span class="cstat-no" title="statement not covered" >        );</span>
+<span class="cstat-no" title="statement not covered" >      }</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >      response</span>
+<span class="cstat-no" title="statement not covered" >        .status(200)</span>
+<span class="cstat-no" title="statement not covered" >        .json({ success: true, updatedRows: result.rowCount });</span>
+<span class="cstat-no" title="statement not covered" >      console.log(`Data updated: ${result.rowCount} row(s)`);</span>
+<span class="cstat-no" title="statement not covered" >    } catch (error) {</span>
+<span class="cstat-no" title="statement not covered" >      console.error("Error updating data:", error);</span>
+<span class="cstat-no" title="statement not covered" >      response</span>
+<span class="cstat-no" title="statement not covered" >        .status(500)</span>
+<span class="cstat-no" title="statement not covered" >        .json({ success: false, error: "Failed to update data" });</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
 <span class="cstat-no" title="statement not covered" >  } else {</span>
-<span class="cstat-no" title="statement not covered" >    // CNPJ</span>
-<span class="cstat-no" title="statement not covered" >    value = value.replace(/^(\d{2})(\d)/, "$1.$2");</span>
-<span class="cstat-no" title="statement not covered" >    value = value.replace(/^(\d{2})\.(\d{3})(\d)/, "$1.$2.$3");</span>
-<span class="cstat-no" title="statement not covered" >    value = value.replace(/\.(\d{3})(\d)/, ".$1/$2");</span>
-<span class="cstat-no" title="statement not covered" >    value = value.replace(/(\d{4})(\d)/, "$1-$2");</span>
+<span class="cstat-no" title="statement not covered" >    response.status(405).json({ success: false, error: "Method not allowed" });</span>
 <span class="cstat-no" title="statement not covered" >  }</span>
-<span class="cstat-no" title="statement not covered" >  return value;</span>
 <span class="cstat-no" title="statement not covered" >}</span>
-<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >export function formatCep(value) {</span>
-<span class="cstat-no" title="statement not covered" >  if (!value) return "";</span>
-<span class="cstat-no" title="statement not covered" >  value = value.replace(/\D/g, "");</span>
-<span class="cstat-no" title="statement not covered" >  value = value.replace(/^(\d{5})(\d)/, "$1-$2");</span>
-<span class="cstat-no" title="statement not covered" >  return value;</span>
-<span class="cstat-no" title="statement not covered" >}</span>
-<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >export function formatCelular(value) {</span>
-<span class="cstat-no" title="statement not covered" >  if (!value) return "";</span>
-<span class="cstat-no" title="statement not covered" >  value = value.replace(/\D/g, "");</span>
-<span class="cstat-no" title="statement not covered" >  value = value.replace(/^(\d{2})(\d)/g, "($1) $2");</span>
-<span class="cstat-no" title="statement not covered" >  value = value.replace(/(\d)(\d{4})$/, "$1-$2");</span>
-<span class="cstat-no" title="statement not covered" >  return value;</span>
-<span class="cstat-no" title="statement not covered" >}</span>
-<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >export function formatTelefone(value) {</span>
-<span class="cstat-no" title="statement not covered" >  if (!value) return "";</span>
-<span class="cstat-no" title="statement not covered" >  value = value.replace(/\D/g, "");</span>
-<span class="cstat-no" title="statement not covered" >  value = value.replace(/^(\d{2})(\d)/g, "($1) $2");</span>
-<span class="cstat-no" title="statement not covered" >  value = value.replace(/(\d)(\d{4})$/, "$1-$2");</span>
-<span class="cstat-no" title="statement not covered" >  return value;</span>
-<span class="cstat-no" title="statement not covered" >}</span>
-<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >export function formatMoney(value) {</span>
-<span class="cstat-no" title="statement not covered" >  if (value === null || value === undefined || value === "") return "";</span>
-<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >  let cleanValue = String(value).replace(/\D/g, '');</span>
-<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >  if (cleanValue === "") {</span>
-<span class="cstat-no" title="statement not covered" >    return "R$ 0,00";</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
-<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >  let numericValue = parseInt(cleanValue, 10);</span>
-<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >  let finalValue = numericValue / 100;</span>
-<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >  return finalValue.toLocaleString("pt-BR", {</span>
-<span class="cstat-no" title="statement not covered" >    style: "currency",</span>
-<span class="cstat-no" title="statement not covered" >    currency: "BRL",</span>
-<span class="cstat-no" title="statement not covered" >  });</span>
-<span class="cstat-no" title="statement not covered" >}</span>
-<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >export function formatPercentage(value) {</span>
-<span class="cstat-no" title="statement not covered" >  let text = String(value).replace(/%/g, '');</span>
-<span class="cstat-no" title="statement not covered" >  return `${text}%`;</span>
-<span class="cstat-no" title="statement not covered" >}</span></pre></td></tr></table></pre>
+&nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
             </div><!-- /wrapper -->
