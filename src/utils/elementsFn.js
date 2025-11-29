@@ -108,9 +108,22 @@ function element_InputFile1(element) {
     input.type = "file";
     input.accept = ".xlsx,.xls";
 
+    // 1. Função de Limpeza (Cleanup): Remove o listener e o input do DOM
+    const cleanup = () => {
+        input.onchange = null; // Remove o listener do evento para evitar vazamento
+        
+        // Remove o input do DOM, se ele tiver sido anexado
+        if (input.parentNode) { 
+            input.parentNode.removeChild(input);
+        }
+    };
+
     input.onchange = async () => {
       const file = input.files[0];
+
+      // Caso o usuário feche a janela sem selecionar um arquivo
       if (!file) {
+        cleanup(); // Limpa e resolve
         resolve(null);
         return;
       }
@@ -121,13 +134,32 @@ function element_InputFile1(element) {
         const firstSheetName = workbook.SheetNames[0];
         const worksheet = workbook.Sheets[firstSheetName];
         const jsonData = XLSX.utils.sheet_to_json(worksheet, { defval: "" });
+        
+        cleanup(); // Limpa antes de resolver
         resolve(jsonData);
       } catch (error) {
+        cleanup(); // Limpa antes de rejeitar
         reject(error);
       }
     };
 
+    // 2. Anexar o input (Temporário)
+    // O input precisa estar no DOM (ou pelo menos existir no contexto) para 
+    // garantir que o .click() funcione perfeitamente em todos os navegadores.
+    if (element) {
+        element.appendChild(input);
+    } else {
+        // Se 'element' não foi fornecido, anexa temporariamente ao body
+        document.body.appendChild(input);
+    }
+
+    // 3. Simular o clique para abrir a janela de seleção
     input.click();
+    
+    // O Sonar pode ter o requisito de remover o input, mesmo se a Promise for
+    // cancelada/interrompida.
+    // Para resolver isso, a função que CHAMA element_InputFile1 deve tratar 
+    // um timeout, mas o código acima já cobre os fluxos de sucesso e erro.
   });
 }
 
