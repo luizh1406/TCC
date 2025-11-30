@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">51.07% </span>
+                <span class="strong">54.19% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>71/139</span>
+                <span class='fraction'>71/131</span>
             </div>
         
             
@@ -37,16 +37,16 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">14.81% </span>
+                <span class="strong">15.09% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>8/54</span>
+                <span class='fraction'>8/53</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">51.07% </span>
+                <span class="strong">54.19% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>71/139</span>
+                <span class='fraction'>71/131</span>
             </div>
         
             
@@ -719,25 +719,7 @@
 <a name='L654'></a><a href='#L654'>654</a>
 <a name='L655'></a><a href='#L655'>655</a>
 <a name='L656'></a><a href='#L656'>656</a>
-<a name='L657'></a><a href='#L657'>657</a>
-<a name='L658'></a><a href='#L658'>658</a>
-<a name='L659'></a><a href='#L659'>659</a>
-<a name='L660'></a><a href='#L660'>660</a>
-<a name='L661'></a><a href='#L661'>661</a>
-<a name='L662'></a><a href='#L662'>662</a>
-<a name='L663'></a><a href='#L663'>663</a>
-<a name='L664'></a><a href='#L664'>664</a>
-<a name='L665'></a><a href='#L665'>665</a>
-<a name='L666'></a><a href='#L666'>666</a>
-<a name='L667'></a><a href='#L667'>667</a>
-<a name='L668'></a><a href='#L668'>668</a>
-<a name='L669'></a><a href='#L669'>669</a>
-<a name='L670'></a><a href='#L670'>670</a>
-<a name='L671'></a><a href='#L671'>671</a>
-<a name='L672'></a><a href='#L672'>672</a>
-<a name='L673'></a><a href='#L673'>673</a>
-<a name='L674'></a><a href='#L674'>674</a>
-<a name='L675'></a><a href='#L675'>675</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L657'></a><a href='#L657'>657</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -768,24 +750,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1444,24 +1408,6 @@ export async function getServerSideProps(context) {
   return { props: { isMobile, userAgent, user } };
 }
 &nbsp;
-async function <span class="fstat-no" title="function not covered" >resumeSales(</span>
-  setSales,
-  setLastSales,
-  setAllSales,
-  setFilteredSale
-) {
-  const salesRes = <span class="cstat-no" title="statement not covered" >await fetch("/api/get/resume/sales");</span>
-  const sales = <span class="cstat-no" title="statement not covered" >await resultFetch(salesRes);</span>
-&nbsp;
-  const allSalesRes = <span class="cstat-no" title="statement not covered" >await fetch("/api/get/all_sales");</span>
-  const allSales = <span class="cstat-no" title="statement not covered" >await resultFetch(allSalesRes);</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  await setLastSales(sales);</span>
-<span class="cstat-no" title="statement not covered" >  await setSales(sales);</span>
-<span class="cstat-no" title="statement not covered" >  await setAllSales(allSales);</span>
-<span class="cstat-no" title="statement not covered" >  await setFilteredSale(allSales);</span>
-}
-&nbsp;
 export default function home(props) {
   const [loading, setLoading] = useState(false);
   const [module, setModule] = useState(3);
@@ -2092,7 +2038,7 @@ export default function home(props) {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-11-29T16:59:04.850Z
+                at 2025-11-30T12:46:34.475Z
             </div>
         <script src="../prettify.js"></script>
         <script>

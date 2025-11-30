@@ -31,24 +31,6 @@ export async function getServerSideProps(context) {
   return { props: { isMobile, userAgent, user } };
 }
 
-async function resumeSales(
-  setSales,
-  setLastSales,
-  setAllSales,
-  setFilteredSale
-) {
-  const salesRes = await fetch("/api/get/resume/sales");
-  const sales = await resultFetch(salesRes);
-
-  const allSalesRes = await fetch("/api/get/all_sales");
-  const allSales = await resultFetch(allSalesRes);
-
-  await setLastSales(sales);
-  await setSales(sales);
-  await setAllSales(allSales);
-  await setFilteredSale(allSales);
-}
-
 export default function home(props) {
   const [loading, setLoading] = useState(false);
   const [module, setModule] = useState(3);
