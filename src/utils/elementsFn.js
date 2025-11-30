@@ -1,7 +1,4 @@
 import stylesColor from "../styles/styles.stylesColor";
-import list from "./linksList";
-import defaultValues from "./defaultValues";
-import buttonsList from "./buttonsList";
 import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
 import ExcelJS from "exceljs";

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1764507769595" clover="3.2.0">
-  <project timestamp="1764507769595" name="All files">
-    <metrics statements="436" coveredstatements="253" conditionals="238" coveredconditionals="173" methods="130" coveredmethods="33" elements="804" coveredelements="459" complexity="0" loc="436" ncloc="436" packages="7" files="9" classes="9"/>
+<coverage generated="1764546575593" clover="3.2.0">
+  <project timestamp="1764546575593" name="All files">
+    <metrics statements="471" coveredstatements="287" conditionals="276" coveredconditionals="210" methods="141" coveredmethods="44" elements="888" coveredelements="541" complexity="0" loc="471" ncloc="471" packages="7" files="10" classes="10"/>
     <package name="pages">
-      <metrics statements="131" coveredstatements="71" conditionals="110" coveredconditionals="102" methods="53" coveredmethods="8"/>
+      <metrics statements="166" coveredstatements="105" conditionals="148" coveredconditionals="139" methods="64" coveredmethods="19"/>
       <file name="index.js" path="C:\Users\Luiz.DESKTOP-1AU5235\Desktop\tcc\TCC\pages\index.js">
         <metrics statements="131" coveredstatements="71" conditionals="110" coveredconditionals="102" methods="53" coveredmethods="8"/>
         <line num="13" count="4" type="cond" truecount="1" falsecount="1"/>
@@ -137,6 +137,44 @@
         <line num="630" count="0" type="stmt"/>
         <line num="633" count="0" type="stmt"/>
         <line num="634" count="0" type="stmt"/>
+      </file>
+      <file name="login.jsx" path="C:\Users\Luiz.DESKTOP-1AU5235\Desktop\tcc\TCC\pages\login.jsx">
+        <metrics statements="35" coveredstatements="34" conditionals="38" coveredconditionals="37" methods="11" coveredmethods="11"/>
+        <line num="4" count="1" type="stmt"/>
+        <line num="41" count="32" type="stmt"/>
+        <line num="68" count="16" type="stmt"/>
+        <line num="84" count="16" type="stmt"/>
+        <line num="101" count="16" type="stmt"/>
+        <line num="133" count="1" type="stmt"/>
+        <line num="153" count="1" type="stmt"/>
+        <line num="155" count="1" type="cond" truecount="2" falsecount="0"/>
+        <line num="173" count="2" type="cond" truecount="1" falsecount="1"/>
+        <line num="176" count="2" type="stmt"/>
+        <line num="180" count="2" type="stmt"/>
+        <line num="185" count="16" type="stmt"/>
+        <line num="186" count="16" type="stmt"/>
+        <line num="187" count="16" type="stmt"/>
+        <line num="192" count="16" type="stmt"/>
+        <line num="193" count="9" type="stmt"/>
+        <line num="194" count="9" type="stmt"/>
+        <line num="195" count="9" type="stmt"/>
+        <line num="196" count="9" type="stmt"/>
+        <line num="197" count="9" type="stmt"/>
+        <line num="198" count="9" type="stmt"/>
+        <line num="201" count="16" type="stmt"/>
+        <line num="204" count="4" type="stmt"/>
+        <line num="205" count="4" type="stmt"/>
+        <line num="207" count="4" type="stmt"/>
+        <line num="208" count="4" type="stmt"/>
+        <line num="214" count="4" type="cond" truecount="2" falsecount="0"/>
+        <line num="215" count="3" type="stmt"/>
+        <line num="217" count="1" type="stmt"/>
+        <line num="221" count="0" type="stmt"/>
+        <line num="223" count="4" type="stmt"/>
+        <line num="229" count="16" type="stmt"/>
+        <line num="242" count="16" type="stmt"/>
+        <line num="248" count="16" type="stmt"/>
+        <line num="256" count="16" type="stmt"/>
       </file>
     </package>
     <package name="pages.Quality">
@@ -424,7 +462,7 @@
       <metrics statements="1" coveredstatements="1" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
       <file name="styles.color.js" path="C:\Users\Luiz.DESKTOP-1AU5235\Desktop\tcc\TCC\src\styles\colors\styles.color.js">
         <metrics statements="1" coveredstatements="1" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
-        <line num="1" count="3" type="stmt"/>
+        <line num="1" count="2" type="stmt"/>
       </file>
     </package>
     <package name="src.utils">
@@ -469,9 +507,9 @@
         <line num="59" count="0" type="stmt"/>
         <line num="62" count="0" type="cond" truecount="0" falsecount="4"/>
         <line num="63" count="0" type="stmt"/>
-        <line num="68" count="3" type="stmt"/>
-        <line num="69" count="3" type="stmt"/>
-        <line num="70" count="3" type="stmt"/>
+        <line num="68" count="1" type="stmt"/>
+        <line num="69" count="1" type="stmt"/>
+        <line num="70" count="1" type="stmt"/>
         <line num="74" count="1" type="stmt"/>
         <line num="76" count="7" type="cond" truecount="1" falsecount="0"/>
         <line num="78" count="1" type="stmt"/>
