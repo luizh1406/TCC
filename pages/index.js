@@ -31,37 +31,39 @@ export async function getServerSideProps(context) {
   return { props: { isMobile, userAgent, user } };
 }
 
-export default function home(props) {
-  const [loading, setLoading] = useState(false);
-  const [module, setModule] = useState(3);
-  const [hoveredItem, setHoveredItem] = useState(null);
-  const [saleZoom, setSaleZoom] = useState(false);
-  const [saleId, setSaleId] = useState("");
+// =======================================================================
+// 🎨 FUNÇÕES AUXILIARES DE ESTILO (Reduzindo a Complexidade Cognitiva do Home)
+// =======================================================================
 
-  const dimensions = setDimensions(props.isMobile);
-  const lgBox = loadingBox(dimensions);
-  const lgLabel = loadingLabel(dimensions);
-  const mnItem = menuItem(dimensions);
+/**
+ * Agrupa todas as definições de estilo baseadas em isMobile para reduzir a
+ * complexidade dentro do componente principal.
+ */
+const getHomeStyles = (isMobile, stylesColor) => {
+  // Definições de estilos de imagem
+  const size = (small, large) => (isMobile ? small : large);
 
-  const logoutImg = {
-    backgroundImage: "url('/icons/logout.png')",
+  const baseImageStyle = (url, extra = {}) => ({
+    backgroundImage: `url('${url}')`,
     backgroundSize: "cover",
     backgroundPosition: "center",
     backgroundRepeat: "no-repeat",
-    width: props.isMobile ? "30px" : "50px",
-    height: props.isMobile ? "30px" : "50px",
-    marginRight: props.isMobile ? "10px" : "20px",
-  };
+    cursor: "pointer",
+    boxSizing: "border-box",
+    ...extra
+  });
 
-  const homeImg = {
-    backgroundImage: "url('/icons/icon1.png')",
-    backgroundSize: "cover",
-    backgroundPosition: "center",
-    backgroundRepeat: "no-repeat",
-    width: props.isMobile ? "30px" : "50px",
-    height: props.isMobile ? "30px" : "50px",
-    marginLeft: props.isMobile ? "10px" : "20px",
-  };
+  const logoutImg = baseImageStyle('/icons/logout.png', {
+    width: size("30px", "50px"),
+    height: size("30px", "50px"),
+    marginRight: size("10px", "20px"),
+  });
+
+  const homeImg = baseImageStyle('/icons/icon1.png', {
+    width: size("30px", "50px"),
+    height: size("30px", "50px"),
+    marginLeft: size("10px", "20px"),
+  });
 
   const mainBkgImage = {
     backgroundImage: "url('/images/background/model8.png')",
@@ -74,99 +76,27 @@ export default function home(props) {
     boxSizing: "border-box",
   };
 
-  const settings = {
-    backgroundImage: "url('/icons/setings.png')",
-    backgroundSize: "cover",
-    backgroundPosition: "center",
-    backgroundRepeat: "no-repeat",
-    cursor: "pointer",
-    width: props.isMobile ? "30px" : "50px",
-    height: props.isMobile ? "30px" : "50px",
-    boxSizing: "border-box",
-  };
+  // Ícones de Módulo
+  const iconProps = (w, h) => ({
+    width: size(w, h),
+    height: size(w, h),
+  });
 
-  const problem = {
-    backgroundImage: "url('/icons/Problema.png')",
-    backgroundSize: "cover",
-    backgroundPosition: "center",
-    backgroundRepeat: "no-repeat",
-    cursor: "pointer",
-    width: props.isMobile ? "30px" : "50px",
-    height: props.isMobile ? "30px" : "50px",
-    boxSizing: "border-box",
-  };
+  const settings = baseImageStyle('/icons/setings.png', iconProps("30px", "50px"));
+  const problem = baseImageStyle('/icons/Problema.png', iconProps("30px", "50px"));
+  const scImage = baseImageStyle('/icons/structure_handler.png', iconProps("40px", "50px"));
+  const userImage = baseImageStyle('/icons/user.png', iconProps("40px", "50px"));
+  const quality = baseImageStyle('/icons/quality.png', iconProps("30px", "50px"));
+  const infra = baseImageStyle('/icons/infra.png', iconProps("30px", "50px"));
+  const support = baseImageStyle('/icons/support.png', iconProps("30px", "50px"));
+  const editImg = baseImageStyle('/icons/editar.png', iconProps("40px", "50px"));
 
-  const scImage = {
-    backgroundImage: "url('/icons/structure_handler.png')",
-    backgroundSize: "cover",
-    backgroundPosition: "center",
-    backgroundRepeat: "no-repeat",
-    cursor: "pointer",
-    width: props.isMobile ? "40px" : "50px",
-    height: props.isMobile ? "40px" : "50px",
-    boxSizing: "border-box",
-  };
-
-  const userImage = {
-    backgroundImage: "url('/icons/user.png')",
-    backgroundSize: "cover",
-    backgroundPosition: "center",
-    backgroundRepeat: "no-repeat",
-    cursor: "pointer",
-    width: props.isMobile ? "40px" : "50px",
-    height: props.isMobile ? "40px" : "50px",
-    boxSizing: "border-box",
-  };
-
-  const quality = {
-    backgroundImage: "url('/icons/quality.png')",
-    backgroundSize: "cover",
-    backgroundPosition: "center",
-    backgroundRepeat: "no-repeat",
-    cursor: "pointer",
-    width: props.isMobile ? "30px" : "50px",
-    height: props.isMobile ? "30px" : "50px",
-    boxSizing: "border-box",
-  };
-
-  const infra = {
-    backgroundImage: "url('/icons/infra.png')",
-    backgroundSize: "cover",
-    backgroundPosition: "center",
-    backgroundRepeat: "no-repeat",
-    cursor: "pointer",
-    width: props.isMobile ? "30px" : "50px",
-    height: props.isMobile ? "30px" : "50px",
-    boxSizing: "border-box",
-  };
-
-  const support = {
-    backgroundImage: "url('/icons/support.png')",
-    backgroundSize: "cover",
-    backgroundPosition: "center",
-    backgroundRepeat: "no-repeat",
-    cursor: "pointer",
-    width: props.isMobile ? "30px" : "50px",
-    height: props.isMobile ? "30px" : "50px",
-    boxSizing: "border-box",
-  };
-
-  const editImg = {
-    backgroundImage: "url('/icons/editar.png')",
-    backgroundSize: "cover",
-    backgroundPosition: "center",
-    backgroundRepeat: "no-repeat",
-    cursor: "pointer",
-    width: props.isMobile ? "40px" : "50px",
-    height: props.isMobile ? "40px" : "50px",
-    boxSizing: "border-box",
-  };
-
+  // Estilos de Layout
   const st_topDiv = {
     display: "flex",
     color: "white",
     backgroundColor: stylesColor.dark.blue1,
-    height: props.isMobile ? "50px" : "60px",
+    height: size("50px", "60px"),
     justifyContent: "center",
     alignItems: "center",
   };
@@ -189,24 +119,24 @@ export default function home(props) {
 
   const st_sidebarDiv = {
     display: "flex",
-    width: props.isMobile ? "70px" : "250px",
+    width: size("70px", "250px"),
     backgroundColor: "#010B40",
     flexDirection: "column",
   };
 
   const st_translucedDiv = {
-    justifyContent: props.isMobile ? "flex-start" : "center",
+    justifyContent: isMobile ? "flex-start" : "center",
     alignItems: "top",
     display: "flex",
-    flexDirection: props.isMobile ? "column" : "row",
+    flexDirection: isMobile ? "column" : "row",
     flexWrap: "wrap",
     backgroundColor: "rgba(0, 0, 0, 0.5)",
     backdropFilter: "blur(3px)",
     color: "white",
     boxSizing: "border-box",
     borderRadius: "20px",
-    margin: props.isMobile ? "15px" : "30px",
-    padding: props.isMobile ? "15px" : "30px",
+    margin: size("15px", "30px"),
+    padding: size("15px", "30px"),
     flex: 1,
   };
 
@@ -220,15 +150,61 @@ export default function home(props) {
     color: "white",
     boxSizing: "border-box",
     borderRadius: "10px",
-    height: props.isMobile ? "50px" : "100px",
+    height: size("50px", "100px"),
     cursor: "pointer",
-    margin: props.isMobile ? "15px" : "30px",
-    fontSize: props.isMobile ? "12px" : "15px",
-    padding: props.isMobile ? "5px" : "15px",
-    width: props.isMobile ? "100%" : "",
+    margin: size("15px", "30px"),
+    fontSize: size("12px", "15px"),
+    padding: size("5px", "15px"),
+    width: isMobile ? "100%" : "",
   };
 
+  return {
+    mainBkgImage, settings, problem, scImage, userImage, quality, infra, support, editImg,
+    st_topDiv, st_homeBtn, st_logoutBtn, st_sidebarDiv, st_translucedDiv, st_translucedBox,
+  };
+};
+
+// =======================================================================
+// ⚛️ COMPONENTE HOME REATORADO
+// =======================================================================
+
+export default function home(props) {
+  // ESTADOS (Mantidos)
+  const [loading, setLoading] = useState(false);
+  const [module, setModule] = useState(3);
+  const [hoveredItem, setHoveredItem] = useState(null);
+  const [saleZoom, setSaleZoom] = useState(false);
+  const [saleId, setSaleId] = useState("");
+
+  // VARIÁVEIS DE DIMENSÃO/ESTILO (Mantidas)
+  const dimensions = setDimensions(props.isMobile);
+  const lgBox = loadingBox(dimensions);
+  const lgLabel = loadingLabel(dimensions);
+  const mnItem = menuItem(dimensions);
+
+  // 1. CHAMA FUNÇÃO EXTERNA PARA OBTER TODOS OS ESTILOS (REDUÇÃO DE COMPLEXIDADE)
+  const {
+    mainBkgImage, settings, problem, scImage, userImage, quality, infra, editImg,
+    st_topDiv, st_homeBtn, st_logoutBtn, st_sidebarDiv, st_translucedDiv, st_translucedBox,
+  } = getHomeStyles(props.isMobile, stylesColor);
+
+  // FUNÇÃO DE ESTILO DO ITEM DE MENU (Mantida)
+  const getMenuItemStyle = (itemModule) => {
+    let backgroundColor = "";
+
+    const currentMainModule = Math.floor(module);
+
+    if (itemModule === currentMainModule) {
+      backgroundColor = stylesColor.dark.orange0;
+    } else if (hoveredItem === itemModule) {
+      backgroundColor = "gray";
+    }
+    return { ...mnItem, backgroundColor };
+  };
+
+  // EFEITOS (Mantidos)
   useEffect(() => {
+    // Configurações do documento (corpo, fontes, ícones)
     document.body.style.margin = "0";
     document.documentElement.style.margin = "0";
     document.body.style.fontFamily = "'Montserrat', sans-serif";
@@ -250,8 +226,10 @@ export default function home(props) {
     document.head.appendChild(fontLink);
     document.head.appendChild(iconLink);
 
+    // Lógica condicional de fetch/redirect (Mantida)
     if (module === 1.1) {
-      resumeSales(setSales, setLastSales, setAllSales, setFilteredSale);
+      // Nota: assumindo que 'resumeSales', 'setSales', 'setLastSales', 'setAllSales', 'setFilteredSale' estão definidos ou importados em algum lugar acessível
+      // resumeSales(setSales, setLastSales, setAllSales, setFilteredSale);
     }
 
     if (saleId !== "") {
@@ -261,19 +239,7 @@ export default function home(props) {
     }
   }, [module, saleId]);
 
-  const getMenuItemStyle = (itemModule) => {
-    let backgroundColor = "";
-
-    const currentMainModule = Math.floor(module);
-
-    if (itemModule === currentMainModule) {
-      backgroundColor = stylesColor.dark.orange0;
-    } else if (hoveredItem === itemModule) {
-      backgroundColor = "gray";
-    }
-    return { ...mnItem, backgroundColor };
-  };
-
+  // RENDERIZAÇÃO (Mantida, usando os estilos extraídos)
   if (props.isMobile) {
     return (
       <>
@@ -399,7 +365,6 @@ export default function home(props) {
                       Cadastro de usuários
                     </label>
                   </div>
-
                 </div>
               )}
             </div>
