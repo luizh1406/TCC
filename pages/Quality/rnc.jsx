@@ -309,21 +309,41 @@ const updateInforGeralWithImage = (prev, base64, mimeType) => {
   // 📝 MANIPULADORES DE INFORMAÇÕES GERAIS (Extraídos para reduzir o aninhamento)
 
   // Função genérica para atualizar um campo numérico em inforGeral (op, ns, projeto)
-  const handleGeneralInfoNumberBlur = (key) => (e) => {
+// 📝 FUNÇÃO AUXILIAR PARA ATUALIZAÇÃO DE INFO GERAL
+  // Nível 1 de aninhamento
+  const updateInfoGeralSingleKey = (prev, key, value) => {
+    return prev.map((item, index) => { // Nível 2 (map callback)
+      // Apenas atualiza o primeiro item (index === 0)
+      if (index === 0) {
+        return {
+          ...item, 
+          [key]: value
+        };
+      }
+      return item;
+    });
+  };
+
+
+  // 📝 MANIPULADORES DE INFORMAÇÕES GERAIS (Refatorados para reduzir o aninhamento)
+
+  // Função genérica para atualizar um campo numérico em inforGeral (op, ns, projeto)
+  const handleGeneralInfoNumberBlur = (key) => (e) => { // Nível 1 -> Nível 2
     const value = e.currentTarget.value;
+    const numericValue = Number(value) || 0; // Valor processado
+
     // Converte o valor para Number na hora da atualização
-    setInforGeral((prev) =>
-      prev.map((item, index) =>
-        index === 0 ? { ...item, [key]: Number(value) || 0 } : item
-      )
+    setInforGeral((prev) => // Nível 3 (callback)
+      updateInfoGeralSingleKey(prev, key, numericValue) // Chamada de função simples
     );
   };
 
   // Função genérica para atualizar um campo de texto/data/select em inforGeral (setor, data_ocorrido, ocorrencia)
-  const handleGeneralInfoStringChange = (key) => (e) => {
+  const handleGeneralInfoStringChange = (key) => (e) => { // Nível 1 -> Nível 2
     const value = e.currentTarget.value;
-    setInforGeral((prev) =>
-      prev.map((item, index) => (index === 0 ? { ...item, [key]: value } : item))
+
+    setInforGeral((prev) => // Nível 3 (callback)
+      updateInfoGeralSingleKey(prev, key, value) // Reutiliza a função auxiliar
     );
   };
 
