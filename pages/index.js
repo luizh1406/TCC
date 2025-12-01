@@ -9,7 +9,7 @@ import { stylesColor } from "../src/styles/colors/styles.color";
 import { logout, resultFetch } from "../src/utils/dafaults.fn";
 import jwt from "jsonwebtoken";
 
-export async function getServerSideProps(context) {
+export async function getServerSideProps(context) { 
   const userAgent = context.req.headers["user-agent"] || "indisponível";
   const isMobile =
     /android|iphone|ipad|ipod|blackberry|opera mini|iemobile|mobile/i.test(
@@ -74,17 +74,6 @@ export default function home(props) {
     boxSizing: "border-box",
   };
 
-  const searchSales = {
-    backgroundImage: "url('/icons/search.png')",
-    backgroundSize: "cover",
-    backgroundPosition: "center",
-    backgroundRepeat: "no-repeat",
-    cursor: "pointer",
-    width: props.isMobile ? "40px" : "50px",
-    height: props.isMobile ? "40px" : "50px",
-    boxSizing: "border-box",
-  };
-
   const settings = {
     backgroundImage: "url('/icons/setings.png')",
     backgroundSize: "cover",
@@ -131,17 +120,6 @@ export default function home(props) {
 
   const quality = {
     backgroundImage: "url('/icons/quality.png')",
-    backgroundSize: "cover",
-    backgroundPosition: "center",
-    backgroundRepeat: "no-repeat",
-    cursor: "pointer",
-    width: props.isMobile ? "30px" : "50px",
-    height: props.isMobile ? "30px" : "50px",
-    boxSizing: "border-box",
-  };
-
-  const device = {
-    backgroundImage: "url('/icons/device.png')",
     backgroundSize: "cover",
     backgroundPosition: "center",
     backgroundRepeat: "no-repeat",
@@ -420,41 +398,6 @@ export default function home(props) {
                     <label style={{ padding: "10px" }}>
                       Cadastro de usuários
                     </label>
-                  </div>
-                  <div
-                    style={{ ...st_translucedBox }}
-                    id="addDevice"
-                    onMouseEnter={() =>
-                      (document.getElementById("addDevice").style.border =
-                        "2px solid orange")
-                    }
-                    onMouseLeave={() =>
-                      (document.getElementById("addDevice").style.border = "")
-                    }
-                    onClick={() => {
-                      setLoading(true);
-                      window.location.href = "/Infra/addDevice";
-                    }}
-                  >
-                    <a style={{ ...device }} />
-                    <label style={{ padding: "10px" }}>
-                      Cadastro de Dispositivos
-                    </label>
-                  </div>
-                  <div
-                    style={{ ...st_translucedBox }}
-                    id="addSales"
-                    onMouseEnter={(e) =>
-                      (e.currentTarget.style.border = "2px solid orange")
-                    }
-                    onMouseLeave={(e) => (e.currentTarget.style.border = "")}
-                    onClick={() => {
-                      setLoading(true);
-                      window.location.href = "/Infra/tickets";
-                    }}
-                  >
-                    <a style={{ ...searchSales }} />
-                    <label style={{ padding: "10px" }}>Abrir chamado</label>
                   </div>
                 </div>
               )}
