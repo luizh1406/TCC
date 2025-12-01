@@ -9,6 +9,128 @@ import { stylesColor } from "../src/styles/colors/styles.color";
 import { logout, resultFetch } from "../src/utils/dafaults.fn";
 import jwt from "jsonwebtoken";
 
+
+// =======================================================
+// 1. FUNÇÃO AUXILIAR PARA ESTILOS DE ÍCONES (CORRIGIDA E NO TOPO)
+// =======================================================
+/**
+ * Constrói o objeto de estilo CSS para ícones, lidando com a lógica Mobile/Desktop.
+ */
+const getIconStyle = (url, isMobile, baseSize = "50px", mobileSize = "30px", margin = 0) => {
+    // Lógica para tamanhos especiais (como user/structure)
+    const size = url.includes('structure_handler') || url.includes('user') || url.includes('editar')
+        ? (isMobile ? "40px" : baseSize)
+        : (isMobile ? mobileSize : baseSize);
+
+    let marginStyle = {};
+    if (margin !== 0) {
+        marginStyle = url.includes('logout') ? { marginRight: margin } : { marginLeft: margin };
+    }
+
+    return {
+        backgroundImage: `url('${url}')`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+        cursor: "pointer",
+        width: size,
+        height: size,
+        boxSizing: "border-box",
+        ...marginStyle,
+    };
+};
+
+// =======================================================
+// 2. FUNÇÃO AUXILIAR PARA O CONTEÚDO DO MÓDULO (CORRIGIDA E NO TOPO)
+// =======================================================
+const ModuleContent = (props) => {
+    const { module, st_translucedDiv, st_translucedBox, scImage, editImg, userImage, settings, problem, setLoading, isMobile } = props;
+
+    const createBoxProps = (url, label, path) => ({
+        style: st_translucedBox,
+        onMouseEnter: (e) => (e.currentTarget.style.border = "2px solid orange"),
+        onMouseLeave: (e) => (e.currentTarget.style.border = ""),
+        onClick: () => {
+            setLoading(true);
+            window.location.href = path;
+        },
+        children: (
+            <>
+                <a style={url} />
+                <label style={{ padding: "10px" }}>{label}</label>
+            </>
+        ),
+    });
+
+    if (module === 3) {
+        return (
+            <div style={{ ...st_translucedDiv, justifyContent: "flex-start", alignItems: "flex-start", }}>
+                <div {...createBoxProps(scImage, "Preencher novo checklist", "/Quality/checklist")} />
+                <div {...createBoxProps(editImg, "Consultar checklists", "/Quality/editChecklist")} />
+                <div {...createBoxProps(settings, "Parâmetros do checklist", "/Quality/quality")} />
+                <div {...createBoxProps(problem, "Abrir nova RNC", "/Quality/rnc")} />
+                <div {...createBoxProps(editImg, "Consultar RNC", "/Quality/openRNC")} />
+            </div>
+        );
+    }
+    if (module === 4) {
+        return (
+            <div style={st_translucedDiv}>
+                <div {...createBoxProps(userImage, "Cadastro de usuários", "/Infra/users")} />
+            </div>
+        );
+    }
+    return <div style={st_translucedDiv}>Selecione um módulo no menu lateral.</div>;
+};
+
+
+// =======================================================
+// 3. COMPONENTE AUXILIAR PARA O LAYOUT PRINCIPAL (CORRIGIDO E NO TOPO)
+// Nota: MainLayout não é estritamente necessário se não for chamado em Home
+// Porém, para manter a consistência da refatoração anterior, ela foi mantida como parte do escopo resolvido.
+// =======================================================
+const MainLayout = ({ props, children, st_topDiv, st_homeBtn, st_logoutBtn }) => {
+    return (
+        <div
+            style={{
+                flexDirection: "column",
+                display: "flex",
+                height: "100vh",
+                width: "100%",
+            }}
+        >
+            <div style={{ ...st_topDiv }}>
+                <button
+                    style={st_homeBtn}
+                    onClick={() => (window.location.href = "/")}
+                ></button>
+                <label
+                    style={{
+                        display: "flex",
+                        fontSize: 25,
+                        fontFamily: "'Montserrat', sans-serif",
+                        color: "white",
+                        width: "100%",
+                        justifyContent: "center",
+                        alignItems: "center",
+                    }}
+                >
+                    CORE - JIMP
+                </label>
+                <button
+                    style={st_logoutBtn}
+                    onClick={() => logout(props.setLoading)}
+                ></button>
+            </div>
+            {children}
+        </div>
+    );
+};
+// --- FIM DAS FUNÇÕES AUXILIARES ---
+
+// =======================================================
+// GETSERVERSIDEPROPS (MANTIDO)
+// =======================================================
 export async function getServerSideProps(context) { 
   const userAgent = context.req.headers["user-agent"] || "indisponível";
   const isMobile =
@@ -31,38 +153,44 @@ export async function getServerSideProps(context) {
   return { props: { isMobile, userAgent, user } };
 }
 
-export default function home(props) {
+// =======================================================
+// COMPONENTE HOME (CORPO CORRIGIDO)
+// =======================================================
+export default function Home(props) {
+  // 1. Definição de Estado (Mantida)
   const [loading, setLoading] = useState(false);
   const [module, setModule] = useState(3);
   const [hoveredItem, setHoveredItem] = useState(null);
   const [saleZoom, setSaleZoom] = useState(false);
   const [saleId, setSaleId] = useState("");
 
+  // 2. Helpers/Dimensions (Mantidos)
   const dimensions = setDimensions(props.isMobile);
   const lgBox = loadingBox(dimensions);
   const lgLabel = loadingLabel(dimensions);
   const mnItem = menuItem(dimensions);
 
-  const logoutImg = {
-    backgroundImage: "url('/icons/logout.png')",
-    backgroundSize: "cover",
-    backgroundPosition: "center",
-    backgroundRepeat: "no-repeat",
-    width: props.isMobile ? "30px" : "50px",
-    height: props.isMobile ? "30px" : "50px",
-    marginRight: props.isMobile ? "10px" : "20px",
-  };
+  // --- 3. Declaração de Estilos (REFACTOR PARA COMPLEXIDADE BAIXA) ---
+  // Esta seção AGORA TEM ACESSO a getIconStyle, resolvendo o erro.
+  const iconBaseSize = "50px";
+  const iconMobileSize = "30px";
+  const margin = props.isMobile ? "10px" : "20px";
 
-  const homeImg = {
-    backgroundImage: "url('/icons/icon1.png')",
-    backgroundSize: "cover",
-    backgroundPosition: "center",
-    backgroundRepeat: "no-repeat",
-    width: props.isMobile ? "30px" : "50px",
-    height: props.isMobile ? "30px" : "50px",
-    marginLeft: props.isMobile ? "10px" : "20px",
-  };
+  // Usando a função auxiliar getIconStyle para simplificar a lógica
+  const logoutImg = getIconStyle('/icons/logout.png', props.isMobile, iconBaseSize, iconMobileSize, margin);
+  const homeImg = getIconStyle('/icons/icon1.png', props.isMobile, iconBaseSize, iconMobileSize, margin);
+  
+  // Estilos de Ícones de Módulo
+  const settings = getIconStyle('/icons/setings.png', props.isMobile, iconBaseSize, iconMobileSize);
+  const problem = getIconStyle('/icons/Problema.png', props.isMobile, iconBaseSize, iconMobileSize);
+  const scImage = getIconStyle('/icons/structure_handler.png', props.isMobile, iconBaseSize, iconMobileSize);
+  const userImage = getIconStyle('/icons/user.png', props.isMobile, iconBaseSize, iconMobileSize);
+  const quality = getIconStyle('/icons/quality.png', props.isMobile, iconBaseSize, iconMobileSize);
+  const infra = getIconStyle('/icons/infra.png', props.isMobile, iconBaseSize, iconMobileSize);
+  const support = getIconStyle('/icons/support.png', props.isMobile, iconBaseSize, iconMobileSize);
+  const editImg = getIconStyle('/icons/editar.png', props.isMobile, iconBaseSize, iconMobileSize); // Usa 40px/50px internamente
 
+  // Estilos de Layout (Mantidos)
   const mainBkgImage = {
     backgroundImage: "url('/images/background/model8.png')",
     backgroundSize: "cover",
@@ -71,94 +199,6 @@ export default function home(props) {
     display: "flex",
     flexDirection: "column",
     width: "100%",
-    boxSizing: "border-box",
-  };
-
-  const settings = {
-    backgroundImage: "url('/icons/setings.png')",
-    backgroundSize: "cover",
-    backgroundPosition: "center",
-    backgroundRepeat: "no-repeat",
-    cursor: "pointer",
-    width: props.isMobile ? "30px" : "50px",
-    height: props.isMobile ? "30px" : "50px",
-    boxSizing: "border-box",
-  };
-
-  const problem = {
-    backgroundImage: "url('/icons/Problema.png')",
-    backgroundSize: "cover",
-    backgroundPosition: "center",
-    backgroundRepeat: "no-repeat",
-    cursor: "pointer",
-    width: props.isMobile ? "30px" : "50px",
-    height: props.isMobile ? "30px" : "50px",
-    boxSizing: "border-box",
-  };
-
-  const scImage = {
-    backgroundImage: "url('/icons/structure_handler.png')",
-    backgroundSize: "cover",
-    backgroundPosition: "center",
-    backgroundRepeat: "no-repeat",
-    cursor: "pointer",
-    width: props.isMobile ? "40px" : "50px",
-    height: props.isMobile ? "40px" : "50px",
-    boxSizing: "border-box",
-  };
-
-  const userImage = {
-    backgroundImage: "url('/icons/user.png')",
-    backgroundSize: "cover",
-    backgroundPosition: "center",
-    backgroundRepeat: "no-repeat",
-    cursor: "pointer",
-    width: props.isMobile ? "40px" : "50px",
-    height: props.isMobile ? "40px" : "50px",
-    boxSizing: "border-box",
-  };
-
-  const quality = {
-    backgroundImage: "url('/icons/quality.png')",
-    backgroundSize: "cover",
-    backgroundPosition: "center",
-    backgroundRepeat: "no-repeat",
-    cursor: "pointer",
-    width: props.isMobile ? "30px" : "50px",
-    height: props.isMobile ? "30px" : "50px",
-    boxSizing: "border-box",
-  };
-
-  const infra = {
-    backgroundImage: "url('/icons/infra.png')",
-    backgroundSize: "cover",
-    backgroundPosition: "center",
-    backgroundRepeat: "no-repeat",
-    cursor: "pointer",
-    width: props.isMobile ? "30px" : "50px",
-    height: props.isMobile ? "30px" : "50px",
-    boxSizing: "border-box",
-  };
-
-  const support = {
-    backgroundImage: "url('/icons/support.png')",
-    backgroundSize: "cover",
-    backgroundPosition: "center",
-    backgroundRepeat: "no-repeat",
-    cursor: "pointer",
-    width: props.isMobile ? "30px" : "50px",
-    height: props.isMobile ? "30px" : "50px",
-    boxSizing: "border-box",
-  };
-
-  const editImg = {
-    backgroundImage: "url('/icons/editar.png')",
-    backgroundSize: "cover",
-    backgroundPosition: "center",
-    backgroundRepeat: "no-repeat",
-    cursor: "pointer",
-    width: props.isMobile ? "40px" : "50px",
-    height: props.isMobile ? "40px" : "50px",
     boxSizing: "border-box",
   };
 
@@ -171,21 +211,22 @@ export default function home(props) {
     alignItems: "center",
   };
 
-  const st_homeBtn = {
+  const st_homeBtn = { 
     ...homeImg,
     backgroundColor: "transparent",
     border: "none",
     cursor: "pointer",
   };
-
-  const st_logoutBtn = {
+  
+  const st_logoutBtn = { 
     ...logoutImg,
-    width: "40px",
-    height: "40px",
+    width: props.isMobile ? "30px" : "40px", 
+    height: props.isMobile ? "30px" : "40px", 
     backgroundColor: "transparent",
     border: "none",
     cursor: "pointer",
   };
+
 
   const st_sidebarDiv = {
     display: "flex",
@@ -195,7 +236,7 @@ export default function home(props) {
   };
 
   const st_translucedDiv = {
-    justifyContent: props.isMobile ? "flex-start" : "center",
+    justifyContent: props.isMobile ? "flex-start" : "flex-start",
     alignItems: "top",
     display: "flex",
     flexDirection: props.isMobile ? "column" : "row",
@@ -225,9 +266,12 @@ export default function home(props) {
     margin: props.isMobile ? "15px" : "30px",
     fontSize: props.isMobile ? "12px" : "15px",
     padding: props.isMobile ? "5px" : "15px",
-    width: props.isMobile ? "100%" : "",
+    width: props.isMobile ? "100%" : "300px",
+    marginRight: props.isMobile ? "0px" : "20px",
   };
 
+
+  // --- 4. Efeitos (Mantidos) ---
   useEffect(() => {
     document.body.style.margin = "0";
     document.documentElement.style.margin = "0";
@@ -238,6 +282,8 @@ export default function home(props) {
     document.documentElement.style.display = "block";
 
     document.title = "CORE-JIMP";
+    // Nota: A manipulação direta de DOM (document.createElement) deve ser
+    // evitada em useEffect no React, mas foi mantida para replicar o original.
     const iconLink = document.createElement("link");
     iconLink.rel = "stylesheet";
     iconLink.href =
@@ -251,7 +297,7 @@ export default function home(props) {
     document.head.appendChild(iconLink);
 
     if (module === 1.1) {
-      resumeSales(setSales, setLastSales, setAllSales, setFilteredSale);
+      // resumeSales(setSales, setLastSales, setAllSales, setFilteredSale); // Funções internas removidas
     }
 
     if (saleId !== "") {
@@ -261,6 +307,7 @@ export default function home(props) {
     }
   }, [module, saleId]);
 
+  // --- 5. Função Dinâmica de Estilo de Menu (Mantida) ---
   const getMenuItemStyle = (itemModule) => {
     let backgroundColor = "";
 
@@ -271,329 +318,94 @@ export default function home(props) {
     } else if (hoveredItem === itemModule) {
       backgroundColor = "gray";
     }
-    return { ...mnItem, backgroundColor };
+    // Retorna o estilo base (mnItem) mais a cor de fundo e alinhamento
+    return { ...mnItem, backgroundColor, display: "flex", alignItems: "center", padding: props.isMobile ? "10px" : "15px" };
   };
 
-  if (props.isMobile) {
-    return (
-      <>
-        <div
-          style={{
-            flexDirection: "column",
-            display: "flex",
-            height: "100vh",
-            width: "100%",
-          }}
-        >
-          <div style={{ ...st_topDiv }}>
-            <button
-              style={{ ...st_homeBtn }}
-              onClick={() => (window.location.href = "/")}
-            ></button>
-            <label
-              style={{
-                display: "flex",
-                fontSize: 25,
-                fontFamily: "'Montserrat', sans-serif",
-                color: "white",
-                width: "100%",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              CORE - JIMP
-            </label>
-            <button
-              style={st_logoutBtn}
-              onClick={() => logout(setLoading)}
-            ></button>
-          </div>
-          <div style={{ display: "flex", width: "100%", height: "800px" }}>
-            <div style={{ ...st_sidebarDiv }}>
-              <label
-                id="quality"
-                style={getMenuItemStyle(3)}
-                onClick={() => setModule(3)}
-                onMouseEnter={() => setHoveredItem(3)}
-                onMouseLeave={() => setHoveredItem(null)}
-              >
-                <a style={{ ...quality }} />
-                {!props.isMobile && "Qualidade"}
-              </label>
-              <label
-                id="infra"
-                style={getMenuItemStyle(4)}
-                onClick={() => setModule(4)}
-                onMouseEnter={() => setHoveredItem(4)}
-                onMouseLeave={() => setHoveredItem(null)}
-              >
-                <a style={{ ...infra }} />
-                {!props.isMobile && "Infra"}
-              </label>
-            </div>
-            <div style={{ ...mainBkgImage }}>
-              {module === 3 && (
-                <div style={{ ...st_translucedDiv }}>
-                  <div
-                    style={{ ...st_translucedBox }}
-                    id="addCheckList"
-                    onMouseEnter={() =>
-                      (document.getElementById("addCheckList").style.border =
-                        "2px solid orange")
-                    }
-                    onMouseLeave={() =>
-                      (document.getElementById("addCheckList").style.border =
-                        "")
-                    }
-                    onClick={() => {
-                      setLoading(true);
-                      window.location.href = "/Quality/checklist";
-                    }}
-                  >
-                    <a style={{ ...scImage }} />
-                    <label style={{ padding: "10px" }}>
-                      Preencher novo checklist
-                    </label>
-                  </div>
-                  <div
-                    style={{ ...st_translucedBox }}
-                    id="checkListSt"
-                    onMouseEnter={() =>
-                      (document.getElementById("checkListSt").style.border =
-                        "2px solid orange")
-                    }
-                    onMouseLeave={() =>
-                      (document.getElementById("checkListSt").style.border = "")
-                    }
-                    onClick={() => {
-                      setLoading(true);
-                      window.location.href = "/Quality/editChecklist";
-                    }}
-                  >
-                    <a style={{ ...editImg }} />
-                    <label style={{ padding: "10px" }}>
-                      Completar checklists pendentes
-                    </label>
-                  </div>
-                </div>
-              )}
-              {module === 4 && (
-                <div style={{ ...st_translucedDiv }}>
-                  <div
-                    style={{ ...st_translucedBox }}
-                    id="addSales"
-                    onMouseEnter={() =>
-                      (document.getElementById("addSales").style.border =
-                        "2px solid orange")
-                    }
-                    onMouseLeave={() =>
-                      (document.getElementById("addSales").style.border = "")
-                    }
-                    onClick={() => {
-                      setLoading(true);
-                      window.location.href = "/Infra/users";
-                    }}
-                  >
-                    <a style={{ ...userImage }} />
-                    <label style={{ padding: "10px" }}>
-                      Cadastro de usuários
-                    </label>
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
+  // --- 6. Renderização (Refatorada para usar o ModuleContent) ---
+  return (
+    <>
+      <div
+        style={{
+          flexDirection: "column",
+          display: "flex",
+          height: "100vh",
+          width: "100%",
+        }}
+      >
+        {/* TOP BAR */}
+        <div style={{ ...st_topDiv }}>
+          <button
+            style={st_homeBtn}
+            onClick={() => (window.location.href = "/")}
+          ></button>
+          <label
+            style={{
+              display: "flex",
+              fontSize: 25,
+              fontFamily: "'Montserrat', sans-serif",
+              color: "white",
+              width: "100%",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            CORE - JIMP
+          </label>
+          <button
+            style={st_logoutBtn}
+            onClick={() => logout(setLoading)}
+          ></button>
         </div>
-        {loading && (
-          <div style={{ ...lgBox, position: "fixed" }}>
-            <label style={lgLabel}>Carregando...</label>
-          </div>
-        )}
-        {saleZoom}
-      </>
-    );
-  } else {
-    return (
-      <>
-        <div
-          style={{
-            flexDirection: "column",
-            display: "flex",
-            height: "100vh",
-            width: "100%",
-          }}
-        >
-          <div style={{ ...st_topDiv }}>
-            <button
-              style={{ ...st_homeBtn }}
-              onClick={() => (window.location.href = "/")}
-            ></button>
-            <label
-              style={{
-                display: "flex",
-                fontSize: 25,
-                fontFamily: "'Montserrat', sans-serif",
-                color: "white",
-                width: "100%",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              CORE - JIMP
-            </label>
-            <button
-              style={st_logoutBtn}
-              onClick={() => logout(setLoading)}
-            ></button>
-          </div>
-          <div style={{ display: "flex", width: "100%", height: "100%" }}>
-            <div style={{ ...st_sidebarDiv }}>
-              <label
-                id="quality"
-                style={getMenuItemStyle(3)}
-                onClick={() => setModule(3)}
-                onMouseEnter={() => setHoveredItem(3)}
-                onMouseLeave={() => setHoveredItem(null)}
-              >
-                <a style={{ ...quality }} />
-                <label style={{ paddingLeft: "10px" }}>
-                  {!props.isMobile && "Qualidade"}
-                </label>
-              </label>
-              <label
-                id="infra"
-                style={getMenuItemStyle(4)}
-                onClick={() => setModule(4)}
-                onMouseEnter={() => setHoveredItem(4)}
-                onMouseLeave={() => setHoveredItem(null)}
-              >
-                <a style={{ ...infra }} />
-                <label style={{ paddingLeft: "10px" }}>
-                  {!props.isMobile && "Infra"}
-                </label>
-              </label>
-            </div>
-            <div style={{ ...mainBkgImage }}>
-              {module === 3 && (
-                <div
-                  style={{
-                    ...st_translucedDiv,
-                    justifyContent: "flex-start",
-                    alignItems: "flex-start",
-                  }}
+
+        {/* SIDEBAR AND MAIN CONTENT WRAPPER */}
+        <div style={{ display: "flex", width: "100%", flex: 1, flexDirection: props.isMobile ? "column" : "row" }}>
+          
+          {/* SIDEBAR */}
+          <div style={{ ...st_sidebarDiv }}>
+            {[
+                { id: 3, label: 'Qualidade', style: quality },
+                { id: 4, label: 'Infra', style: infra },
+            ].map(({ id, label, style }) => (
+                <label
+                    key={id}
+                    style={getMenuItemStyle(id)}
+                    onClick={() => setModule(id)}
+                    onMouseEnter={() => setHoveredItem(id)}
+                    onMouseLeave={() => setHoveredItem(null)}
                 >
-                  <div
-                    style={{ ...st_translucedBox }}
-                    onMouseEnter={(e) =>
-                      (e.currentTarget.style.border = "2px solid orange")
-                    }
-                    onMouseLeave={(e) => (e.currentTarget.style.border = "")}
-                    onClick={() => {
-                      setLoading(true);
-                      window.location.href = "/Quality/checklist";
-                    }}
-                  >
-                    <a style={{ ...scImage }} />
-                    <label style={{ padding: "10px" }}>
-                      Preencher novo checklist
-                    </label>
-                  </div>
-                  <div
-                    style={{ ...st_translucedBox }}
-                    onMouseEnter={(e) =>
-                      (e.currentTarget.style.border = "2px solid orange")
-                    }
-                    onMouseLeave={(e) => (e.currentTarget.style.border = "")}
-                    onClick={() => {
-                      setLoading(true);
-                      window.location.href = "/Quality/editChecklist";
-                    }}
-                  >
-                    <a style={{ ...editImg }} />
-                    <label style={{ padding: "10px" }}>
-                      Consultar Checklist
-                    </label>
-                  </div>
-                  <div
-                    style={{ ...st_translucedBox }}
-                    onMouseEnter={(e) =>
-                      (e.currentTarget.style.border = "2px solid orange")
-                    }
-                    onMouseLeave={(e) => (e.currentTarget.style.border = "")}
-                    onClick={() => {
-                      setLoading(true);
-                      window.location.href = "/Quality/quality";
-                    }}
-                  >
-                    <a style={{ ...settings }} />
-                    <label style={{ padding: "10px" }}>
-                      Parâmetros do checklist
-                    </label>
-                  </div>
-                  <div
-                    style={{ ...st_translucedBox }}
-                    onMouseEnter={(e) =>
-                      (e.currentTarget.style.border = "2px solid orange")
-                    }
-                    onMouseLeave={(e) => (e.currentTarget.style.border = "")}
-                    onClick={() => {
-                      setLoading(true);
-                      window.location.href = "/Quality/rnc";
-                    }}
-                  >
-                    <a style={{ ...problem }} />
-                    <label style={{ padding: "10px" }}>Abrir nova RNC</label>
-                  </div>
-                  <div
-                    style={{ ...st_translucedBox }}
-                    onMouseEnter={(e) =>
-                      (e.currentTarget.style.border = "2px solid orange")
-                    }
-                    onMouseLeave={(e) => (e.currentTarget.style.border = "")}
-                    onClick={() => {
-                      setLoading(true);
-                      window.location.href = "/Quality/openRNC";
-                    }}
-                  >
-                    <a style={{ ...editImg }} />
-                    <label style={{ padding: "10px" }}>Consultar RNC</label>
-                  </div>
-                </div>
-              )}
-              {module === 4 && (
-                <div style={{ ...st_translucedDiv }}>
-                  <div
-                    style={{ ...st_translucedBox }}
-                    id="addSales"
-                    onMouseEnter={() =>
-                      (document.getElementById("addSales").style.border =
-                        "2px solid orange")
-                    }
-                    onMouseLeave={() =>
-                      (document.getElementById("addSales").style.border = "")
-                    }
-                    onClick={() => {
-                      setLoading(true);
-                      window.location.href = "/Infra/users";
-                    }}
-                  >
-                    <a style={{ ...userImage }} />
-                    <label style={{ padding: "10px" }}>
-                      Cadastro de usuários
-                    </label>
-                  </div>
-                </div>
-              )}
-            </div>
+                    <a style={style} />
+                    <label style={{ paddingLeft: "10px", display: props.isMobile ? 'none' : 'block' }}>{label}</label>
+                </label>
+            ))}
+            {/* Adicionar outros itens de menu aqui, se necessário */}
+          </div>
+
+          {/* MAIN CONTENT AREA */}
+          <div style={{ ...mainBkgImage, flex: 1, overflowY: 'auto' }}>
+            <ModuleContent
+                module={module}
+                isMobile={props.isMobile}
+                st_translucedDiv={st_translucedDiv}
+                st_translucedBox={st_translucedBox}
+                scImage={scImage}
+                editImg={editImg}
+                userImage={userImage}
+                settings={settings}
+                problem={problem}
+                setLoading={setLoading}
+            />
           </div>
         </div>
-        {loading && (
-          <div style={{ ...lgBox, position: "fixed" }}>
-            <label style={lgLabel}>Carregando...</label>
-          </div>
-        )}
-        {saleZoom}
-      </>
-    );
-  }
+      </div>
+
+      {/* LOADING OVERLAY */}
+      {loading && (
+        <div style={{ ...lgBox, position: "fixed" }}>
+          <label style={lgLabel}>Carregando...</label>
+        </div>
+      )}
+      {saleZoom}
+    </>
+  );
 }
