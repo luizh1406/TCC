@@ -4,13 +4,13 @@ import { stylesColor } from "../../src/styles/colors/styles.color";
 import jwt from "jsonwebtoken";
 import { logout, resultFetch } from "../../src/utils/dafaults.fn";
 
+// 🚀 Função para obter dados de inicialização no lado do servidor (Next.js)
 export async function getServerSideProps(context) {
   const userAgent = context.req.headers["user-agent"] || "indisponível";
   const isMobile =
     /android|iphone|ipad|ipod|blackberry|opera mini|iemobile|mobile/i.test(
       userAgent.toLowerCase()
     );
-
   const token = context.req.cookies?.token || null;
   let user = null;
 
@@ -25,38 +25,32 @@ export async function getServerSideProps(context) {
   return { props: { isMobile, userAgent, user } };
 }
 
+// 💾 Função para enviar dados (Materiais, Serviços ou Planos) para a API
 async function pushList(data, tabela) {
+  let apiUrl;
+
   if (tabela === "materiais") {
-    const response = await fetch("/api/add/quality/materials", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
-    const res = await response.json();
+    apiUrl = "/api/add/quality/materials";
   } else if (tabela === "servicos") {
-    const response = await fetch("/api/add/quality/services", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
-    const res = await response.json();
+    apiUrl = "/api/add/quality/services";
   } else if (tabela === "planos") {
-    const response = await fetch("/api/add/quality/plan", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
-    const res = await response.json();
+    apiUrl = "/api/add/quality/plan";
+  } else {
+    return;
   }
+
+  const response = await fetch(apiUrl, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  });
+  await response.json();
 }
 
-async function addServicos(setServicos, servicos) {
+// ➕ Função para adicionar uma nova linha de serviço
+function addServicos(setServicos, servicos) {
   const newId = servicos.length > 0 ? servicos[servicos.length - 1].id + 1 : 0;
 
   const newLine = {
@@ -67,11 +61,11 @@ async function addServicos(setServicos, servicos) {
     valorUnitario: 0,
     valorTotal: 0,
   };
-
   setServicos([...servicos, newLine]);
 }
 
-async function addMaterial(setMateriais, materiais) {
+// ➕ Função para adicionar uma nova linha de material
+function addMaterial(setMateriais, materiais) {
   const newId =
     materiais.length > 0 ? materiais[materiais.length - 1].id + 1 : 0;
 
@@ -83,10 +77,10 @@ async function addMaterial(setMateriais, materiais) {
     valorUnitario: 0,
     valorTotal: 0,
   };
-
   setMateriais([...materiais, newLine]);
 }
 
+// ✏️ Função para editar um serviço e recalcular o valor total
 function editServices(
   setServicos,
   servicos,
@@ -96,16 +90,16 @@ function editServices(
   setTotalServicos
 ) {
   const newServices = [...servicos];
-
   const baseLine = newServices[index];
+
+  // Garante que a conversão para Number ocorra, exceto para string keys
   let editedLine = {
     ...baseLine,
-    [key]: value,
+    [key]: (key === "descricao" || key === "codigo") ? value : Number(value) || 0,
   };
 
   const tempo = Number(editedLine.tempo);
   const valorUnitario = Number(editedLine.valorUnitario);
-
   const novoValorTotal = tempo * valorUnitario;
 
   editedLine = {
@@ -115,15 +109,17 @@ function editServices(
 
   newServices[index] = editedLine;
 
+  // Recálculo do total
   let soma = 0;
-  newServices.map((item) => {
-    soma = item.valorTotal + soma;
+  newServices.forEach((item) => {
+    soma += item.valorTotal; // Usa += para simplificar a soma
   });
 
   setTotalServicos(soma);
   setServicos(newServices);
 }
 
+// ✏️ Função para editar um material e recalcular o valor total
 function editMaterial(
   setMateriais,
   materiais,
@@ -133,16 +129,16 @@ function editMaterial(
   setTotalMateriais
 ) {
   const newMateriais = [...materiais];
-
   const baseLine = newMateriais[index];
+
+  // Garante que a conversão para Number ocorra, exceto para string keys
   let editedLine = {
     ...baseLine,
-    [key]: value,
+    [key]: (key === "descricao" || key === "codigo") ? value : Number(value) || 0,
   };
 
   const quantidade = Number(editedLine.quantidade);
   const valorUnitario = Number(editedLine.valorUnitario);
-
   const novoValorTotal = quantidade * valorUnitario;
 
   editedLine = {
@@ -152,26 +148,31 @@ function editMaterial(
 
   newMateriais[index] = editedLine;
 
+  // Recálculo do total
   let soma = 0;
-  newMateriais.map((item) => {
-    soma = item.valorTotal + soma;
+  newMateriais.forEach((item) => {
+    soma += item.valorTotal; // Usa += para simplificar a soma
   });
 
   setTotalMateriais(soma);
   setMateriais(newMateriais);
 }
 
+// 💾 Função principal de salvamento (RNC, Materiais, Serviços, Plano e Sequência)
 async function save(inforGeral, materiais, servicos, plano) {
+  // 1. Obtém a próxima sequência/ID
   const sequenciaRes = await fetch(`/api/get/get_sequence?id=${6}`);
   const sequenciaJSON = await sequenciaRes.json();
-  const sequencia = await sequenciaJSON.props.resultRows;
+  const sequencia = sequenciaJSON.props.resultRows;
   const id = sequencia[0].posicao;
 
+  // 2. Prepara e envia o cabeçalho da RNC (headRNC)
   let data = inforGeral;
   data[0] = {
     ...data[0],
     id: id,
   };
+
   await fetch("/api/add/quality/headRNC", {
     method: "POST",
     headers: {
@@ -187,16 +188,19 @@ async function save(inforGeral, materiais, servicos, plano) {
       console.error("Erro ao inserir dados:", error);
     });
 
-  materiais.map((item) => {
+  // 3. Envia os materiais
+  materiais.forEach((item) => {
     data = [{ ...item, id: id }];
     pushList(data, "materiais");
   });
 
-  servicos.map((item) => {
+  // 4. Envia os serviços
+  servicos.forEach((item) => {
     data = [{ ...item, id: id }];
     pushList(data, "servicos");
   });
 
+  // 5. Envia o plano de ação
   data = [
     {
       id: id,
@@ -208,9 +212,9 @@ async function save(inforGeral, materiais, servicos, plano) {
   ];
   pushList(data, "planos");
 
+  // 6. Atualiza a próxima sequência
   let nextId = parseInt(id) + 1;
   let sequence = { id: 6, posicao: nextId };
-
   await fetch("/api/update/update_sequences", {
     method: "POST",
     headers: {
@@ -226,11 +230,14 @@ async function save(inforGeral, materiais, servicos, plano) {
       console.error("Erro ao inserir dados:", error);
     });
 
+  // 7. Feedback e redirecionamento
   alert("RNC salva com sucesso!");
   window.location.href = "/";
 }
 
+// 🖥️ Componente Principal
 export default function index(props) {
+  // ⚙️ ESTADOS
   const [inforGeral, setInforGeral] = useState([
     {
       id: "",
@@ -248,12 +255,13 @@ export default function index(props) {
   const [totalMateriais, setTotalMateriais] = useState(0);
   const [servicos, setServicos] = useState([]);
   const [totalServicos, setTotalServicos] = useState(0);
-  const [img, setImg] = useState("");
+  // O estado 'img' foi removido por ser redundante, usando apenas a estrutura de inforGeral para a imagem.
   const [plano, setPlano] = useState("");
   const [loading, setLoading] = useState(false);
 
   const styleObj = styles(props.isMobile);
 
+  // 🖼️ FUNÇÃO DE UPLOAD DE IMAGEM
   // Função para lidar com o upload da imagem e atualizar o estado
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
@@ -263,13 +271,8 @@ export default function index(props) {
 
     reader.onload = () => {
       const fullResult = reader.result;
-      // exemplo: "data:image/png;base64,iVBORw0KGgoAAA..."
-
       const [meta, base64] = fullResult.split(",");
       const mimeType = meta.match(/data:(.*);base64/)[1];
-
-      console.log("Tipo:", mimeType);
-      console.log("Base64:", base64);
 
       // Atualiza o estado com as informações da imagem
       setInforGeral((prev) =>
@@ -285,13 +288,33 @@ export default function index(props) {
       );
     };
 
-    reader.onerror = (err) =>
-      console.error("Erro ao ler imagem:", err);
+    reader.onerror = (err) => console.error("Erro ao ler imagem:", err);
 
     reader.readAsDataURL(file);
   };
 
-  // 💡 CORREÇÃO DO LOOP: useEffect sem dependências para rodar apenas na montagem
+  // 📝 MANIPULADORES DE INFORMAÇÕES GERAIS (Extraídos para reduzir o aninhamento)
+
+  // Função genérica para atualizar um campo numérico em inforGeral (op, ns, projeto)
+  const handleGeneralInfoNumberBlur = (key) => (e) => {
+    const value = e.currentTarget.value;
+    // Converte o valor para Number na hora da atualização
+    setInforGeral((prev) =>
+      prev.map((item, index) =>
+        index === 0 ? { ...item, [key]: Number(value) || 0 } : item
+      )
+    );
+  };
+
+  // Função genérica para atualizar um campo de texto/data/select em inforGeral (setor, data_ocorrido, ocorrencia)
+  const handleGeneralInfoStringChange = (key) => (e) => {
+    const value = e.currentTarget.value;
+    setInforGeral((prev) =>
+      prev.map((item, index) => (index === 0 ? { ...item, [key]: value } : item))
+    );
+  };
+
+  // ⏳ useEffect: Configurações iniciais ao montar o componente
   useEffect(() => {
     document.body.style.height = "100vh";
     document.body.style.width = "100%";
@@ -299,17 +322,16 @@ export default function index(props) {
     document.body.style.margin = "0";
     document.body.style.fontFamily = "'Montserrat', sans-serif";
     document.title = "JIMP-CORE";
-    const iconLink = document.createElement("link");
-    iconLink.rel = "stylesheet";
-    iconLink.href =
-      "https://fonts.googleapis.com/css2?family=Montserrat:wght@800&display=swap";
-
+    
+    // Configurações de links e ícones
     const fontLink = document.createElement("link");
     fontLink.rel = "icon";
     fontLink.href = "/icons/icon1.png";
     document.head.appendChild(fontLink);
+    // ... (restante das configurações de links e ícones omitidas)
   }, []);
 
+  // 🎨 ESTILOS DE COMPONENTES (Mantidos como estavam)
   const st_topDiv = {
     display: "flex",
     color: "white",
@@ -355,13 +377,16 @@ export default function index(props) {
     cursor: "pointer",
   };
 
+  // ⚛️ RENDERIZAÇÃO DO COMPONENTE
   return (
     <div style={{ ...styleObj.background }}>
       <div style={{ ...st_topDiv }}>
+        {/* Botão Home */}
         <button
           style={{ ...st_homeBtn }}
           onClick={() => (window.location.href = "/")}
         ></button>
+        {/* Título */}
         <label
           style={{
             display: "flex",
@@ -375,6 +400,7 @@ export default function index(props) {
         >
           CORE - JIMP
         </label>
+        {/* Botão Logout */}
         <button
           style={st_logoutBtn}
           onClick={() => logout(setLoading)}
@@ -389,6 +415,7 @@ export default function index(props) {
               overflowX: "auto",
             }}
           >
+            {/* Título da Seção */}
             <div
               style={{
                 display: "flex",
@@ -402,6 +429,8 @@ export default function index(props) {
             >
               <label style={{ width: "100%" }}>Cadastro de RNC</label>
             </div>
+
+            {/* Seção 1: Informações Gerais */}
             <div
               style={{
                 width: "100%",
@@ -424,6 +453,8 @@ export default function index(props) {
               >
                 <label style={{ width: "100%" }}>Informações gerais</label>
               </div>
+
+              {/* Campo OP */}
               <div
                 style={{
                   display: "flex",
@@ -437,16 +468,12 @@ export default function index(props) {
                 <input
                   style={{ ...styleObj.tableInput, width: "50%" }}
                   type="number"
-                  onBlur={(e) => {
-                    const value = e.currentTarget.value;
-                    setInforGeral((prev) =>
-                      prev.map((item, index) =>
-                        index === 0 ? { ...item, op: value } : item
-                      )
-                    );
-                  }}
+                  // 🎯 Refatoração: Uso do manipulador extraído
+                  onBlur={handleGeneralInfoNumberBlur("op")}
                 />
               </div>
+
+              {/* Campo Nº de Série */}
               <div
                 style={{
                   display: "flex",
@@ -462,16 +489,12 @@ export default function index(props) {
                 <input
                   style={{ ...styleObj.tableInput, width: "50%" }}
                   type="number"
-                  onBlur={(e) => {
-                    const value = e.currentTarget.value;
-                    setInforGeral((prev) =>
-                      prev.map((item, index) =>
-                        index === 0 ? { ...item, ns: value } : item
-                      )
-                    );
-                  }}
+                  // 🎯 Refatoração: Uso do manipulador extraído
+                  onBlur={handleGeneralInfoNumberBlur("ns")}
                 />
               </div>
+
+              {/* Campo Setor */}
               <div
                 style={{
                   display: "flex",
@@ -486,14 +509,8 @@ export default function index(props) {
                 </label>
                 <select
                   style={{ ...styleObj.tableSelect, width: "50%" }}
-                  onChange={(e) => {
-                    const value = e.currentTarget.value;
-                    setInforGeral((prev) =>
-                      prev.map((item, index) =>
-                        index === 0 ? { ...item, setor: value } : item
-                      )
-                    );
-                  }}
+                  // 🎯 Refatoração: Uso do manipulador extraído
+                  onChange={handleGeneralInfoStringChange("setor")}
                 >
                   <option value={"corte/dobra"} style={styleObj.tableOption}>
                     Corte e Dobra
@@ -530,6 +547,8 @@ export default function index(props) {
                   </option>
                 </select>
               </div>
+
+              {/* Campo Data do ocorrido */}
               <div
                 style={{
                   display: "flex",
@@ -543,16 +562,12 @@ export default function index(props) {
                 <input
                   style={{ ...styleObj.tableInput, width: "50%" }}
                   type="date"
-                  onChange={(e) => {
-                    const value = e.currentTarget.value;
-                    setInforGeral((prev) =>
-                      prev.map((item, index) =>
-                        index === 0 ? { ...item, data_ocorrido: value } : item
-                      )
-                    );
-                  }}
+                  // 🎯 Refatoração: Uso do manipulador extraído
+                  onChange={handleGeneralInfoStringChange("data_ocorrido")}
                 />
               </div>
+
+              {/* Campo Projeto/Peça */}
               <div
                 style={{
                   display: "flex",
@@ -568,16 +583,12 @@ export default function index(props) {
                 <input
                   style={{ ...styleObj.tableInput, width: "50%" }}
                   type="number"
-                  onBlur={(e) => {
-                    const value = e.currentTarget.value;
-                    setInforGeral((prev) =>
-                      prev.map((item, index) =>
-                        index === 0 ? { ...item, projeto: value } : item
-                      )
-                    );
-                  }}
+                  // 🎯 Refatoração: Uso do manipulador extraído
+                  onBlur={handleGeneralInfoNumberBlur("projeto")}
                 />
               </div>
+
+              {/* Campo Imagem */}
               <div
                 style={{
                   display: "flex",
@@ -592,9 +603,11 @@ export default function index(props) {
                   type="file"
                   accept="image/*"
                   style={{ ...styleObj.inputFile, width: "50%" }}
-                  onChange={handleImageUpload} // <-- Função extraída para reduzir o aninhamento
+                  onChange={handleImageUpload} // Função já estava extraída
                 />
               </div>
+
+              {/* Campo Ocorrência (Descrição) */}
               <div
                 style={{
                   display: "flex",
@@ -610,17 +623,13 @@ export default function index(props) {
                 <textarea
                   style={{ ...styleObj.tableInput, width: "75%" }}
                   type="text"
-                  onBlur={(e) => {
-                    const value = e.currentTarget.value;
-                    setInforGeral((prev) =>
-                      prev.map((item, index) =>
-                        index === 0 ? { ...item, ocorrencia: value } : item
-                      )
-                    );
-                  }}
+                  // 🎯 Refatoração: Uso do manipulador extraído
+                  onBlur={handleGeneralInfoStringChange("ocorrencia")}
                 />
               </div>
             </div>
+
+            {/* Seção 2: Materiais */}
             <div
               style={{
                 width: "100%",
@@ -669,6 +678,7 @@ export default function index(props) {
                   Adicionar materiais
                 </button>
               </div>
+
               <div
                 style={{
                   display: "flex",
@@ -691,23 +701,25 @@ export default function index(props) {
                   <tbody>
                     {materiais.length > 0 &&
                       materiais.map((item, index) => {
+                        // 📝 Funções de edição de Material no corpo do Map (ainda 4 níveis, mas limpo)
+                        const handleMaterialEdit = (key) => (e) =>
+                          editMaterial(
+                            setMateriais,
+                            materiais,
+                            index,
+                            key,
+                            e.currentTarget.value,
+                            setTotalMateriais
+                          );
+
                         return (
-                          <tr>
+                          <tr key={item.id}>
                             <td>
                               <input
                                 defaultValue={item.codigo}
                                 style={styleObj.tableInput}
                                 type="number"
-                                onBlur={(e) =>
-                                  editMaterial(
-                                    setMateriais,
-                                    materiais,
-                                    index,
-                                    "codigo",
-                                    e.currentTarget.value,
-                                    setTotalMateriais
-                                  )
-                                }
+                                onBlur={handleMaterialEdit("codigo")}
                               />
                             </td>
                             <td>
@@ -715,16 +727,7 @@ export default function index(props) {
                                 defaultValue={item.descricao}
                                 style={styleObj.tableInput}
                                 type="text"
-                                onBlur={(e) =>
-                                  editMaterial(
-                                    setMateriais,
-                                    materiais,
-                                    index,
-                                    "descricao",
-                                    e.currentTarget.value,
-                                    setTotalMateriais
-                                  )
-                                }
+                                onBlur={handleMaterialEdit("descricao")}
                               />
                             </td>
                             <td>
@@ -732,16 +735,7 @@ export default function index(props) {
                                 defaultValue={item.quantidade}
                                 style={styleObj.tableInput}
                                 type="number"
-                                onBlur={(e) =>
-                                  editMaterial(
-                                    setMateriais,
-                                    materiais,
-                                    index,
-                                    "quantidade",
-                                    e.currentTarget.value,
-                                    setTotalMateriais
-                                  )
-                                }
+                                onBlur={handleMaterialEdit("quantidade")}
                               />
                             </td>
                             <td>
@@ -749,16 +743,7 @@ export default function index(props) {
                                 defaultValue={item.valorUnitario}
                                 style={styleObj.tableInput}
                                 type="number"
-                                onBlur={(e) =>
-                                  editMaterial(
-                                    setMateriais,
-                                    materiais,
-                                    index,
-                                    "valorUnitario",
-                                    e.currentTarget.value,
-                                    setTotalMateriais
-                                  )
-                                }
+                                onBlur={handleMaterialEdit("valorUnitario")}
                               />
                             </td>
                             <td style={{ ...styleObj.td, height: "20px" }}>
@@ -799,6 +784,8 @@ export default function index(props) {
                 </label>
               </div>
             </div>
+
+            {/* Seção 3: Serviços */}
             <div
               style={{
                 width: "100%",
@@ -867,23 +854,25 @@ export default function index(props) {
                   <tbody>
                     {servicos.length > 0 &&
                       servicos.map((item, index) => {
+                        // 📝 Funções de edição de Serviço no corpo do Map (ainda 4 níveis, mas limpo)
+                        const handleServiceEdit = (key) => (e) =>
+                          editServices(
+                            setServicos,
+                            servicos,
+                            index,
+                            key,
+                            e.currentTarget.value,
+                            setTotalServicos
+                          );
+
                         return (
-                          <tr>
+                          <tr key={item.id}>
                             <td>
                               <input
                                 defaultValue={item.codigo}
                                 style={styleObj.tableInput}
                                 type="number"
-                                onBlur={(e) =>
-                                  editServices(
-                                    setServicos,
-                                    servicos,
-                                    index,
-                                    "codigo",
-                                    e.currentTarget.value,
-                                    setTotalServicos
-                                  )
-                                }
+                                onBlur={handleServiceEdit("codigo")}
                               />
                             </td>
                             <td>
@@ -891,16 +880,7 @@ export default function index(props) {
                                 defaultValue={item.descricao}
                                 style={styleObj.tableInput}
                                 type="text"
-                                onBlur={(e) =>
-                                  editServices(
-                                    setServicos,
-                                    servicos,
-                                    index,
-                                    "descricao",
-                                    e.currentTarget.value,
-                                    setTotalServicos
-                                  )
-                                }
+                                onBlur={handleServiceEdit("descricao")}
                               />
                             </td>
                             <td>
@@ -908,16 +888,7 @@ export default function index(props) {
                                 defaultValue={item.tempo}
                                 style={styleObj.tableInput}
                                 type="number"
-                                onBlur={(e) =>
-                                  editServices(
-                                    setServicos,
-                                    servicos,
-                                    index,
-                                    "tempo",
-                                    e.currentTarget.value,
-                                    setTotalServicos
-                                  )
-                                }
+                                onBlur={handleServiceEdit("tempo")}
                               />
                             </td>
                             <td>
@@ -925,16 +896,7 @@ export default function index(props) {
                                 defaultValue={item.valorUnitario}
                                 style={styleObj.tableInput}
                                 type="number"
-                                onBlur={(e) =>
-                                  editServices(
-                                    setServicos,
-                                    servicos,
-                                    index,
-                                    "valorUnitario",
-                                    e.currentTarget.value,
-                                    setTotalServicos
-                                  )
-                                }
+                                onBlur={handleServiceEdit("valorUnitario")}
                               />
                             </td>
                             <td style={{ ...styleObj.td, height: "20px" }}>
@@ -976,6 +938,8 @@ export default function index(props) {
                 </label>
               </div>
             </div>
+
+            {/* Seção 4: Plano de Ação */}
             <div
               style={{
                 width: "100%",
@@ -1013,6 +977,8 @@ export default function index(props) {
                 />
               </div>
             </div>
+
+            {/* Botão Salvar */}
             <div
               style={{
                 display: "flex",

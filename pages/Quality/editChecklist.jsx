@@ -102,9 +102,52 @@ function selectChecklist(
   setLoading(false);
 }
 
+// 🎯 Funções Auxiliares para Redução de Complexidade Cognitiva (CC)
+
+/**
+ * Processa e anexa respostas que NÃO são do tipo "Foto" ao FormData.
+ * CC: 3
+ */
+function handleNonFotoResponse(line, formData) {
+  let resposta;
+  if (line.preenchimento === "Verdadeiro ou falso") {
+    // Se for V/F, verifica se o checkbox está checado.
+    resposta = document.getElementById(line.codigo_pergunta).checked
+      ? "Verdadeiro"
+      : "Falso";
+  } else {
+    // Senão, pega o valor padrão (Texto ou Numérico).
+    resposta = document.getElementById(line.codigo_pergunta).value;
+  }
+  
+  // Anexa os dados do checklist e as informações da linha ao FormData
+  formData.append(line.codigo_pergunta, resposta);
+  formData.append(`${line.codigo_pergunta}_info`, JSON.stringify(line));
+}
+
+/**
+ * Processa e anexa respostas do tipo "Foto" ao FormData.
+ * CC: 3
+ */
+function handleFotoResponse(line, formData) {
+  const input = document.getElementById(line.codigo_pergunta);
+  const file = input && input.files && input.files[0];
+
+  if (file) {
+    formData.append(line.codigo_pergunta, file);
+  } else {
+    // Se não houver foto, envia uma flag para o backend.
+    formData.append(line.codigo_pergunta, "SEM FOTO");
+  }
+}
+
+/**
+ * Salva o checklist. Refatorada para CC 13.
+ */
 async function saveChecklist(setLoading, selectedCk, nsProduto, user) {
   setLoading(true);
 
+  // 1. Validação
   if (!nsProduto || nsProduto.trim() === "") {
     alert("Por favor, insira a NS do produto.");
     setLoading(false);
@@ -115,31 +158,16 @@ async function saveChecklist(setLoading, selectedCk, nsProduto, user) {
   formData.append("nsProduto", nsProduto);
   formData.append("userEmail", user.email);
 
+  // 2. Processamento das linhas do Checklist (CC reduzida pela extração)
   for (const line of selectedCk) {
     if (line.preenchimento === "Foto") {
-      const input = document.getElementById(line.codigo_pergunta);
-      const file = input && input.files && input.files[0];
-      if (file) {
-        formData.append(line.codigo_pergunta, file);
-      } else {
-        // Se não houver foto, envie uma flag para o backend.
-        formData.append(line.codigo_pergunta, "SEM FOTO");
-      }
+      handleFotoResponse(line, formData);
     } else {
-      let resposta;
-      if (line.preenchimento === "Verdadeiro ou falso") {
-        resposta = document.getElementById(line.codigo_pergunta).checked
-          ? "Verdadeiro"
-          : "Falso";
-      } else {
-        resposta = document.getElementById(line.codigo_pergunta).value;
-      }
-      // Anexe todos os dados do checklist ao FormData
-      formData.append(line.codigo_pergunta, resposta);
-      formData.append(`${line.codigo_pergunta}_info`, JSON.stringify(line));
+      handleNonFotoResponse(line, formData);
     }
   }
 
+  // 3. Envio e Tratamento de Erros (Try/Catch)
   try {
     const response = await fetch("/api/add/quality/clChecklist", {
       method: "POST",
@@ -194,7 +222,7 @@ export default function sh(props) {
     document.head.appendChild(iconLink);
 
     if (nsProduto === "" || nsProduto === null) {
-      listOfChecklist(setLoading, setLtCheckList, setClChecklistIMG, setMixed);
+      listOfChecklist(setLoading, setLtCheckList, setClChecklistIMG);
     } else {
       filterChecklist(
         setLoading,
