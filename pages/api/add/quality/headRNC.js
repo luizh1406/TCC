@@ -1,46 +1,52 @@
 import pool from "../../database.js";
 
 export default async function insertQuery(request, response) {
-  if (request.method === "POST") {
-    const data = request.body;
+  if (request.method !== "POST") {
+    return response.status(405).json({
+      success: false,
+      error: "Method not allowed",
+    });
+  }
 
-    console.table(data);
+  try {
+    const data = request.body[0];
 
-    let select = [
-      "INSERT INTO headRNC (id, nr_op, ns, setor, data_ocorrencia, codigo_projeto, image, email, descricao ) values (",
-      data[0].id,
-      ",",
-      data[0].op,
-      ",",
-      data[0].ns,
-      ",'",
-      data[0].setor,
-      "','",
-      data[0].data_ocorrido,
-      "',",
-      data[0].projeto,
-      ",'",
-      data[0].image,
-      "','",
-      data[0].email,
-      "','",
-      data[0].ocorrencia,
-      "')",
-    ].join("");
+    // 1. Converter base64 para bytes reais
+    const buffer = data.image_base64
+      ? Buffer.from(data.image_base64, "base64")
+      : null;
 
-    console.log(select);
+    const query = `
+      INSERT INTO headRNC 
+      (id, nr_op, ns, setor, data_ocorrencia, codigo_projeto, image, email, descricao) 
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+      RETURNING *;
+    `;
 
-    try {
-      const result = await pool.query(select);
-      response.status(201).json({ success: true, data: result.rows[0] });
-      console.log("Data inserted:", result.rows[0]);
-    } catch (error) {
-      console.error("Error inserting data:", error);
-      response
-        .status(500)
-        .json({ success: false, error: "Failed to insert data" });
-    }
-  } else {
-    response.status(405).json({ success: false, error: "Method not allowed" });
+    const values = [
+      data.id,
+      data.op,
+      data.ns,
+      data.setor,
+      data.data_ocorrido,
+      data.projeto,
+      buffer, // <-- AGORA SIM: imagem em bytes reais
+      data.email,
+      data.ocorrencia,
+    ];
+
+    const result = await pool.query(query, values);
+
+    response.status(201).json({
+      success: true,
+      data: result.rows[0],
+    });
+  } catch (error) {
+    console.error("Erro ao inserir:", error);
+    response.status(500).json({
+      success: false,
+      error: "Failed to insert data",
+    });
   }
 }
+ 

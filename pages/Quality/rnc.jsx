@@ -203,15 +203,15 @@ async function save(inforGeral, materiais, servicos, plano) {
       codigo: 0,
       descricao: plano,
       ativo: true,
-      solucao: "em andamento",
+      solucao: "Em andamento",
     },
   ];
   pushList(data, "planos");
 
   let nextId = parseInt(id) + 1;
-  let sequence = [{ id: 6, posicao: nextId }];
+  let sequence = { id: 6, posicao: nextId };
 
-  await fetch("/api/update_vl/update_sequences", {
+  await fetch("/api/update/update_sequences", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -270,7 +270,6 @@ export default function index(props) {
     fontLink.rel = "icon";
     fontLink.href = "/icons/icon1.png";
     document.head.appendChild(fontLink);
-
   }, [inforGeral]);
 
   const st_topDiv = {
@@ -538,6 +537,56 @@ export default function index(props) {
                         index === 0 ? { ...item, projeto: value } : item
                       )
                     );
+                  }}
+                />
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  width: "50%",
+                  gap: "15px",
+                  alignItems: "center",
+                  backgroundColor: "rgba(0, 0, 0, 0.5)",
+                }}
+              >
+                <label style={{ width: "50%" }}>Adicionar imagem</label>
+                <input
+                  type="file"
+                  accept="image/*"
+                  style={{ ...styleObj.inputFile, width: "50%" }}
+                  onChange={(e) => {
+                    const file = e.target.files[0];
+                    if (!file) return;
+
+                    const reader = new FileReader();
+                    reader.onload = () => {
+                      const fullResult = reader.result;
+                      // exemplo: "data:image/png;base64,iVBORw0KGgoAAA..."
+
+                      const [meta, base64] = fullResult.split(",");
+                      const mimeType = meta.match(/data:(.*);base64/)[1];
+
+                      console.log("Tipo:", mimeType);
+                      console.log("Base64:", base64);
+
+                      // Agora enviamos ambos ao backend
+                      setInforGeral((prev) =>
+                        prev.map((item, index) =>
+                          index === 0
+                            ? {
+                                ...item,
+                                image_base64: base64,
+                                image_type: mimeType,
+                              }
+                            : item
+                        )
+                      );
+                    };
+
+                    reader.onerror = (err) =>
+                      console.error("Erro ao ler imagem:", err);
+
+                    reader.readAsDataURL(file);
                   }}
                 />
               </div>

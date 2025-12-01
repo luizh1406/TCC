@@ -210,7 +210,7 @@ export async function save(inforGeral, materiais, servicos, plano, solucao) {
   ];
   pushList(data, "planos");
 
-  window.location.href = "/Quality/openRNC"
+  window.location.href = "/Quality/openRNC";
 }
 
 export async function searchRNC(setSearch) {
@@ -258,14 +258,27 @@ export async function currentRNC(
   const PlanJSON = await resPlan.json();
   const PlanData = await PlanJSON.props.resultRows;
 
-  const image = header.image;
-  const hexLimpo = image.substring(2);
-  const base64 = Buffer.from(hexLimpo, "hex").toString("utf8");
-  const imageUrl = `data:image/jpeg;base64,${base64}`;
+  function bufferToBase64(buffer) {
+    if (!buffer) return "";
 
-  setImage(imageUrl);
-  setSolucao(header.solucao)
+    // buffer vem como { type: "Buffer", data: [...] }
+    const bytes = new Uint8Array(buffer.data ?? buffer);
 
+    let binary = "";
+    const len = bytes.length;
+
+    for (let i = 0; i < len; i++) {
+      binary += String.fromCharCode(bytes[i]);
+    }
+
+    return window.btoa(binary);
+  }
+
+  const base64 = bufferToBase64(header.image.data);
+
+  console.log(base64);
+  setSolucao(header.solucao);
+  setImage(base64);
   setInforGeral(header);
   setMateriais(materialData);
   setServicos(serviceData);
@@ -294,7 +307,7 @@ export default function index(props) {
   const [id, setID] = useState("");
   const [loading, setLoading] = useState(false);
   const [image64, setImage] = useState("");
-  const [solucao, setSolucao] = useState([])
+  const [solucao, setSolucao] = useState([]);
 
   const styleObj = styles(props.isMobile);
 
@@ -465,11 +478,30 @@ export default function index(props) {
                         <label style={{ width: "50%" }}>
                           Status da Solução
                         </label>
-                          <select style={{ ...styleObj.tableSelect, width: "50%" }} defaultValue={inforGeral.solucao} onBlur={(e)=> setSolucao(e.currentTarget.value)}>
-                            <option style={styleObj.tableOption} value={"Cancelado"}>Cancelado</option>
-                            <option style={styleObj.tableOption} value={"Em andamento"}>Em andamento</option>
-                            <option style={styleObj.tableOption} value={"Concluído"}>Concluído</option>
-                          </select>
+                        <select
+                          style={{ ...styleObj.tableSelect, width: "50%" }}
+                          defaultValue={inforGeral.solucao}
+                          onBlur={(e) => setSolucao(e.currentTarget.value)}
+                        >
+                          <option
+                            style={styleObj.tableOption}
+                            value={"Cancelado"}
+                          >
+                            Cancelado
+                          </option>
+                          <option
+                            style={styleObj.tableOption}
+                            value={"Em andamento"}
+                          >
+                            Em andamento
+                          </option>
+                          <option
+                            style={styleObj.tableOption}
+                            value={"Concluído"}
+                          >
+                            Concluído
+                          </option>
+                        </select>
                       </div>
                       <div
                         style={{
@@ -514,11 +546,11 @@ export default function index(props) {
                           defaultValue={inforGeral.ns}
                           onBlur={(e) => {
                             const value = e.currentTarget.value;
-                            setInforGeral((prev) =>
-                              prev.map((item, index) =>
-                                index === 0 ? { ...item, ns: value } : item
-                              )
-                            );
+                            setInforGeral((prev) => ({
+                              // CORRIGIDO
+                              ...prev,
+                              ns: value,
+                            }));
                           }}
                         />
                       </div>
@@ -539,11 +571,11 @@ export default function index(props) {
                           defaultValue={inforGeral.setor}
                           onChange={(e) => {
                             const value = e.currentTarget.value;
-                            setInforGeral((prev) =>
-                              prev.map((item, index) =>
-                                index === 0 ? { ...item, setor: value } : item
-                              )
-                            );
+                            setInforGeral((prev) => ({
+                              // CORRIGIDO
+                              ...prev,
+                              setor: value,
+                            }));
                           }}
                         >
                           <option
@@ -624,13 +656,11 @@ export default function index(props) {
                           value={inforGeral.data_ocorrencia}
                           onChange={(e) => {
                             const value = e.currentTarget.value;
-                            setInforGeral((prev) =>
-                              prev.map((item, index) =>
-                                index === 0
-                                  ? { ...item, data_ocorrencia: value }
-                                  : item
-                              )
-                            );
+                            setInforGeral((prev) => ({
+                              // CORRIGIDO
+                              ...prev,
+                              data_ocorrencia: value,
+                            }));
                           }}
                         />
                       </div>
@@ -652,13 +682,11 @@ export default function index(props) {
                           defaultValue={inforGeral.codigo_projeto}
                           onBlur={(e) => {
                             const value = e.currentTarget.value;
-                            setInforGeral((prev) =>
-                              prev.map((item, index) =>
-                                index === 0
-                                  ? { ...item, codigo_projeto: value }
-                                  : item
-                              )
-                            );
+                            setInforGeral((prev) => ({
+                              // CORRIGIDO
+                              ...prev,
+                              codigo_projeto: value,
+                            }));
                           }}
                         />
                       </div>
@@ -670,9 +698,12 @@ export default function index(props) {
                           alignItems: "center",
                           backgroundColor: "rgba(0, 0, 0, 0.5)",
                         }}
-                      >
-                      </div>
+                      ></div>
                     </div>
+                    <img
+                      src={`data:image/jpeg;base64,${image64}`}
+                      style={{ width: "30%" }}
+                    />
                   </div>
                   <div
                     style={{
@@ -692,11 +723,11 @@ export default function index(props) {
                       defaultValue={inforGeral.descricao}
                       onBlur={(e) => {
                         const value = e.currentTarget.value;
-                        setInforGeral((prev) =>
-                          prev.map((item, index) =>
-                            index === 0 ? { ...item, ocorrencia: value } : item
-                          )
-                        );
+                        setInforGeral((prev) => ({
+                          // CORRIGIDO, e propriedade alterada para 'descricao'
+                          ...prev,
+                          descricao: value,
+                        }));
                       }}
                     />
                   </div>
@@ -1090,7 +1121,9 @@ export default function index(props) {
                     <textarea
                       style={{ width: "100%", height: "200px" }}
                       defaultValue={plano[0].descricao}
-                      onBlur={(e) => plano[0].descricao = e.currentTarget.value}
+                      onBlur={(e) =>
+                        (plano[0].descricao = e.currentTarget.value)
+                      }
                     />
                   </div>
                 </div>
@@ -1113,7 +1146,9 @@ export default function index(props) {
                       fontWeight: "bold",
                       cursor: "pointer",
                     }}
-                    onClick={() => save(inforGeral, materiais, servicos, plano, solucao)}
+                    onClick={() =>
+                      save(inforGeral, materiais, servicos, plano, solucao)
+                    }
                   >
                     Salvar RNC
                   </button>
