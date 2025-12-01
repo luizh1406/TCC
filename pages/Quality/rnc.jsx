@@ -263,32 +263,45 @@ export default function index(props) {
 
   // 🖼️ FUNÇÃO DE UPLOAD DE IMAGEM
   // Função para lidar com o upload da imagem e atualizar o estado
-  const handleImageUpload = (e) => {
+const updateInforGeralWithImage = (prev, base64, mimeType) => {
+    return prev.map((item, index) => {
+      if (index === 0) {
+        return {
+          ...item,
+          image_base64: base64,
+          image_type: mimeType,
+        };
+      }
+      return item;
+    });
+  };
+
+
+  // 🖼️ FUNÇÃO DE UPLOAD DE IMAGEM
+  // Função para lidar com o upload da imagem e atualizar o estado
+
+  const handleImageUpload = (e) => { // Nível 1
     const file = e.target.files[0];
+
     if (!file) return;
 
     const reader = new FileReader();
 
-    reader.onload = () => {
+    reader.onload = () => { // Nível 2
       const fullResult = reader.result;
       const [meta, base64] = fullResult.split(",");
       const mimeType = meta.match(/data:(.*);base64/)[1];
 
       // Atualiza o estado com as informações da imagem
-      setInforGeral((prev) =>
-        prev.map((item, index) =>
-          index === 0
-            ? {
-                ...item,
-                image_base64: base64,
-                image_type: mimeType,
-              }
-            : item
-        )
+      // A callback de setInforGeral chama a função auxiliar (Nível 3)
+      setInforGeral((prev) => 
+        updateInforGeralWithImage(prev, base64, mimeType)
       );
+
     };
 
     reader.onerror = (err) => console.error("Erro ao ler imagem:", err);
+
 
     reader.readAsDataURL(file);
   };
