@@ -12,13 +12,12 @@ module.exports = {
   coverageReporters: ["lcov", "text", "clover"],
 
   collectCoverageFrom: [
-    "**/*.{js,jsx,ts,tsx}",
-    "!**/node_modules/**",
-    "!**/.next/**",
-    "!coverage/**",
+    "pages/**/*.{js,jsx,ts,tsx}",
+    "src/**/*.{js,jsx,ts,tsx}",
   ],
 
-  coveragePathIgnorePatterns: [
+  // ❌ Removemos backend e frontend daqui
+  testPathIgnorePatterns: [
     "/node_modules/",
   ],
 };
