@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1764589154979" clover="3.2.0">
-  <project timestamp="1764589154979" name="All files">
-    <metrics statements="471" coveredstatements="304" conditionals="276" coveredconditionals="214" methods="141" coveredmethods="46" elements="888" coveredelements="564" complexity="0" loc="471" ncloc="471" packages="7" files="10" classes="10"/>
+<coverage generated="1764589648579" clover="3.2.0">
+  <project timestamp="1764589648579" name="All files">
+    <metrics statements="493" coveredstatements="305" conditionals="276" coveredconditionals="214" methods="163" coveredmethods="47" elements="932" coveredelements="566" complexity="0" loc="493" ncloc="493" packages="8" files="11" classes="11"/>
     <package name="pages">
       <metrics statements="166" coveredstatements="105" conditionals="148" coveredconditionals="139" methods="64" coveredmethods="19"/>
       <file name="index.js" path="C:\Users\infra\OneDrive\Ambiente de Trabalho\tcc\TCC\pages\index.js">
@@ -463,6 +463,34 @@
       <file name="styles.color.js" path="C:\Users\infra\OneDrive\Ambiente de Trabalho\tcc\TCC\src\styles\colors\styles.color.js">
         <metrics statements="1" coveredstatements="1" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
         <line num="1" count="2" type="stmt"/>
+      </file>
+    </package>
+    <package name="src.styles.containers">
+      <metrics statements="22" coveredstatements="1" conditionals="0" coveredconditionals="0" methods="22" coveredmethods="1"/>
+      <file name="containers.ts" path="C:\Users\infra\OneDrive\Ambiente de Trabalho\tcc\TCC\src\styles\containers\containers.ts">
+        <metrics statements="22" coveredstatements="1" conditionals="0" coveredconditionals="0" methods="22" coveredmethods="1"/>
+        <line num="4" count="0" type="stmt"/>
+        <line num="12" count="0" type="stmt"/>
+        <line num="27" count="0" type="stmt"/>
+        <line num="36" count="0" type="stmt"/>
+        <line num="44" count="0" type="stmt"/>
+        <line num="59" count="0" type="stmt"/>
+        <line num="74" count="0" type="stmt"/>
+        <line num="91" count="0" type="stmt"/>
+        <line num="102" count="0" type="stmt"/>
+        <line num="113" count="1" type="stmt"/>
+        <line num="122" count="0" type="stmt"/>
+        <line num="134" count="0" type="stmt"/>
+        <line num="151" count="0" type="stmt"/>
+        <line num="162" count="0" type="stmt"/>
+        <line num="176" count="0" type="stmt"/>
+        <line num="189" count="0" type="stmt"/>
+        <line num="201" count="0" type="stmt"/>
+        <line num="216" count="0" type="stmt"/>
+        <line num="232" count="0" type="stmt"/>
+        <line num="248" count="0" type="stmt"/>
+        <line num="265" count="0" type="stmt"/>
+        <line num="283" count="0" type="stmt"/>
       </file>
     </package>
     <package name="src.utils">
