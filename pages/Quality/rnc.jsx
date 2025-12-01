@@ -254,6 +254,44 @@ export default function index(props) {
 
   const styleObj = styles(props.isMobile);
 
+  // Função para lidar com o upload da imagem e atualizar o estado
+  const handleImageUpload = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+
+    reader.onload = () => {
+      const fullResult = reader.result;
+      // exemplo: "data:image/png;base64,iVBORw0KGgoAAA..."
+
+      const [meta, base64] = fullResult.split(",");
+      const mimeType = meta.match(/data:(.*);base64/)[1];
+
+      console.log("Tipo:", mimeType);
+      console.log("Base64:", base64);
+
+      // Atualiza o estado com as informações da imagem
+      setInforGeral((prev) =>
+        prev.map((item, index) =>
+          index === 0
+            ? {
+                ...item,
+                image_base64: base64,
+                image_type: mimeType,
+              }
+            : item
+        )
+      );
+    };
+
+    reader.onerror = (err) =>
+      console.error("Erro ao ler imagem:", err);
+
+    reader.readAsDataURL(file);
+  };
+
+  // 💡 CORREÇÃO DO LOOP: useEffect sem dependências para rodar apenas na montagem
   useEffect(() => {
     document.body.style.height = "100vh";
     document.body.style.width = "100%";
@@ -270,7 +308,7 @@ export default function index(props) {
     fontLink.rel = "icon";
     fontLink.href = "/icons/icon1.png";
     document.head.appendChild(fontLink);
-  }, [inforGeral]);
+  }, []);
 
   const st_topDiv = {
     display: "flex",
@@ -554,40 +592,7 @@ export default function index(props) {
                   type="file"
                   accept="image/*"
                   style={{ ...styleObj.inputFile, width: "50%" }}
-                  onChange={(e) => {
-                    const file = e.target.files[0];
-                    if (!file) return;
-
-                    const reader = new FileReader();
-                    reader.onload = () => {
-                      const fullResult = reader.result;
-                      // exemplo: "data:image/png;base64,iVBORw0KGgoAAA..."
-
-                      const [meta, base64] = fullResult.split(",");
-                      const mimeType = meta.match(/data:(.*);base64/)[1];
-
-                      console.log("Tipo:", mimeType);
-                      console.log("Base64:", base64);
-
-                      // Agora enviamos ambos ao backend
-                      setInforGeral((prev) =>
-                        prev.map((item, index) =>
-                          index === 0
-                            ? {
-                                ...item,
-                                image_base64: base64,
-                                image_type: mimeType,
-                              }
-                            : item
-                        )
-                      );
-                    };
-
-                    reader.onerror = (err) =>
-                      console.error("Erro ao ler imagem:", err);
-
-                    reader.readAsDataURL(file);
-                  }}
+                  onChange={handleImageUpload} // <-- Função extraída para reduzir o aninhamento
                 />
               </div>
               <div
