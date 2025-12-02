@@ -22,7 +22,7 @@ O objetivo é padronizar processos, garantir rastreabilidade e facilitar auditor
 - Descrição do ocorrido  
 - Plano de ação  
 - Registro de materiais e serviços utilizados  
-- Upload de anexos (imagens/documentos)  
+- Upload de anexos (imagens)  
 - Atualização de status  
 - Histórico e rastreabilidade  
 
@@ -122,3 +122,8 @@ Este sistema foi desenvolvido como parte do **Trabalho de Conclusão de Curso em
 ##  Autor
 **Luiz Henrique de Oliveira**  
 Joinville – SC  
+
+## Informações para teste
+**Login
+Email: demo@catolicasc.com.br
+Senha: 123
