@@ -1,5 +1,6 @@
 name: SonarCloud + Coverage
 
+# Gatilho para ser um fluxo de trabalho reutilizável
 on:
   workflow_call:
     secrets:
@@ -7,7 +8,7 @@ on:
         required: true
 
 jobs:
-  build:
+  build:  
     name: Run Tests and SonarCloud Analysis
     runs-on: ubuntu-latest
     
@@ -30,20 +31,11 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Create Test Reports Directory
-        run: mkdir -p test-reports
-
       - name: Run backend tests with coverage
         run: npm run test:backend
 
       - name: Run frontend tests with coverage
         run: npm run test:frontend
-
-      - name: Verify Report Generation
-        run: ls -lR test-reports/
-
-      - name: Merge JUnit Reports
-        run: npx junit-merge test-reports/backend.xml test-reports/frontend.xml > test-reports/merged-junit.xml
 
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@v3
@@ -51,4 +43,10 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         with:
-          args: -Dsonar.projectKey=luizh1406_TCC -Dsonar.organization=luizh1406 -Dsonar.sources=src,pages -Dsonar.javascript.lcov.reportPaths=coverage/backend/lcov.info,coverage/frontend/lcov.info -Dsonar.testExecutionReportPaths=test-reports/merged-junit.xml -Dsonar.test.inclusions=**/__tests__/**/*.test.js,**/__tests__/**/*.test.jsx -Dsonar.exclusions=**/node_modules/**
+          args: >
+            -Dsonar.projectKey=luizh1406_TCC
+            -Dsonar.organization=luizh1406
+            -Dsonar.sources=src,pages
+            -Dsonar.javascript.lcov.reportPaths=coverage/backend/lcov.info,coverage/frontend/lcov.info
+            -Dsonar.test.inclusions=**/__tests__/**/*.test.js,**/__tests__/**/*.test.jsx
+            -Dsonar.exclusions=**/node_modules/**
