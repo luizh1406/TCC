@@ -30,7 +30,7 @@ export async function getServerSideProps(context) {
   return { props: { isMobile, userAgent, user } };
 }
 
-async function listOfChecklist(setLoading, setLtCheckList, setClChecklistIMG) {
+export async function listOfChecklist(setLoading, setLtCheckList, setClChecklistIMG) {
   setLoading(true);
 
   const res = await fetch("/api/get/quality/editChecklist");
@@ -44,7 +44,7 @@ async function listOfChecklist(setLoading, setLtCheckList, setClChecklistIMG) {
   setLoading(false);
 }
 
-function filterChecklist(
+export function filterChecklist(
   setLoading,
   ltCheckList,
   nsProduto,
@@ -80,7 +80,7 @@ function filterChecklist(
   setLoading(false);
 }
 
-function selectChecklist(
+export function selectChecklist(
   setLoading,
   ltCheckList,
   ns,
