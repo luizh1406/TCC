@@ -7,8 +7,8 @@
     "build": "next build",
     "start": "next start",
     "test": "jest --config jest.config.js --coverage --watchAll=false",
-    "test:backend": "jest --config jest.config.js --testMatch \"**/tests/backend/**/*(*.)+(test|spec).js\" --coverage --watchAll=false --coverageDirectory=coverage/backend",
-    "test:frontend": "jest --config jest.config.js --testMatch \"**/tests/frontend/**/*(*.)+(test|spec).js\" --coverage --watchAll=false --coverageDirectory=coverage/frontend"
+    "test:backend": "jest --config jest.config.js --testMatch \"**/tests/backend/**/*(*.)+(test|spec).js\" --coverage --watchAll=false --coverageDirectory=coverage/backend --reporters=default --reporters=jest-junit",
+    "test:frontend": "jest --config jest.config.js --testMatch \"**/tests/frontend/**/*(*.)+(test|spec).js\" --coverage --watchAll=false --coverageDirectory=coverage/frontend --reporters=default --reporters=jest-junit"
   },
   "keywords": [],
   "author": "",
@@ -51,5 +51,12 @@
     "jest-junit": "^16.0.0",
     "node-mocks-http": "^1.17.2",
     "typescript": "5.8.3"
+  },
+  "jest-junit": {
+    "outputDirectory": "test-reports",
+    "outputName": "junit.xml",
+    "suiteName": "jest tests",
+    "usePathForSuiteName": "true",
+    "addFileAttribute": "true"
   }
 }
