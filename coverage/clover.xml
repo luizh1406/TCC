@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1765309885926" clover="3.2.0">
-  <project timestamp="1765309885926" name="All files">
-    <metrics statements="828" coveredstatements="579" conditionals="379" coveredconditionals="252" methods="238" coveredmethods="110" elements="1445" coveredelements="941" complexity="0" loc="828" ncloc="828" packages="9" files="15" classes="15"/>
+<coverage generated="1765310173508" clover="3.2.0">
+  <project timestamp="1765310173508" name="All files">
+    <metrics statements="686" coveredstatements="499" conditionals="284" coveredconditionals="212" methods="213" coveredmethods="99" elements="1183" coveredelements="810" complexity="0" loc="686" ncloc="686" packages="8" files="13" classes="13"/>
     <package name="pages">
       <metrics statements="161" coveredstatements="109" conditionals="83" coveredconditionals="73" methods="62" coveredmethods="23"/>
       <file name="index.js" path="C:\Users\infra\OneDrive\Ambiente de Trabalho\tcc\TCC\pages\index.js">
@@ -173,147 +173,7 @@
       </file>
     </package>
     <package name="pages.Quality">
-      <metrics statements="451" coveredstatements="271" conditionals="197" coveredconditionals="96" methods="122" coveredmethods="37"/>
-      <file name="editChecklist.jsx" path="C:\Users\infra\OneDrive\Ambiente de Trabalho\tcc\TCC\pages\Quality\editChecklist.jsx">
-        <metrics statements="137" coveredstatements="77" conditionals="93" coveredconditionals="39" methods="24" coveredmethods="10"/>
-        <line num="11" count="3" type="cond" truecount="1" falsecount="1"/>
-        <line num="13" count="3" type="stmt"/>
-        <line num="18" count="3" type="cond" truecount="2" falsecount="0"/>
-        <line num="19" count="3" type="stmt"/>
-        <line num="21" count="3" type="cond" truecount="2" falsecount="0"/>
-        <line num="22" count="2" type="stmt"/>
-        <line num="24" count="2" type="stmt"/>
-        <line num="26" count="1" type="stmt"/>
-        <line num="30" count="3" type="stmt"/>
-        <line num="34" count="3" type="stmt"/>
-        <line num="36" count="3" type="stmt"/>
-        <line num="37" count="3" type="stmt"/>
-        <line num="39" count="3" type="stmt"/>
-        <line num="40" count="3" type="stmt"/>
-        <line num="41" count="3" type="stmt"/>
-        <line num="42" count="3" type="stmt"/>
-        <line num="44" count="3" type="stmt"/>
-        <line num="56" count="1" type="stmt"/>
-        <line num="57" count="1" type="stmt"/>
-        <line num="58" count="3" type="cond" truecount="2" falsecount="2"/>
-        <line num="61" count="1" type="stmt"/>
-        <line num="63" count="1" type="stmt"/>
-        <line num="66" count="2" type="cond" truecount="2" falsecount="0"/>
-        <line num="67" count="1" type="stmt"/>
-        <line num="76" count="1" type="stmt"/>
-        <line num="78" count="1" type="stmt"/>
-        <line num="79" count="1" type="stmt"/>
-        <line num="80" count="1" type="stmt"/>
-        <line num="93" count="1" type="stmt"/>
-        <line num="94" count="1" type="stmt"/>
-        <line num="95" count="1" type="stmt"/>
-        <line num="96" count="1" type="stmt"/>
-        <line num="97" count="1" type="stmt"/>
-        <line num="100" count="1" type="stmt"/>
-        <line num="101" count="1" type="stmt"/>
-        <line num="102" count="1" type="stmt"/>
-        <line num="113" count="0" type="cond" truecount="0" falsecount="2"/>
-        <line num="115" count="0" type="cond" truecount="0" falsecount="2"/>
-        <line num="120" count="0" type="stmt"/>
-        <line num="124" count="0" type="stmt"/>
-        <line num="125" count="0" type="stmt"/>
-        <line num="133" count="0" type="stmt"/>
-        <line num="134" count="0" type="cond" truecount="0" falsecount="3"/>
-        <line num="136" count="0" type="cond" truecount="0" falsecount="2"/>
-        <line num="137" count="0" type="stmt"/>
-        <line num="140" count="0" type="stmt"/>
-        <line num="148" count="0" type="stmt"/>
-        <line num="151" count="0" type="cond" truecount="0" falsecount="4"/>
-        <line num="152" count="0" type="stmt"/>
-        <line num="153" count="0" type="stmt"/>
-        <line num="154" count="0" type="stmt"/>
-        <line num="157" count="0" type="stmt"/>
-        <line num="158" count="0" type="stmt"/>
-        <line num="159" count="0" type="stmt"/>
-        <line num="162" count="0" type="stmt"/>
-        <line num="163" count="0" type="cond" truecount="0" falsecount="2"/>
-        <line num="164" count="0" type="stmt"/>
-        <line num="166" count="0" type="stmt"/>
-        <line num="171" count="0" type="stmt"/>
-        <line num="172" count="0" type="stmt"/>
-        <line num="176" count="0" type="stmt"/>
-        <line num="178" count="0" type="cond" truecount="0" falsecount="2"/>
-        <line num="179" count="0" type="stmt"/>
-        <line num="180" count="0" type="stmt"/>
-        <line num="182" count="0" type="stmt"/>
-        <line num="185" count="0" type="stmt"/>
-        <line num="186" count="0" type="stmt"/>
-        <line num="189" count="0" type="stmt"/>
-        <line num="193" count="4" type="stmt"/>
-        <line num="194" count="4" type="stmt"/>
-        <line num="195" count="4" type="stmt"/>
-        <line num="196" count="4" type="stmt"/>
-        <line num="197" count="4" type="stmt"/>
-        <line num="198" count="4" type="stmt"/>
-        <line num="199" count="4" type="stmt"/>
-        <line num="200" count="4" type="stmt"/>
-        <line num="201" count="4" type="stmt"/>
-        <line num="203" count="4" type="stmt"/>
-        <line num="204" count="2" type="stmt"/>
-        <line num="205" count="2" type="stmt"/>
-        <line num="206" count="2" type="stmt"/>
-        <line num="207" count="2" type="stmt"/>
-        <line num="208" count="2" type="stmt"/>
-        <line num="209" count="2" type="stmt"/>
-        <line num="211" count="2" type="stmt"/>
-        <line num="212" count="2" type="stmt"/>
-        <line num="213" count="2" type="stmt"/>
-        <line num="214" count="2" type="stmt"/>
-        <line num="217" count="2" type="stmt"/>
-        <line num="218" count="2" type="stmt"/>
-        <line num="219" count="2" type="stmt"/>
-        <line num="221" count="2" type="stmt"/>
-        <line num="222" count="2" type="stmt"/>
-        <line num="224" count="2" type="cond" truecount="2" falsecount="2"/>
-        <line num="225" count="2" type="stmt"/>
-        <line num="227" count="0" type="stmt"/>
-        <line num="237" count="4" type="stmt"/>
-        <line num="238" count="4" type="stmt"/>
-        <line num="239" count="4" type="stmt"/>
-        <line num="241" count="4" type="stmt"/>
-        <line num="251" count="4" type="stmt"/>
-        <line num="261" count="4" type="stmt"/>
-        <line num="273" count="4" type="stmt"/>
-        <line num="282" count="4" type="stmt"/>
-        <line num="289" count="4" type="stmt"/>
-        <line num="298" count="4" type="stmt"/>
-        <line num="315" count="4" type="stmt"/>
-        <line num="326" count="4" type="stmt"/>
-        <line num="342" count="0" type="stmt"/>
-        <line num="343" count="0" type="cond" truecount="0" falsecount="4"/>
-        <line num="344" count="0" type="stmt"/>
-        <line num="345" count="0" type="stmt"/>
-        <line num="346" count="0" type="stmt"/>
-        <line num="348" count="0" type="stmt"/>
-        <line num="352" count="4" type="stmt"/>
-        <line num="360" count="0" type="stmt"/>
-        <line num="361" count="0" type="stmt"/>
-        <line num="362" count="0" type="stmt"/>
-        <line num="363" count="0" type="stmt"/>
-        <line num="364" count="0" type="stmt"/>
-        <line num="365" count="0" type="stmt"/>
-        <line num="367" count="0" type="stmt"/>
-        <line num="370" count="4" type="stmt"/>
-        <line num="378" count="0" type="stmt"/>
-        <line num="395" count="0" type="stmt"/>
-        <line num="460" count="0" type="stmt"/>
-        <line num="461" count="0" type="stmt"/>
-        <line num="496" count="0" type="stmt"/>
-        <line num="507" count="0" type="stmt"/>
-        <line num="528" count="0" type="stmt"/>
-        <line num="530" count="0" type="stmt"/>
-        <line num="535" count="0" type="cond" truecount="0" falsecount="4"/>
-        <line num="537" count="0" type="stmt"/>
-        <line num="556" count="0" type="stmt"/>
-        <line num="571" count="0" type="stmt"/>
-        <line num="598" count="0" type="stmt"/>
-        <line num="621" count="0" type="stmt"/>
-      </file>
+      <metrics statements="314" coveredstatements="194" conditionals="104" coveredconditionals="57" methods="98" coveredmethods="27"/>
       <file name="openRNC.jsx" path="C:\Users\infra\OneDrive\Ambiente de Trabalho\tcc\TCC\pages\Quality\openRNC.jsx">
         <metrics statements="170" coveredstatements="114" conditionals="50" coveredconditionals="24" methods="53" coveredmethods="15"/>
         <line num="9" count="3" type="cond" truecount="1" falsecount="1"/>
@@ -797,22 +657,11 @@
         <line num="181" count="9" type="stmt"/>
       </file>
     </package>
-    <package name="src.dimensions">
-      <metrics statements="5" coveredstatements="3" conditionals="2" coveredconditionals="1" methods="1" coveredmethods="1"/>
-      <file name="default.dimensions.js" path="C:\Users\infra\OneDrive\Ambiente de Trabalho\tcc\TCC\src\dimensions\default.dimensions.js">
-        <metrics statements="5" coveredstatements="3" conditionals="2" coveredconditionals="1" methods="1" coveredmethods="1"/>
-        <line num="2" count="4" type="cond" truecount="1" falsecount="1"/>
-        <line num="3" count="0" type="stmt"/>
-        <line num="72" count="0" type="stmt"/>
-        <line num="74" count="4" type="stmt"/>
-        <line num="206" count="4" type="stmt"/>
-      </file>
-    </package>
     <package name="src.styles.colors">
       <metrics statements="1" coveredstatements="1" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
       <file name="styles.color.js" path="C:\Users\infra\OneDrive\Ambiente de Trabalho\tcc\TCC\src\styles\colors\styles.color.js">
         <metrics statements="1" coveredstatements="1" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
-        <line num="1" count="5" type="stmt"/>
+        <line num="1" count="4" type="stmt"/>
       </file>
     </package>
     <package name="src.styles.containers">
@@ -824,8 +673,8 @@
         <line num="27" count="1" type="stmt"/>
         <line num="36" count="1" type="stmt"/>
         <line num="44" count="1" type="stmt"/>
-        <line num="59" count="5" type="stmt"/>
-        <line num="74" count="5" type="stmt"/>
+        <line num="59" count="1" type="stmt"/>
+        <line num="74" count="1" type="stmt"/>
         <line num="91" count="1" type="stmt"/>
         <line num="102" count="1" type="stmt"/>
         <line num="113" count="2" type="stmt"/>
