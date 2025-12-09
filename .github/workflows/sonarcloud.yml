@@ -36,11 +36,15 @@ jobs:
       - name: Run frontend tests with coverage
         run: npm run test:frontend
 
+      # 🟢 NOVO PASSO: Mescla os relatórios XML separados em um arquivo único e válido
+      - name: Merge JUnit Reports
+        run: npx junit-merge test-reports/backend.xml test-reports/frontend.xml > test-reports/merged-junit.xml
+
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@v3
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         with:
-          # Voltando para o arquivo único junit.xml, pois a configuração do jest-junit agora garante a mesclagem limpa.
-          args: -Dsonar.projectKey=luizh1406_TCC -Dsonar.organization=luizh1406 -Dsonar.sources=src,pages -Dsonar.javascript.lcov.reportPaths=coverage/backend/lcov.info,coverage/frontend/lcov.info -Dsonar.testExecutionReportPaths=test-reports/junit.xml -Dsonar.test.inclusions=**/__tests__/**/*.test.js,**/__tests__/**/*.test.jsx -Dsonar.exclusions=**/node_modules/**
+          # Apontando para o novo arquivo XML mesclado
+          args: -Dsonar.projectKey=luizh1406_TCC -Dsonar.organization=luizh1406 -Dsonar.sources=src,pages -Dsonar.javascript.lcov.reportPaths=coverage/backend/lcov.info,coverage/frontend/lcov.info -Dsonar.testExecutionReportPaths=test-reports/merged-junit.xml -Dsonar.test.inclusions=**/__tests__/**/*.test.js,**/__tests__/**/*.test.jsx -Dsonar.exclusions=**/node_modules/**
