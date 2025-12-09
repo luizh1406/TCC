@@ -43,10 +43,5 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         with:
-          args: >
-            -Dsonar.projectKey=luizh1406_TCC
-            -Dsonar.organization=luizh1406
-            -Dsonar.sources=src,pages
-            -Dsonar.javascript.lcov.reportPaths=coverage/backend/lcov.info,coverage/frontend/lcov.info
-            -Dsonar.test.inclusions=**/__tests__/**/*.test.js,**/__tests__/**/*.test.jsx
-            -Dsonar.exclusions=**/node_modules/**
+          args: > 
+           Dsonar.projectKey=luizh1406_TCC -Dsonar.organization=luizh1406 -Dsonar.sources=src,pages -Dsonar.javascript.lcov.reportPaths=coverage/backend/lcov.info,coverage/frontend/lcov.info -Dsonar.testExecutionReportPaths=test-reports/junit.xml -Dsonar.test.inclusions=**/__tests__/**/*.test.js,**/__tests__/**/*.test.jsx -Dsonar.exclusions=**/node_modules/**

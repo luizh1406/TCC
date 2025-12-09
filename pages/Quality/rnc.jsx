@@ -26,7 +26,7 @@ export async function getServerSideProps(context) {
 }
 
 // 💾 Função para enviar dados (Materiais, Serviços ou Planos) para a API
-async function pushList(data, tabela) {
+export async function pushList(data, tabela) {
   let apiUrl;
 
   if (tabela === "materiais") {
@@ -50,7 +50,7 @@ async function pushList(data, tabela) {
 }
 
 // ➕ Função para adicionar uma nova linha de serviço
-function addServicos(setServicos, servicos) {
+export function addServicos(setServicos, servicos) {
   const newId = servicos.length > 0 ? servicos[servicos.length - 1].id + 1 : 0;
 
   const newLine = {
@@ -65,7 +65,7 @@ function addServicos(setServicos, servicos) {
 }
 
 // ➕ Função para adicionar uma nova linha de material
-function addMaterial(setMateriais, materiais) {
+export function addMaterial(setMateriais, materiais) {
   const newId =
     materiais.length > 0 ? materiais[materiais.length - 1].id + 1 : 0;
 
@@ -81,7 +81,7 @@ function addMaterial(setMateriais, materiais) {
 }
 
 // ✏️ Função para editar um serviço e recalcular o valor total
-function editServices(
+export function editServices(
   setServicos,
   servicos,
   index,
@@ -120,7 +120,7 @@ function editServices(
 }
 
 // ✏️ Função para editar um material e recalcular o valor total
-function editMaterial(
+export function editMaterial(
   setMateriais,
   materiais,
   index,
@@ -159,7 +159,7 @@ function editMaterial(
 }
 
 // 💾 Função principal de salvamento (RNC, Materiais, Serviços, Plano e Sequência)
-async function save(inforGeral, materiais, servicos, plano) {
+export async function save(inforGeral, materiais, servicos, plano) {
   // 1. Obtém a próxima sequência/ID
   const sequenciaRes = await fetch(`/api/get/get_sequence?id=${6}`);
   const sequenciaJSON = await sequenciaRes.json();

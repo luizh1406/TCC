@@ -1,23 +1,22 @@
 module.exports = {
-  roots: ["<rootDir>/tests"],
+  roots: ["<rootDir>/tests"],
 
-  transform: {
-    "^.+\\.[jt]sx?$": "babel-jest",
-  },
+  transform: {
+    "^.+\\.[jt]sx?$": "babel-jest",
+  },
 
-  testEnvironment: "jsdom",
+  testEnvironment: "jsdom",
 
-  collectCoverage: true,
-  coverageDirectory: "coverage",
-  coverageReporters: ["lcov", "text", "clover"],
+  collectCoverage: true,
+  coverageDirectory: "coverage",
+  coverageReporters: ["lcov", "text", "clover"], // 'lcov' é o que o Sonar precisa
 
-  collectCoverageFrom: [
-    "pages/**/*.{js,jsx,ts,tsx}",
-    "src/**/*.{js,jsx,ts,tsx}",
-  ],
+  collectCoverageFrom: [
+    "pages/**/*.{js,jsx,ts,tsx}",
+    "src/**/*.{js,jsx,ts,tsx}",
+  ],
 
-  // ❌ Removemos backend e frontend daqui
-  testPathIgnorePatterns: [
-    "/node_modules/",
-  ],
+  testPathIgnorePatterns: [
+    "/node_modules/",
+  ],
 };
