@@ -1,6 +1,7 @@
 // rnc.test.js
 
-// Importa as funções utilitárias do arquivo rnc.jsx (necessário que estejam exportadas)
+// Importa as funções utilitárias do arquivo rnc.jsx (necessário que estejam exportada
+
 import { 
   editServices, 
   editMaterial, 

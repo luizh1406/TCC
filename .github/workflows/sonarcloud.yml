@@ -47,6 +47,6 @@ jobs:
             -Dsonar.projectKey=luizh1406_TCC
             -Dsonar.organization=luizh1406
             -Dsonar.sources=src,pages
-            -Dsonar.javascript.lcov.reportPaths=coverage/backend/lcov.info,coverage/frontend/lcov.info
+            -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
             -Dsonar.test.inclusions=**/__tests__/**/*.test.js,**/__tests__/**/*.test.jsx
             -Dsonar.exclusions=**/node_modules/**
