@@ -39,6 +39,9 @@ jobs:
       - name: Run frontend tests with coverage
         run: npm run test:frontend
 
+      - name: Verify Report Generation
+        run: ls -lR test-reports/
+
       - name: Merge JUnit Reports
         run: npx junit-merge test-reports/backend.xml test-reports/frontend.xml > test-reports/merged-junit.xml
 
