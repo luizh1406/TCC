@@ -101,7 +101,7 @@ function LoginForm({ isMobile, email, setEmail, password, setPassword, handleSub
   return (
     <>
       <img
-        src="/images/background/model1.png"
+        src="/images/background/model12.jpg"
         style={{
           width: "100%",
           height: "auto",
